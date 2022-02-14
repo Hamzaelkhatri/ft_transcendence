@@ -25,7 +25,6 @@
     "@nestjs/core": "^8.0.0",
     "@nestjs/passport": "^8.1.1",
     "@nestjs/platform-express": "^8.0.0",
-<<<<<<< HEAD
     "dotenv": "^16.0.0",
     "nest": "^0.1.6",
     "nestjs-oauth2-server": "^1.1.21",
@@ -39,17 +38,6 @@
     "rxjs": "^7.2.0",
     "sequelize": "^6.16.1",
     "sequelize-typescript": "^2.1.2"
-=======
-    "google-auth-library": "^7.12.0",
-    "nestjs-oauth2-server": "^1.1.21",
-    "passport": "^0.5.2",
-    "passport-local": "^1.0.0",
-    "passport-oauth2": "^1.6.1",
-    "reflect-metadata": "^0.1.13",
-    "rimraf": "^3.0.2",
-    "rxjs": "^7.2.0",
-    "websocket.io": "^0.1.1"
->>>>>>> e6fa873581346210cb1ac60d91741a10c56d47ee
   },
   "devDependencies": {
     "@nestjs/cli": "^8.2.1",
@@ -58,12 +46,8 @@
     "@types/express": "^4.17.13",
     "@types/jest": "27.4.0",
     "@types/node": "^16.0.0",
-<<<<<<< HEAD
     "@types/passport-local": "^1.0.34",
     "@types/sequelize": "^4.28.11",
-=======
-    "@types/passport-oauth2": "^1.4.11",
->>>>>>> e6fa873581346210cb1ac60d91741a10c56d47ee
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
