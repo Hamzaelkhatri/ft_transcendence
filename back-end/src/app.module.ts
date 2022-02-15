@@ -4,12 +4,12 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { AuthModuleOptions } from '@nestjs/passport';
 import { UsersModule } from './users/users.module';
-import { forwardRef } from '@nestjs/common';
+import { AppGateway } from './app.gateway';
 
 @Module({
   imports: [AuthModule,UsersModule,AuthModuleOptions],
 //   imports: []
   controllers: [AppController],
-  providers: [AppService,AuthModuleOptions],
+  providers: [AppService,AuthModuleOptions,AppGateway],
 })
 export class AppModule {}
