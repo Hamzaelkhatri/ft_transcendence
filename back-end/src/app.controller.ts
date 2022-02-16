@@ -7,7 +7,13 @@ import { LocalStrategy } from './auth/local.strategy';
 export class AppController {
   @UseGuards(AuthGuard('42'))
   @Get('/auth/42/callback')
-  async login(@Request() req) {
+  async login(@Request() req) 
+  {
+    console.log(req.raw);
     return req.user;
+  }
+  @Get('/')
+  async wlcome() {
+    return "welcome"
   }
 }

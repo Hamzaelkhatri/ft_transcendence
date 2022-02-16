@@ -19,14 +19,10 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 
   handleConnection(client: Socket, ...args: any[]) {
     this.logger.log(`Client connected ${client.id}`);
-    // if (this.Players.length < 2)
-    //   this.Players.push(client.id);
   }
 
   handleDisconnect(client: Socket) {
     this.logger.log(`Client desconnected ${client.id}`);
-    // if (this.Players.length > 0)
-      // this.Players.splice(this.Players.indexOf(client.id), 1);
   }
 
 
