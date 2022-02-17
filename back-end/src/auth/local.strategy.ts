@@ -16,9 +16,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
   async validate (accessToken: string, refreshToken: string, profile: any) 
   {
-      return profile;
+      return accessToken;
   }
-
-  //
-
 }
