@@ -63,6 +63,7 @@ function MyApp(props: AppProps) {
   //   }
   // }
   const [reactData, setReactData] = useState({});
+  const ISSERVER = typeof window === "undefined";
 
   // useEffect(() => {
     if (router.query.token !== undefined && localStorage.getItem("token") === null) 
@@ -77,32 +78,41 @@ function MyApp(props: AppProps) {
       .then(res => res.json())
       .then(data => {
         setReactData(data)
-      }).catch((e) => { console.log(e) });
+        setReactData(
+          {
+            email: data.email,
+            usual_full_name: data.usual_full_name,
+            image_url: data.image_url
+          })
+      })
+      
       console.log(res)
       console.log(reactData)
-    }
-
-    const ISSERVER = typeof window === "undefined";
-
-// if() {
-//  // Access localStorage
-
+      // useEffect(() => {
+        // if(!ISSERVER) {
+      // if(reactData.email !== undefined)
+      // {
+      // localStorage.setItem("email", reactData.email)
+      // localStorage.setItem("usual_full_name", reactData.usual_full_name)
+      // localStorage.setItem("image_url", reactData.image_url)
+      // }
+  }
+    // if(!ISSERVER) {
+      useEffect(() => {
+      setReactData(
+        {
+          email: localStorage.getItem("email") === null ? "" : localStorage.getItem("email"),
+          usual_full_name: localStorage.getItem("usual_full_name") === null ? "" : localStorage.getItem("usual_full_name"),
+          image_url: localStorage.getItem("image_url") === null ? "" : localStorage.getItem("image_url")
+        });
+     
+        console.log(reactData)
+      // }
+    }, [])
     
-    if(!ISSERVER &&localStorage.getItem("token") !== null) 
-    {
-      reactData.email = localStorage.getItem("email")
-      reactData.login = localStorage.getItem("login")
-      reactData.first_name = localStorage.getItem("first_name")
-    }
-    if(reactData.email !== undefined)
-    {
-      localStorage.setItem("token", router.query.token+"")
-      localStorage.setItem("email", reactData.email)
-      localStorage.setItem("image", reactData.login)
-      localStorage.setItem("first_name", reactData.usual_full_name)
-    }
-
-
+  // useEffect(() => {
+   
+  // }, [])
   return (
     <div>
       {
