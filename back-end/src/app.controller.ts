@@ -9,7 +9,7 @@ export class AppController {
 
   router: Router;
   @UseGuards(AuthGuard('42'))
-  @Get('/auth/42/callback')
+  @Get('/login/42/return')
   async login(@Res() res, @Request() req) 
   {
     res.redirect("http://localhost:3001/?token=" + req.user);

@@ -62,30 +62,52 @@ function MyApp(props: AppProps) {
 
   //   }
   // }
-  const [reactData, setReactData] = useState([]);
+  const [reactData, setReactData] = useState({});
 
   // useEffect(() => {
-    if (router.query.token !== undefined) {
+    if (router.query.token !== undefined && localStorage.getItem("token") === null) 
+    {
      const res =  fetch("https://api.intra.42.fr/v2/me",
-        {
-          headers: {
-            'Authorization': 'Bearer ' +router.query.token,
-            'Content-Type': 'application/json'
-          }
-        })
-        .then(res => res.json())
-        .then(data => {
-          setReactData(data)
-        }).catch((e) => { console.log(e) });
-        console.log(res)
+     {
+       headers: {
+         'Authorization': 'Bearer ' +router.query.token,
+         'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        setReactData(data)
+      }).catch((e) => { console.log(e) });
+      console.log(res)
+      console.log(reactData)
+    }
 
-    // }, []);
-    console.log(reactData)
+    const ISSERVER = typeof window === "undefined";
+
+// if() {
+//  // Access localStorage
+
+    
+    if(!ISSERVER &&localStorage.getItem("token") !== null) 
+    {
+      reactData.email = localStorage.getItem("email")
+      reactData.login = localStorage.getItem("login")
+      reactData.first_name = localStorage.getItem("first_name")
+    }
+    if(reactData.email !== undefined)
+    {
+      localStorage.setItem("token", router.query.token+"")
+      localStorage.setItem("email", reactData.email)
+      localStorage.setItem("image", reactData.login)
+      localStorage.setItem("first_name", reactData.usual_full_name)
     }
 
 
   return (
     <div>
+      {
+        
+      }
       {
         // reactData.map((user: user) => {
           // return (
@@ -100,7 +122,7 @@ function MyApp(props: AppProps) {
           // )
         // })
       }
-      <button onClick={() => login("http://127.0.0.1:3000/auth/42/callback")} >Sign In </button>
+      <button onClick={() => login("http://127.0.0.1:3000/login/42/return")} >Sign In </button>
     </div>
   );
 }
