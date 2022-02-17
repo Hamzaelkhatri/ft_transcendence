@@ -7,83 +7,99 @@ import { useRouter } from 'next/router'
 import axios from 'axios'
 import { request } from 'https';
 import { setRequestMeta } from 'next/dist/server/request-meta';
+import { GetServerSideProps } from 'next'
+import { useState } from 'react'
+import { useEffect } from 'react';
 
-class User {
-  fullName: string;
-  email: string;
-  image: string;
-
-  constructor(fullName: string, email: string, image: string) {
-    this.fullName = fullName;
-    this.email = email;
-    this.image = image;
-  }
-
-  //getters and setters
-  get _fullName() {
-    return this.fullName;
-  }
-
-  set _fullName(value: string) {
-    this.fullName = value;
-  }
-
-  get _email() { return this.email; }
-
-  set _email(value: string) {
-    this.email = value;
-  }
-
-  get _image() { return this.image; }
-
-  set _image(value: string) {
-    this.image = value;
+type user =
+  {
+    id: number,
+    email: string// helkhatr@student.1337.ma,
+    login: string// helkhatr,
+    first_name: string// Hamza,
+    last_name: string// Elkhatri,
+    usual_full_name: string// Hamza Elkhatri,
+    usual_first_name: any,
+    url: string,
+    phone: string,
+    displayname: string
+    image_url: string,
   }
 
 
-  ToJson() {
-    return ({
-      fullName: this.fullName,
-      email: this.email,
-      image: this.image
-    });
+// export const getStaticProps: GetStaticProps = async (context) => {
+
+// }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+
+  return {
+    props: {
+      message: "hello"
+    }
   }
 }
 
-function MyApp({ Component, pageProps }: AppProps) {
+
+function MyApp(props: AppProps) {
   const router = useRouter()
   const login = async (link: string) => {
-    // router.push(link)
-    console.log({
-      username: user._fullName,
-      email: user._email,
-      image: user._image
-      
-    })
+    router.push(link)
   }
 
-  let user = new User("T", "T", "T")
+  // const res = await axios.get("https://api.intra.42.fr/v2/me",
+  // {
+  //   headers: {
+  //     'Authorization': 'Bearer ' + context.query.token,
+  //     'Content-Type': 'application/json'
+  //   }
+  // });
+  // const data = async () => {
+  //   const router = useRouter()
+  //   if (router.query.token !== undefined) {
 
-  const info = async () => {
+  //     const user[] = res.data
+
+  //   }
+  // }
+  const [reactData, setReactData] = useState([]);
+
+  // useEffect(() => {
     if (router.query.token !== undefined) {
-      const res = await axios.get("https://api.intra.42.fr/v2/me",
+     const res =  fetch("https://api.intra.42.fr/v2/me",
         {
           headers: {
-            'Authorization': 'Bearer ' + router.query.token,
+            'Authorization': 'Bearer ' +router.query.token,
+            'Content-Type': 'application/json'
           }
-        });
-      console.log(res.data)
-      //new User(res.data.displayname, res.data.email, res.data.new_image_url)
-      user._fullName = res.data.displayname;
-      user._email = res.data.email;
-      user._image = res.data.new_image_url;
-      return (res.data);
+        })
+        .then(res => res.json())
+        .then(data => {
+          setReactData(data)
+        }).catch((e) => { console.log(e) });
+        console.log(res)
+
+    // }, []);
+    console.log(reactData)
     }
-  }
-  const t = info()
-  
+
+
   return (
     <div>
+      {
+        // reactData.map((user: user) => {
+          // return (
+            <div className="profile">
+              <h1>{reactData.displayname}</h1> 
+              <img className="ImageProfile" src={reactData.image_url} alt="" />
+              <div>
+                <p>{reactData.login}</p>
+                <p>{reactData.usual_full_name}</p>
+              </div>
+            </div>
+          // )
+        // })
+      }
       <button onClick={() => login("http://127.0.0.1:3000/auth/42/callback")} >Sign In </button>
     </div>
   );
