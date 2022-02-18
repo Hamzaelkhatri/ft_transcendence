@@ -61,23 +61,20 @@ p
     top: 100%;
     transform: translate(-50%, -50%);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #00ff6a;
-    color: #ffffff;
     font-style:initial;
     border: 5px solid #00ff6a;
     padding: 10px;
-
-    /*hovring button*/
-    -webkit-transition: all 0.5s;
-    -moz-transition: all 0.5s;
-    -o-transition: all 0.5s;
-    transition: all 0.5s;
-
-    -webkit-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.5);
-    -moz-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.5);
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
 }
 
-.navbar {
+.nav-bar {
   overflow: hidden;
     background-color: #333;
     font-family: Arial, Helvetica, sans-serif;
@@ -124,17 +121,16 @@ p
         padding: 14px 16px;
         text-decoration: none;
         font-family: "Comic Sans MS", cursive, sans-serif;
+        
+}
+
+.nav-bar-left-menu-item:hover 
+{
+  background-color: rgb(0, 7, 63);
 }
 
 .nav-bar-right-user-image
 {
-    /* float: left;
-    display: block;
-    color: #ffffff;
-    text-align: center;
-    padding: 14px 16px; */
-    /* text-decoration: none;
-    font-family: "Comic Sans MS", cursive, sans-serif; */
     margin-right: 10px;
     width: 30px;
     height: 30px;
@@ -151,6 +147,7 @@ p
     color: #ffffff;
     text-align: center;
     text-decoration: none;
+    padding: 3px 5px;
     font-family: "Comic Sans MS", cursive, sans-serif;
 
 }

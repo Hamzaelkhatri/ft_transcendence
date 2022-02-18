@@ -12,8 +12,9 @@ export class AppController {
   @Get('/login/42/return')
   async login(@Res() res, @Request() req) 
   {
-    res.redirect("http://localhost:3001/?token=" + req.user);
-    return(req.user);
+    //close the browser window
+    // res.send('<script>window.close()</script>');
+    res.redirect('http://localhost:3001/?token='+req.user);
   }
   @Get('/')
   async wlcome() {
