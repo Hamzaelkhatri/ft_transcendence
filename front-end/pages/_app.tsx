@@ -135,10 +135,34 @@ function MyApp(props: AppProps) {
 
   // }, [])
   return (
+    <>
+      <div className="nav-bar">
+        <div className="nav-bar-left">
+          <div className="nav-bar-left-menu">
+            <div className="nav-bar-left-menu-item">
+              <a href="/">Home</a>
+            </div>
+            <div className="nav-bar-left-menu-item">
+              <a href="/about">About</a>
+            </div>
+            <div className="nav-bar-left-menu-item">
+              <a href="/contact">Contact</a>
+            </div>
+          </div>
+        </div>
+        <div className="nav-bar-right">
+          <div className="nav-bar-right-user">
+              <img className="nav-bar-right-user-image" src={reactData.image_url} alt="user" />
+            <div className="nav-bar-right-user-name">
+              {reactData.usual_full_name}
+            </div>
+          </div>
+          <div className="nav-bar-right-sign-in">
+            <a href="/" onClick={() => login("/signin")}>{singIn}</a>
+          </div>
+        </div>
+      </div>
     <div>
-      {
-
-      }
       {
         // reactData.map((user: user) => {
         // return (
@@ -155,6 +179,7 @@ function MyApp(props: AppProps) {
         // })
       }
     </div>
+    </>
   );
 }
 

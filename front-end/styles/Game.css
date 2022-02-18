@@ -75,6 +75,93 @@ p
 
     -webkit-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.5);
     -moz-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0.5);
-    
+}
 
+.navbar {
+  overflow: hidden;
+    background-color: #333;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.nav-bar-left {
+  float: left;
+}
+
+.nav-bar-left-logo
+{
+  font-size: 30px;
+    color: #ffffff;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+
+.nav-bar-left-menu {
+  overflow: hidden;
+}
+
+.nav-bar-left-menu-item
+{
+  float: left;
+    display: block;
+    color: #ffffff;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+.nav-bar-right
+{
+  float: right;
+}
+
+.nav-bar-right-user
+{
+    float: right;
+        display: block;
+        color: #ffffff;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+.nav-bar-right-user-image
+{
+    /* float: left;
+    display: block;
+    color: #ffffff;
+    text-align: center;
+    padding: 14px 16px; */
+    /* text-decoration: none;
+    font-family: "Comic Sans MS", cursive, sans-serif; */
+    margin-right: 10px;
+    width: 30px;
+    height: 30px;
+    margin-left: 3px;
+    margin-right: auto;
+    margin-bottom: 20px;
+    border-radius: 50%;
+}
+
+.nav-bar-right-user-name
+{
+    float: left;
+    display: block;
+    color: #ffffff;
+    text-align: center;
+    text-decoration: none;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+
+}
+
+.nav-bar-right-sign-in
+{
+    float: left;
+    display: block;
+    color: #ffffff;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-family: "Comic Sans MS", cursive, sans-serif;
 }
