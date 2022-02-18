@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import { GetServerSideProps } from 'next'
 import { useState } from 'react'
 import { useEffect } from 'react';
+import ResponsiveAppBar from "./Navbar"
 type user =
   {
     id: number,
@@ -92,9 +93,6 @@ function MyApp(props: AppProps) {
           window.opener.document.getElementById('img_profile').src = data.image_url;
           window.opener.document.getElementById('image_url').src = data.image_url;
           window.close();
-          
-          // window.opener.reload(1);
-          // window.opener.document.getElementById('image_url').innerHTML = data.usual_full_name;
         }
         setSingIn("Sign Out")
         // set data in parent window
@@ -137,14 +135,11 @@ useEffect(() => {
   }
 
   console.log(reactData)
-  // requestAnimationFrame(() => fetchin());
-  // }
 }, [])
 
 
 
 
-// useEffect(() => {
 const Home = () => {
 
   if (!ISSERVER) {
@@ -154,8 +149,8 @@ const Home = () => {
 // }, [])
 return (
   <>
-    
-    {!popup&& <div className="nav-bar">
+    <ResponsiveAppBar data={reactData} />
+    {popup&& <div className="nav-bar">
        
       <div className="nav-bar-left">
         <div className="nav-bar-left-menu">

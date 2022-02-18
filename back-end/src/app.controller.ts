@@ -12,8 +12,6 @@ export class AppController {
   @Get('/auth/42/callback')
   async login(@Res() res, @Request() req) 
   {
-    //close the browser window
-    // res.send('<script>window.close()</script>');
     res.redirect('http://localhost:3001/?token='+req.user);
   }
   @Get('/')
