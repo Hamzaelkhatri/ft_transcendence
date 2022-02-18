@@ -43,9 +43,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 function MyApp(props: AppProps) {
   const router = useRouter()
-  const login = async (link: string) => {
-    router.push(link)
-  }
+
 
   // const res = await axios.get("https://api.intra.42.fr/v2/me",
   // {
@@ -63,16 +61,30 @@ function MyApp(props: AppProps) {
   //   }
   // }
   const [reactData, setReactData] = useState({});
+  const [singIn, setSingIn] = useState("Sign In");
+
+  const login = async (link: string) => {
+    if (singIn === "Sign In") {
+      router.push(link)
+    }
+    else {
+      localStorage.clear();
+      router.push("/")
+    }
+
+    singIn === "Sign In" ? setSingIn("Sign Out") : setSingIn("Sign In");
+
+  }
   const ISSERVER = typeof window === "undefined";
 
   // useEffect(() => {
-    if (router.query.token !== undefined && localStorage.getItem("token") === null) 
-    {
-     const res =  fetch("https://api.intra.42.fr/v2/me",
-     {
-       headers: {
-         'Authorization': 'Bearer ' +router.query.token,
-         'Content-Type': 'application/json'
+  if (singIn === "Sign In" && router.query.token !== undefined) {
+    // fetch one time only
+    const res = fetch("https://api.intra.42.fr/v2/me",
+      {
+        headers: {
+          'Authorization': 'Bearer ' + router.query.token,
+          'Content-Type': 'application/json'
         }
       })
       .then(res => res.json())
@@ -84,55 +96,64 @@ function MyApp(props: AppProps) {
             usual_full_name: data.usual_full_name,
             image_url: data.image_url
           })
+        if (!ISSERVER) {
+
+          localStorage.setItem("email", data.email)
+          localStorage.setItem("usual_full_name", data.usual_full_name)
+          localStorage.setItem("image_url", data.image_url)
+        }
+        setSingIn("Sign Out")
       })
-      
-      console.log(res)
-      console.log(reactData)
-      // useEffect(() => {
-        // if(!ISSERVER) {
-      // if(reactData.email !== undefined)
-      // {
-      // localStorage.setItem("email", reactData.email)
-      // localStorage.setItem("usual_full_name", reactData.usual_full_name)
-      // localStorage.setItem("image_url", reactData.image_url)
-      // }
+
+    console.log(res)
+    console.log(reactData)
+    if(!ISSERVER && reactData.email !== undefined)
+    {
+      setSingIn("Sign Out")
+      localStorage.setItem("email", reactData.email)
+      localStorage.setItem("usual_full_name", reactData.usual_full_name)
+      localStorage.setItem("image_url", reactData.image_url)
+    }
+    // useEffect(() => {
+
   }
-    // if(!ISSERVER) {
-      useEffect(() => {
-      setReactData(
-        {
-          email: localStorage.getItem("email") === null ? "" : localStorage.getItem("email"),
-          usual_full_name: localStorage.getItem("usual_full_name") === null ? "" : localStorage.getItem("usual_full_name"),
-          image_url: localStorage.getItem("image_url") === null ? "" : localStorage.getItem("image_url")
-        });
-     
-        console.log(reactData)
-      // }
-    }, [])
-    
+  // if(!ISSERVER) {
+  useEffect(() => {
+    setReactData(
+      {
+        email: localStorage.getItem("email") === null ? "" : localStorage.getItem("email"),
+        usual_full_name: localStorage.getItem("usual_full_name") === null ? "" : localStorage.getItem("usual_full_name"),
+        image_url: localStorage.getItem("image_url") === null ? "" : localStorage.getItem("image_url")
+      });
+    // setSingIn("Sign Out")
+
+    console.log(reactData)
+    // }
+  }, [])
+
   // useEffect(() => {
-   
+
   // }, [])
   return (
     <div>
       {
-        
+
       }
       {
         // reactData.map((user: user) => {
-          // return (
-            <div className="profile">
-              <h1>{reactData.displayname}</h1> 
-              <img className="ImageProfile" src={reactData.image_url} alt="" />
-              <div>
-                <p>{reactData.login}</p>
-                <p>{reactData.usual_full_name}</p>
-              </div>
-            </div>
-          // )
+        // return (
+        <div className="profile">
+          <h1>{reactData.displayname}</h1>
+          <img className="ImageProfile" src={reactData.image_url} alt="" />
+          <div>
+            <p>{reactData.login}</p>
+            <p>{reactData.usual_full_name}</p>
+          </div>
+          <button className="Login_btn" onClick={() => login("http://127.0.0.1:3000/login/42/return")} >{singIn} </button>
+        </div>
+        // )
         // })
       }
-      <button onClick={() => login("http://127.0.0.1:3000/login/42/return")} >Sign In </button>
     </div>
   );
 }
