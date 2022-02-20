@@ -64,7 +64,6 @@ function MyApp(props: AppProps) {
 
   }
 
-  // useEffect(() => {
   if (singIn === "Sign In" && router.query.token !== undefined) {
     // fetch one time only
 
@@ -114,8 +113,25 @@ function MyApp(props: AppProps) {
 
   const [popup, setPopup] = useState(false);
 
+
+const interval = setInterval(() => {
+  if (popup !== undefined) {
+    if (popup.closed) {
+      setReactData(
+        {
+          email: localStorage.getItem("email") === undefined ? "" : localStorage.getItem("email"),
+          usual_full_name: localStorage.getItem("usual_full_name") === undefined ? "" : localStorage.getItem("usual_full_name"),
+          image_url: localStorage.getItem("image_url") === undefined ? "" : localStorage.getItem("image_url")
+        });
+        clearInterval(interval);
+    }
+  }
+}, 100);
+
 // if(!ISSERVER) {
 useEffect(() => {
+
+  //check if popup is closed
 
 
   if(window.opener !== null) 
@@ -146,7 +162,7 @@ const Home = () => {
     router.push("/login");
   }
 }
-// }, [])
+
 return (
   <>
     <ResponsiveAppBar data={reactData} />
@@ -166,7 +182,7 @@ return (
             {reactData.usual_full_name}
           </div>
         </div>
-        <div onClick={() => login("http://127.0.0.1:3000/auth/42/callback")} className="nav-bar-right-sign-in">
+        <div onClick={() => login("http://127.0.0.1:3000/login/42/return")} className="nav-bar-right-sign-in">
           <a >{singIn}</a>
         </div>
       </div>
@@ -183,7 +199,7 @@ return (
           <div>
             <p id="full_name">{reactData.usual_full_name}</p>
           </div>
-          <button className="Login_btn" onClick={() => login("http://127.0.0.1:3000/auth/42/callback")} >{singIn} </button>
+          <button className="Login_btn" onClick={() => login("http://127.0.0.1:3000/login/42/return")} >{singIn} </button>
         </div>
         // )
         // })
