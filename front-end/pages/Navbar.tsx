@@ -15,9 +15,8 @@ import MenuItem from '@mui/material/MenuItem';
 const pages = ['Home', 'LeaderBoard'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-const ResponsiveAppBar = (prps: any) => 
-{
-console.log(prps.data)
+const ResponsiveAppBar = (prps: any) => {
+  console.log(prps.data)
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -37,7 +36,7 @@ console.log(prps.data)
   };
 
   return (
-    <AppBar >
+    <AppBar style={{ background: '#05032E' }}>
       <Container maxWidth="xl">
         <Toolbar >
           <Typography
@@ -91,7 +90,7 @@ console.log(prps.data)
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
-            LOGO
+            PINGPONG
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
@@ -105,13 +104,13 @@ console.log(prps.data)
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
+          {prps.usecase && <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Typography variant="h6" noWrap component="div"
-                 sx={{ my: 2, color: 'white', display: 'block', paddingRight: '10px' }}>
-                {prps.data.usual_full_name}
-            </Typography>
+                  sx={{ my: 2, color: 'white', display: 'block', paddingRight: '10px' }}>
+                  {prps.data.usual_full_name}
+                </Typography>
                 <Avatar alt="Remy Sharp" id="image_url" src={prps.data.image_url} />
               </IconButton>
             </Tooltip>
@@ -138,6 +137,7 @@ console.log(prps.data)
               ))}
             </Menu>
           </Box>
+          }
         </Toolbar>
       </Container>
     </AppBar>

@@ -8,40 +8,27 @@ import { GetServerSideProps } from 'next'
 import { useState } from 'react'
 import { useEffect } from 'react';
 import ResponsiveAppBar from "./Navbar"
-type user =
-  {
-    id: number,
-    email: string// helkhatr@student.1337.ma,
-    login: string// helkhatr,
-    first_name: string// Hamza,
-    last_name: string// Elkhatri,
-    usual_full_name: string// Hamza Elkhatri,
-    usual_first_name: any,
-    url: string,
-    phone: string,
-    displayname: string
-    image_url: string,
-  }
+// type user =
+//   {
+//     id: number,
+//     email: string// helkhatr@student.1337.ma,
+//     login: string// helkhatr,
+//     first_name: string// Hamza,
+//     last_name: string// Elkhatri,
+//     usual_full_name: string// Hamza Elkhatri,
+//     usual_first_name: any,
+//     url: string,
+//     phone: string,
+//     displayname: string
+//     image_url: string,
+//   }
 
-
-// export const getStaticProps: GetStaticProps = async (context) => {
-
-// }
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-
-  return {
-    props: {
-      message: "hello"
-    }
-  }
-}
-var popup;
 
 
 function MyApp(props: AppProps) {
+  let popups;
   const router = useRouter()
-  const [reactData, setReactData] = useState({});
+  const [reactData, setReactData]:any = useState({});
   const [singIn, setSingIn] = useState("Sign In");
   const ISSERVER = typeof window === "undefined";
 
@@ -49,10 +36,8 @@ function MyApp(props: AppProps) {
     if (singIn === "Sign In") {
       // router.push(link)
       if (!ISSERVER) {
-        popup = window.open(link, 'popup', 'width=600,height=600');
-        popup.focus();
-        // console.log(popup);
-
+        popups = window.open(link, 'popup', 'width=600,height=600');
+        // popups.focus();
       }
     }
     else {
@@ -61,12 +46,18 @@ function MyApp(props: AppProps) {
     }
 
     singIn === "Sign In" ? setSingIn("Sign Out") : setSingIn("Sign In");
+    if(singIn === "Sign Out"){
+      setReactData({
+        //clear local storage
+          usual_full_name: "",
+          displayname: "",
+          image_url: ""
+      });
+    }
 
   }
 
   if (singIn === "Sign In" && router.query.token !== undefined) {
-    // fetch one time only
-
     const res = fetch("https://api.intra.42.fr/v2/me",
       {
         headers: {
@@ -84,24 +75,14 @@ function MyApp(props: AppProps) {
             image_url: data.image_url
           })
         if (!ISSERVER) {
-          // window.document.getElementsByClassName("profile").innerHTML = "Waiting for redirect...";
           localStorage.setItem("email", data.email)
           localStorage.setItem("usual_full_name", data.usual_full_name)
           localStorage.setItem("image_url", data.image_url)
-          window.opener.document.getElementById('full_name').innerHTML = data.usual_full_name;
-          window.opener.document.getElementById('img_profile').src = data.image_url;
-          window.opener.document.getElementById('image_url').src = data.image_url;
           window.close();
         }
         setSingIn("Sign Out")
-        // set data in parent window
-
-        // window.close();
-
       })
 
-    // console.log(res)
-    // console.log(reactData)
     if (!ISSERVER && reactData.email !== undefined) 
     {
       setSingIn("Sign Out")
@@ -115,8 +96,8 @@ function MyApp(props: AppProps) {
 
 
 const interval = setInterval(() => {
-  if (popup !== undefined) {
-    if (popup.closed) {
+  if (popups !== undefined) {
+    if (popups.closed) {
       setReactData(
         {
           email: localStorage.getItem("email") === undefined ? "" : localStorage.getItem("email"),
@@ -130,9 +111,6 @@ const interval = setInterval(() => {
 
 // if(!ISSERVER) {
 useEffect(() => {
-
-  //check if popup is closed
-
 
   if(window.opener !== null) 
   {
@@ -154,45 +132,12 @@ useEffect(() => {
 }, [])
 
 
-
-
-const Home = () => {
-
-  if (!ISSERVER) {
-    router.push("/login");
-  }
-}
-
 return (
   <>
-    <ResponsiveAppBar data={reactData} />
-    {popup&& <div className="nav-bar">
-       
-      <div className="nav-bar-left">
-        <div className="nav-bar-left-menu">
-          <div onClick={Home} className="nav-bar-left-menu-item">
-            <a id="retrievedData">Home</a>
-          </div>
-        </div>
-      </div>
-      <div className="nav-bar-right">
-        <div className="nav-bar-right-user">
-          <img className="nav-bar-right-user-image" id="image_url" src={reactData.image_url} alt="user" />
-          <div className="nav-bar-right-user-name">
-            {reactData.usual_full_name}
-          </div>
-        </div>
-        <div onClick={() => login("http://127.0.0.1:3000/login/42/return")} className="nav-bar-right-sign-in">
-          <a >{singIn}</a>
-        </div>
-      </div>
-
-    </div>
-      }
+    {!popup&&<ResponsiveAppBar data={reactData} usecase={singIn==="Sing Out"} />}
+    <div id="row">
     <div>
-      {!popup &&
-        // reactData.map((user: user) => {
-        // return (
+      {singIn=="Sing Out" &&
         <div className="profile">
           <h1 id="displayname">{reactData.displayname}</h1>
           <img className="ImageProfile" id="img_profile" src={reactData.image_url} alt="" />
@@ -201,8 +146,6 @@ return (
           </div>
           <button className="Login_btn" onClick={() => login("http://127.0.0.1:3000/login/42/return")} >{singIn} </button>
         </div>
-        // )
-        // })
       }
     </div>
     {
@@ -217,6 +160,7 @@ return (
       </div>
     </div>
     }
+    </div>
   </>
 );
 }

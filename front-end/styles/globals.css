@@ -1,9 +1,24 @@
 html,
 body {
   background: #121526;
+  overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
+}
+
+/* overlay of background image */
+#row {
+  /* full image */
+  height: 100vh;
+  width: 100%;
+  color: white;
+  font: bold 6.5em/2em monospace;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to top, #14213D, #14213d7e), url("../images/bg1.png") no-repeat top center;
+  background-size: cover;
 }
 
 a {
