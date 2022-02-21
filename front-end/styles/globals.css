@@ -26,10 +26,12 @@ body {
 #logo {
   position: absolute;
   top: 44%;
-  left: 20%;
+  left: 22%;
   transform: translate(-50%, -79%);
   width: 25%;
-  height: 50%;
+  /* height: 50%; */
+  height: auto;
+
   text-align: center;
   /* font-size: 5em; */
   /* color: white; */
@@ -44,4 +46,18 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+#canvas
+{
+  top: 75%;
+  width: 400px;
+  /* /* height: 200px; */
+  height: auto;
+  left: 22%;
+  /* background-color: black; */
+  background: rgb(13,12,48);
+  /* background: linear-gradient(123deg, rgba(13,12,48,1) 2%, rgba(100,78,184,1) 90%, rgba(100,78,184,1) 99%, rgba(100,78,184,1) 99%); */
+
+  border: 5px solid #ffffff;
 }

@@ -9,10 +9,12 @@ canvas {
     top: 50%;
     transform: translate(-50%, -50%);
     border: 5px solid #FFFF00;
+    background-color: black;
     padding: 10px;
-  
+
   }
   
+ 
 
 .profile {
     position: absolute;
