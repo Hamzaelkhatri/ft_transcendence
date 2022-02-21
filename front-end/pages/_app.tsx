@@ -30,15 +30,14 @@ function MyApp(props: AppProps) {
   const router = useRouter()
   const [reactData, setReactData]:any = useState({});
   const [singIn, setSingIn] = useState("Sign In");
-  const ISSERVER = typeof window === "undefined";
+  const ISSERVER = typeof window   === "undefined";
 
-  const login = async (link: string) => {
+  if(!ISSERVER)
+  {
+
+    const login = (link: string) => {
     if (singIn === "Sign In") {
-      // router.push(link)
-      if (!ISSERVER) {
         popups = window.open(link, 'popup', 'width=600,height=600');
-        // popups.focus();
-      }
     }
     else {
       localStorage.clear();
@@ -57,7 +56,7 @@ function MyApp(props: AppProps) {
 
   }
 
-  if (singIn === "Sign In" && router.query.token !== undefined) {
+  if (singIn === "Sign In" && router.query.token !== undefined && window.opener !== window.self) {
     const res = fetch("https://api.intra.42.fr/v2/me",
       {
         headers: {
@@ -67,35 +66,32 @@ function MyApp(props: AppProps) {
       })
       .then(res => res.json())
       .then(data => {
-        setReactData(data)
         setReactData(
           {
             email: data.email,
             usual_full_name: data.usual_full_name,
             image_url: data.image_url
           })
-        if (!ISSERVER) {
           localStorage.setItem("email", data.email)
           localStorage.setItem("usual_full_name", data.usual_full_name)
           localStorage.setItem("image_url", data.image_url)
           window.close();
-        }
-        setSingIn("Sign Out")
+          setSingIn("Sign Out")
       })
 
-    if (!ISSERVER && reactData.email !== undefined) 
-    {
-      setSingIn("Sign Out")
-      localStorage.setItem("email", reactData.email)
-      localStorage.setItem("usual_full_name", reactData.usual_full_name)
-      localStorage.setItem("image_url", reactData.image_url)
-    }
+    // if (!ISSERVER && reactData.email !== undefined) 
+    // {
+    //   setSingIn("Sign Out")
+    //   localStorage.setItem("email", reactData.email)
+    //   localStorage.setItem("usual_full_name", reactData.usual_full_name)
+    //   localStorage.setItem("image_url", reactData.image_url)
+    // }
   }
 
   const [popup, setPopup] = useState(false);
 
-
 const interval = setInterval(() => {
+
   if (popups !== undefined) {
     if (popups.closed) {
       setReactData(
@@ -116,6 +112,7 @@ useEffect(() => {
   {
     setPopup(true);
   }
+
   
   setReactData(
     {
@@ -128,23 +125,21 @@ useEffect(() => {
     setSingIn("Sign Out")
   }
 
-  console.log(reactData)
 }, [])
-
 
 return (
   <>
     {!popup&&<ResponsiveAppBar data={reactData} usecase={singIn==="Sing Out"} />}
     <div id="row">
     <div>
-      {singIn=="Sing Out" &&
+      {singIn==="Sing Out" &&
         <div className="profile">
           <h1 id="displayname">{reactData.displayname}</h1>
           <img className="ImageProfile" id="img_profile" src={reactData.image_url} alt="" />
           <div>
             <p id="full_name">{reactData.usual_full_name}</p>
           </div>
-          <button className="Login_btn" onClick={() => login("http://127.0.0.1:3000/login/42/return")} >{singIn} </button>
+          <button className="Login_btn" onClick={() => login("http://127.0.0.1:3000/auth/42/callback")} >{singIn} </button>
         </div>
       }
     </div>
@@ -163,6 +158,11 @@ return (
     </div>
   </>
 );
+}
+return(
+  <>
+  server side
+  </>);
 }
 
 export default MyApp

@@ -74,55 +74,6 @@ p
     font-size: 16px;
 }
 
-.nav-bar {
-  overflow: hidden;
-    background-color: #333;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-.nav-bar-left {
-  float: left;
-}
-
-.nav-bar-left-logo
-{
-  font-size: 30px;
-    color: #ffffff;
-    font-family: "Comic Sans MS", cursive, sans-serif;
-}
-
-
-.nav-bar-left-menu {
-  overflow: hidden;
-}
-
-.nav-bar-left-menu-item
-{
-  float: left;
-    display: block;
-    color: #ffffff;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    font-family: "Comic Sans MS", cursive, sans-serif;
-}
-
-.nav-bar-right
-{
-  float: right;
-}
-
-.nav-bar-right-user
-{
-    float: right;
-        display: block;
-        color: #ffffff;
-        text-align: center;
-        padding: 14px 16px;
-        text-decoration: none;
-        font-family: "Comic Sans MS", cursive, sans-serif;
-        
-}
 
 .nav-bar-left-menu-item:hover 
 {
