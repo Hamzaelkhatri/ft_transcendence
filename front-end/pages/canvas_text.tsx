@@ -42,7 +42,7 @@ class Game {
         // this.Bar = new Player(this.width / 2 - 5, this.height / 2 - 80, 10, 80, "white", this.ctx, this.canvas, 0, "paddle.png");
         this.Player1 = new Player(10, (this.canvas.height - 80) / 2, 10, 80, "white", this.ctx, this.canvas, 0, "paddle.png");
         this.Player2 = new Player(this.canvas.width - 20, (this.canvas.height - 80) / 2, 10, 80, "white", this.ctx, this.canvas, 0, "paddle.png");
-        this.ball = new Ball(this.canvas.width / 2, this.canvas.height / 2, 8, "red", this.ctx, this.canvas, this.Player1, this.Player2);
+        this.ball = new Ball(this.canvas.width / 2, this.canvas.height / 2, 8, "white", this.ctx, this.canvas, this.Player1, this.Player2);
         document.addEventListener("keydown", this.keyDownHandler.bind(this), false);
         document.addEventListener("keyup", this.keyUpHandler.bind(this), false);
         this.start();
@@ -53,8 +53,8 @@ class Game {
             "Player1": this.Player1.ToJson(),
             "Player2": this.Player2.ToJson(),
             "Ball": this.ball.ToJson(),
-            "Bar": this.Bar.ToJson(),
-            "Client": this.socket.io.engine.id,
+            // "Bar": this.Bar.ToJson(),
+            // "Client": this.socket.io.engine.id,
             "Pause": this.Pause,
         }
     }

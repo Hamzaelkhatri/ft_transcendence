@@ -12,20 +12,18 @@ body {
 
 /* overlay of background image */
 #row {
-  height: 80vh;
-  width: 65%;
+  height: 76vh;
+  width: 46%;
   float: right;
   font: bold 6.5em/2em monospace;
-  margin-top: 11%;
-  /* background-image:  no-repeat top center; */
-  background: url("/images/bg0.png");
-
+  margin-top: 12%;
+  background: url(/images/bg0.png);
   background-size: cover;
 }
 
 #logo {
   position: absolute;
-  top: 44%;
+  top: 50%;
   left: 22%;
   transform: translate(-50%, -79%);
   width: 25%;
@@ -56,8 +54,28 @@ a {
   height: auto;
   left: 22%;
   /* background-color: black; */
-  background: rgb(13,12,48);
+  background: rgb(0, 0, 0);
   /* background: linear-gradient(123deg, rgba(13,12,48,1) 2%, rgba(100,78,184,1) 90%, rgba(100,78,184,1) 99%, rgba(100,78,184,1) 99%); */
 
   border: 5px solid #ffffff;
+}
+
+
+#login {
+  background-color: #B621F8; 
+  position: absolute;
+  left: 94%;
+  top: 5%;
+  transform: translate(-50%, -50%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-style:initial;
+  padding: 5px;
+  border: none;
+  color: white;
+  padding: 9px 30px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 50px;
 }

@@ -12,7 +12,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 
-const pages = ['Home', 'LeaderBoard'];
+const pages = ['Home', 'About', 'Contact'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const ResponsiveAppBar = (prps: any) => 
@@ -35,18 +35,15 @@ const ResponsiveAppBar = (prps: any) =>
     setAnchorElUser(null);
   };
 
+  const handleSignIn = () => {
+    console.log("sign in");
+  }
+  
+
   return (
-    <AppBar style={{ background: '#211c50'}}>
+    <AppBar style={{ background: 'transparent', boxShadow: 'none'}}>
       <Container maxWidth="xl">
         <Toolbar >
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
-          >
-            PONG
-          </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
@@ -84,14 +81,6 @@ const ResponsiveAppBar = (prps: any) =>
               ))}
             </Menu>
           </Box>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
-          >
-            PINGPONG
-          </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
@@ -137,6 +126,23 @@ const ResponsiveAppBar = (prps: any) =>
               ))}
             </Menu>
           </Box>
+          }
+
+          {// sign in/out
+            <Box sx={{ flexGrow: 0 }}>
+              <Button
+                variant="contained"
+                //purple color
+                style={{ backgroundColor: '#B621F8', color: 'white', display: 'block'}}
+                // radius
+                sx={{ borderRadius: '50px' }}
+                onClick={handleSignIn}
+                // sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                {prps.usecase ? 'Sign out' : 'Sign in'}
+              </Button>
+            </Box>
+
           }
         </Toolbar>
       </Container>
