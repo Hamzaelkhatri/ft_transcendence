@@ -1,24 +1,40 @@
 html,
 body {
-  background: #121526;
-  overflow: hidden;
+  background: rgb(13,12,48);
+  background: linear-gradient(123deg, rgba(13,12,48,1) 2%, rgba(100,78,184,1) 90%, rgba(100,78,184,1) 99%, rgba(100,78,184,1) 99%);
+    overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
+    /* background-image: url("../images/bg0.png") no-repeat top center; */
+
 }
 
 /* overlay of background image */
 #row {
-  /* full image */
-  height: 100vh;
-  width: 100%;
-  color: white;
+  height: 80vh;
+  width: 65%;
+  float: right;
   font: bold 6.5em/2em monospace;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(to top, #14213D, #14213d7e), url("../images/bg1.png") no-repeat top center;
+  margin-top: 11%;
+  /* background-image:  no-repeat top center; */
+  background: url("/images/bg0.png");
+
   background-size: cover;
+}
+
+#logo {
+  position: absolute;
+  top: 44%;
+  left: 20%;
+  transform: translate(-50%, -79%);
+  width: 25%;
+  height: 50%;
+  text-align: center;
+  /* font-size: 5em; */
+  /* color: white; */
+  /* text-shadow: 0 0 10px black;*/
+
 }
 
 a {

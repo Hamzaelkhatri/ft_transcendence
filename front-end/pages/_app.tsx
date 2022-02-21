@@ -8,6 +8,7 @@ import { GetServerSideProps } from 'next'
 import { useState } from 'react'
 import { useEffect } from 'react';
 import ResponsiveAppBar from "./Navbar"
+import {textcanvas} from './canvas_text'
 // type user =
 //   {
 //     id: number,
@@ -128,35 +129,41 @@ useEffect(() => {
 }, [])
 
 return (
-  <>
-    {!popup&&<ResponsiveAppBar data={reactData} usecase={singIn==="Sing Out"} />}
-    <div id="row">
-    <div>
-      {singIn==="Sing Out" &&
-        <div className="profile">
-          <h1 id="displayname">{reactData.displayname}</h1>
-          <img className="ImageProfile" id="img_profile" src={reactData.image_url} alt="" />
-          <div>
-            <p id="full_name">{reactData.usual_full_name}</p>
-          </div>
-          <button className="Login_btn" onClick={() => login("http://127.0.0.1:3000/auth/42/callback")} >{singIn} </button>
-        </div>
-      }
-    </div>
-    {
-      popup && <div className="popup">
-      <div className="popup-inner">
-        <div className="popup-inner-header">
-          <h1>Welcome</h1>
-        </div>
-        <div className="popup-inner-body">
-          <h1>waiting for redirection</h1>
-        </div>
-      </div>
-    </div>
-    }
-    </div>
-  </>
+  <textcanvas/>
+  // <>
+  //   {popup&&<ResponsiveAppBar data={reactData} usecase={singIn==="Sing Out"} />}
+  //   {
+  //     <div >
+  //       <img id="logo" src="/images/logo2.png" alt="logo" />
+  //     </div>
+  //   }
+  //   <div id="row">
+  //   <div>
+  //     {singIn==="Sing Out" &&
+  //       <div className="profile">
+  //         <h1 id="displayname">{reactData.displayname}</h1>
+  //         <img className="ImageProfile" id="img_profile" src={reactData.image_url} alt="" />
+  //         <div>
+  //           <p id="full_name">{reactData.usual_full_name}</p>
+  //         </div>
+  //         <button className="Login_btn" onClick={() => login("http://127.0.0.1:3000/login/42/return")} >{singIn} </button>
+  //       </div>
+  //     }
+  //   </div>
+  //   {
+  //     popup && <div className="popup">
+  //     <div className="popup-inner">
+  //       <div className="popup-inner-header">
+  //         <h1>Welcome</h1>
+  //       </div>
+  //       <div className="popup-inner-body">
+  //         <h1>waiting for redirection</h1>
+  //       </div>
+  //     </div>
+  //   </div>
+  //   }
+  //   </div>
+  // </>
 );
 }
 return(

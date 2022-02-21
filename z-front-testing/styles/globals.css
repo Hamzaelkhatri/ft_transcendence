@@ -25,7 +25,7 @@ button {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #9dd13b;
+  background-color: #c48ed1;
 }
 :root{
 --wrapperSize: 30vw;
@@ -85,9 +85,9 @@ button {
 }
 .wrapper .ping:nth-of-type(2){
   right: -20%;
-  background-color: #80ce41;
-  background-color: rgb(145, 231, 33);
-  background: linear-gradient(0deg, rgba(250,221,168,1) 0%, rgba(250,221,168,1) 14%, rgb(130, 228, 50) 15%, rgb(180, 224, 20) 100%);
+  background-color: #ab7be2;
+  background-color: rgb(202, 111, 230);
+  background: linear-gradient(0deg, rgba(250,221,168,1) 0%, rgba(250,221,168,1) 14%, rgb(187, 124, 216) 15%, rgb(159, 104, 195) 100%);
   box-shadow: .5vw 0 rgba(0,0,0,.3) inset;
   animation: pongAnim 3500ms linear infinite;
 }

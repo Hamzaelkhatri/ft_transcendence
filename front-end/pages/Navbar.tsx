@@ -36,7 +36,7 @@ const ResponsiveAppBar = (prps: any) =>
   };
 
   return (
-    <AppBar style={{ background: '#05032E' }}>
+    <AppBar style={{ background: '#211c50'}}>
       <Container maxWidth="xl">
         <Toolbar >
           <Typography
