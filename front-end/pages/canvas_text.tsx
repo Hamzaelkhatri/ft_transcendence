@@ -278,7 +278,8 @@ class Ball {
         return y_coordinate_of_ball_on_paddle;
     }
 
-    bar_collision(Bar: Player) {
+    bar_collision(Bar: Player) 
+    {
         if (this.x + this.dx < Bar.x + Bar.width && this.x + this.dx > Bar.x && this.y + this.dy > Bar.y && this.y + this.dy < Bar.y + Bar.height) {
             this.dx = -this.dx;
             this.dx += 0.5;
@@ -286,14 +287,14 @@ class Ball {
     }
 
     bot(p: Player) {
+        this.bar_collision(p);
         var y_coordinate_of_ball_on_paddle = this.calculate_coordinates_of_ball_on_paddle(p);
         if (y_coordinate_of_ball_on_paddle < this.y + this.radius) {
-            p.moveUp(6);
+            p.moveUp(7);
         }
         else if (y_coordinate_of_ball_on_paddle > this.y + this.radius) {
-            p.moveDown(6);
+            p.moveDown(7);
         }
-        this.bar_collision(p);
     }
 
     draw() {

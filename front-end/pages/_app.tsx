@@ -92,6 +92,7 @@ function MyApp(props: AppProps) {
     }
 
     const [popup, setPopup] = useState(false);
+    let img:number = 0;
 
     const interval = setInterval(() => {
 
@@ -108,8 +109,29 @@ function MyApp(props: AppProps) {
           setSingIn("Sign Out");
         }
       }
+      // if(img === 0){
+      //   window.document.getElementById("cover").src = "/images/logo.png";
+      //   img = 1;
+      // }
+      // else
+      // {
+      //   window.document.getElementById("cover").src = "/images/bg0.png";
+      //   img = 0;
+      // }
+
     }, 100);
 
+
+    setInterval(() => {
+      if (img === 0) {
+        window.document.getElementById("cover").src = "/images/cover-girl.png";
+        img = 1;
+      }
+      else {
+        window.document.getElementById("cover").src = "/images/cover-boy.png";
+        img = 0;
+      }
+    }, 2000);
     // if(!ISSERVER) {
     useEffect(() => {
 
