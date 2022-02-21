@@ -135,7 +135,7 @@ function MyApp(props: AppProps) {
             <img id="logo" src="/images/logo2.png" alt="logo" />
           </div>
         }
-        <div id="row">
+        <img id="cover" src="/images/bg0.png" alt="row" />
           <div>
             {singIn === "Sing Out" &&
               <div className="profile">
@@ -160,7 +160,6 @@ function MyApp(props: AppProps) {
               </div>
             </div>
           }
-        </div>
       </>
     );
   }

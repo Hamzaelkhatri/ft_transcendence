@@ -6,19 +6,22 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
+  
     /* background-image: url("../images/bg0.png") no-repeat top center; */
 
 }
 
 /* overlay of background image */
-#row {
-  height: 76vh;
-  width: 46%;
-  float: right;
-  font: bold 6.5em/2em monospace;
-  margin-top: 12%;
-  background: url(/images/bg0.png);
-  background-size: cover;
+#cover {
+  position: absolute;
+  top: 0;
+  left: 33%;
+  width: 78%;
+  display: block;
+  height: 100%;
+  float: left;
+  /* background: rgba(0, 0, 0, 0.5); */
+  z-index: -1;
 }
 
 #logo {
