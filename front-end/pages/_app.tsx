@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import ResponsiveAppBar from "./Navbar"
 import TextCanvas from './canvas_text'
 import { Button } from '@mui/material';
+import Typewriter from 'typewriter-effect';
 // type user =
 //   {
 //     id: number,
@@ -33,7 +34,28 @@ function MyApp(props: AppProps) {
   const [reactData, setReactData]: any = useState({});
   const [singIn, setSingIn] = useState("Sign In");
   const ISSERVER = typeof window === "undefined";
+  const [show_text, set_showText] = useState(true);
 
+
+  function wri_ter() {
+    return (
+      <div id="text">
+        <Typewriter
+          onInit={(typewriter) => {
+            typewriter.typeString('Welcome to Ping Pong Game !')
+              .pauseFor(2600)
+              // .deleteAll()
+              // typewriter.typeString('Click SIGN IN to start NOW !')
+              // .deleteAll()
+              .callFunction(() => {
+                // set_showText(false);
+              })
+              .start()
+          }}
+        />
+      </div>
+    );
+  }
   if (!ISSERVER) {
 
     const login = (link: string) => {
@@ -58,8 +80,7 @@ function MyApp(props: AppProps) {
 
     }
 
-    if (singIn === "Sign In" && router.query.token !== undefined) 
-    {
+    if (singIn === "Sign In" && router.query.token !== undefined) {
       const res = fetch("https://api.intra.42.fr/v2/me",
         {
           headers: {
@@ -92,7 +113,7 @@ function MyApp(props: AppProps) {
     }
 
     const [popup, setPopup] = useState(false);
-    let img:number = 0;
+    let img: number = 0;
 
     const interval = setInterval(() => {
 
@@ -148,40 +169,46 @@ function MyApp(props: AppProps) {
 
     }, [])
 
+
     return (
       <>
-        <TextCanvas />
-        {!popup && <ResponsiveAppBar data={reactData} usecase={singIn === "Sing Out"}  handleSignIn={login} />}
+        {/* <TextCanvas /> */}
+        {
+           wri_ter() 
+
+        }
+        {<TextCanvas />}
+        {!popup && <ResponsiveAppBar data={reactData} usecase={singIn === "Sing Out"} handleSignIn={login} />}
         {
           <div >
             <img id="logo" src="/images/logo2.png" alt="logo" />
           </div>
         }
-        <img id="cover" src="/images/bg0.png" alt="row" />
-          <div>
-            {singIn === "Sing Out" &&
-              <div className="profile">
-                <h1 id="displayname">{reactData.displayname}</h1>
-                <img className="ImageProfile" id="img_profile" src={reactData.image_url} alt="" />
-                <div>
-                  <p id="full_name">{reactData.usual_full_name}</p>
-                </div>
-                <button className="Login_btn" onClick={() => login("http://127.0.0.1:3000/login/42/return")} >{singIn} </button>
+        <img id="cover" src="/images/cover-girl.png" alt="row" />
+        <div>
+          {singIn === "Sing Out" &&
+            <div className="profile">
+              <h1 id="displayname">{reactData.displayname}</h1>
+              <img className="ImageProfile" id="img_profile" src={reactData.image_url} alt="" />
+              <div>
+                <p id="full_name">{reactData.usual_full_name}</p>
               </div>
-            }
-          </div>
-          {
-            popup && <div className="popup">
-              <div className="popup-inner">
-                <div className="popup-inner-header">
-                  <h1>Welcome</h1>
-                </div>
-                <div className="popup-inner-body">
-                  <h1>waiting for redirection</h1>
-                </div>
-              </div>
+              <button className="Login_btn" onClick={() => login("http://127.0.0.1:3000/login/42/return")} >{singIn} </button>
             </div>
           }
+        </div>
+        {
+          popup && <div className="popup">
+            <div className="popup-inner">
+              <div className="popup-inner-header">
+                <h1>Welcome</h1>
+              </div>
+              <div className="popup-inner-body">
+                <h1>waiting for redirection</h1>
+              </div>
+            </div>
+          </div>
+        }
       </>
     );
   }

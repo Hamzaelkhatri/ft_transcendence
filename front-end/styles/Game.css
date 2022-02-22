@@ -8,8 +8,8 @@ canvas {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    border: 5px solid #FFFF00;
-    background-color: black;
+    border: 2px solid #fafafa;
+    /* background-color: rgb(41 34 92 / 0%); */
     padding: 10px;
 
   }

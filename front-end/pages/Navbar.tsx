@@ -41,11 +41,11 @@ const ResponsiveAppBar = (prps: any) =>
   
 
   return (
-    <AppBar style={{ background: 'transparent', boxShadow: 'none'}}>
-      <Container maxWidth="xl">
-        <Toolbar >
+    <AppBar style={{ background: 'transparent', boxShadow: '' , width: '100%'}}>
+      <Container maxWidth="2xl">
+        <Toolbar style= {{width:'100%'}}>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' }}}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -81,7 +81,7 @@ const ResponsiveAppBar = (prps: any) =>
               ))}
             </Menu>
           </Box>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } ,right:'49%'}}>
             {pages.map((page) => (
               <Button
                 key={page}
@@ -93,7 +93,7 @@ const ResponsiveAppBar = (prps: any) =>
             ))}
           </Box>
 
-          {prps.usecase && <Box sx={{ flexGrow: 0 }}>
+          {prps.usecase && <Box sx={{ flexGrow: 0 ,right:'49%'}}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Typography variant="h6" noWrap component="div"
@@ -135,7 +135,7 @@ const ResponsiveAppBar = (prps: any) =>
                 //purple color
                 style={{ backgroundColor: '#B621F8', color: 'white', display: 'block'}}
                 // radius
-                sx={{ borderRadius: '50px' }}
+                sx={{ borderRadius: '60px' }}
                 onClick={handleSignIn}
                 // sx={{ my: 2, color: 'white', display: 'block' }}
               >
