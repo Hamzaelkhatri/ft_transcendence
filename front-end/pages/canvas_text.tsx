@@ -30,8 +30,7 @@ class Game {
         this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
         this.width = this.canvas.width;
         this.height = this.canvas.height;
-        //color: #0e101c;
-        this.color = "";
+        this.color = "black";
         this.Pause = false;
 
         this.canvas.style.backgroundColor = this.color;
