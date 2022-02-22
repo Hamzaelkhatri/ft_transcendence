@@ -51,10 +51,10 @@ a {
 
 #canvas
 {
-  top: 77%;
-  width: auto;
+  top: 80%;
+  width:650px;
   /* /* height: 200px; */
-  height: 194px;
+  height: 325px;
   left: 22%;
   /* background-color: black; */
   background-color: rgb(41 34 92 / 0%);
@@ -65,7 +65,7 @@ a {
 
 
 #login {
-  background-color: #B621F8; 
+  background-color: #B621F8;
   position: absolute;
   left: 94%;
   top: 5%;
@@ -93,6 +93,6 @@ a {
   width: 25%;
   height: auto;
   text-align: center;
-  font-size: 1.5em;
+  font-size: 3em;
   color: white;
 }

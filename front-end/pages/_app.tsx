@@ -11,21 +11,6 @@ import ResponsiveAppBar from "./Navbar"
 import TextCanvas from './canvas_text'
 import { Button } from '@mui/material';
 import Typewriter from 'typewriter-effect';
-// type user =
-//   {
-//     id: number,
-//     email: string// helkhatr@student.1337.ma,
-//     login: string// helkhatr,
-//     first_name: string// Hamza,
-//     last_name: string// Elkhatri,
-//     usual_full_name: string// Hamza Elkhatri,
-//     usual_first_name: any,
-//     url: string,
-//     phone: string,
-//     displayname: string
-//     image_url: string,
-//   }
-
 
 
 function MyApp(props: AppProps) {
@@ -44,11 +29,7 @@ function MyApp(props: AppProps) {
           onInit={(typewriter) => {
             typewriter.typeString('Welcome to Ping Pong Game !')
               .pauseFor(2600)
-              // .deleteAll()
-              // typewriter.typeString('Click SIGN IN to start NOW !')
-              // .deleteAll()
               .callFunction(() => {
-                // set_showText(false);
               })
               .start()
           }}
@@ -75,8 +56,11 @@ function MyApp(props: AppProps) {
           displayname: "",
           image_url: ""
         });
-        setSingIn("Sign In");
+        // setSingIn("Sign In");
       }
+      // else {
+      //   setSingIn("Sign Out");
+      // }
 
     }
 
@@ -102,14 +86,6 @@ function MyApp(props: AppProps) {
           setSingIn("Sign Out")
           window.close();
         })
-
-      // if (!ISSERVER && reactData.email !== undefined) 
-      // {
-      //   setSingIn("Sign Out")
-      //   localStorage.setItem("email", reactData.email)
-      //   localStorage.setItem("usual_full_name", reactData.usual_full_name)
-      //   localStorage.setItem("image_url", reactData.image_url)
-      // }
     }
 
     const [popup, setPopup] = useState(false);
@@ -130,15 +106,6 @@ function MyApp(props: AppProps) {
           setSingIn("Sign Out");
         }
       }
-      // if(img === 0){
-      //   window.document.getElementById("cover").src = "/images/logo.png";
-      //   img = 1;
-      // }
-      // else
-      // {
-      //   window.document.getElementById("cover").src = "/images/bg0.png";
-      //   img = 0;
-      // }
 
     }, 100);
 
@@ -153,7 +120,6 @@ function MyApp(props: AppProps) {
         img = 0;
       }
     }, 2000);
-    // if(!ISSERVER) {
     useEffect(() => {
 
       setReactData(
@@ -178,7 +144,7 @@ function MyApp(props: AppProps) {
 
         }
         {<TextCanvas />}
-        {!popup && <ResponsiveAppBar data={reactData} usecase={singIn === "Sing Out"} handleSignIn={login} />}
+        {!popup && <ResponsiveAppBar data={reactData} usecase={singIn} login={login} />}
         {
           <div >
             <img id="logo" src="/images/logo2.png" alt="logo" />
@@ -186,15 +152,16 @@ function MyApp(props: AppProps) {
         }
         <img id="cover" src="/images/cover-girl.png" alt="row" />
         <div>
-          {singIn === "Sing Out" &&
-            <div className="profile">
-              <h1 id="displayname">{reactData.displayname}</h1>
-              <img className="ImageProfile" id="img_profile" src={reactData.image_url} alt="" />
-              <div>
-                <p id="full_name">{reactData.usual_full_name}</p>
-              </div>
-              <button className="Login_btn" onClick={() => login("http://127.0.0.1:3000/login/42/return")} >{singIn} </button>
-            </div>
+          {
+          // singIn === "Sing Out" &&
+          //   <div className="profile">
+          //     <h1 id="displayname">{reactData.displayname}</h1>
+          //     <img className="ImageProfile" id="img_profile" src={reactData.image_url} alt="" />
+          //     <div>
+          //       <p id="full_name">{reactData.usual_full_name}</p>
+          //     </div>
+          //     <button className="Login_btn" onClick={() => login("http://127.0.0.1:3000/login/42/return")} >{singIn} </button>
+          //   </div>
           }
         </div>
         {
