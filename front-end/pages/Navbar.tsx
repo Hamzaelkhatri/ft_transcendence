@@ -15,10 +15,12 @@ import MenuItem from '@mui/material/MenuItem';
 const pages = ['Home', 'About', 'Contact'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-const ResponsiveAppBar = (prps: any) => 
-{
+const ResponsiveAppBar = (prps: any) => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const [SignIn, setSignIn] = React.useState(prps.data.image_url === null ? "Sign In" : "Sign Out");
+  
+  // console.log.lo
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -36,14 +38,19 @@ const ResponsiveAppBar = (prps: any) =>
   };
 
   const handleSignIn = () => {
-    console.log("sign in");
+    prps.login("http://127.0.0.1:3000/login/42/return");
+     // if(singIn === "Sign In")
+    //  setSignIn("Sign Out")
+     // else
+     // setSignIn("Sign In")
   }
-  
+
+  console.log(prps.usecase)
 
   return (
-    <AppBar style={{ background: 'transparent', boxShadow: 'none'}}>
-      <Container maxWidth="xl">
-        <Toolbar >
+    <AppBar style={{ background: 'transparent', boxShadow: '', width: '100%' }}>
+      <Container maxWidth="2xl">
+        <Toolbar style={{ width: '100%' }}>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
@@ -58,20 +65,22 @@ const ResponsiveAppBar = (prps: any) =>
             </IconButton>
             <Menu
               id="menu-appbar"
+              style={{ width: '100%', left: '10px' }}
               anchorEl={anchorElNav}
               anchorOrigin={{
                 vertical: 'bottom',
-                horizontal: 'left',
+                horizontal: 'center',
               }}
               keepMounted
               transformOrigin={{
                 vertical: 'top',
-                horizontal: 'left',
+                horizontal: 'center'
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
                 display: { xs: 'block', md: 'none' },
+
               }}
             >
               {pages.map((page) => (
@@ -81,7 +90,7 @@ const ResponsiveAppBar = (prps: any) =>
               ))}
             </Menu>
           </Box>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, right: '49%' }}>
             {pages.map((page) => (
               <Button
                 key={page}
@@ -93,7 +102,7 @@ const ResponsiveAppBar = (prps: any) =>
             ))}
           </Box>
 
-          {prps.usecase && <Box sx={{ flexGrow: 0 }}>
+          {prps.data.image_url !== null && <Box sx={{ flexGrow: 0, right: '49%' }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Typography variant="h6" noWrap component="div"
@@ -121,25 +130,23 @@ const ResponsiveAppBar = (prps: any) =>
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                  <Typography textAlign="center" style={{ color: 'black' }}>{setting}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
           }
 
-          {// sign in/out
+          {
+            prps.data.image_url === null &&
             <Box sx={{ flexGrow: 0 }}>
               <Button
                 variant="contained"
-                //purple color
-                style={{ backgroundColor: '#B621F8', color: 'white', display: 'block'}}
-                // radius
-                sx={{ borderRadius: '50px' }}
+                style={{ backgroundColor: '#B621F8', color: 'white', display: 'block' }}
+                sx={{ borderRadius: '60px' }}
                 onClick={handleSignIn}
-                // sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                {prps.usecase ? 'Sign out' : 'Sign in'}
+                Sign In
               </Button>
             </Box>
 

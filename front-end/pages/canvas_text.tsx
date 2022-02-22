@@ -30,8 +30,7 @@ class Game {
         this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
         this.width = this.canvas.width;
         this.height = this.canvas.height;
-        //color: #0e101c;
-        this.color = "#0e101c";
+        this.color = "black";
         this.Pause = false;
 
         this.canvas.style.backgroundColor = this.color;
@@ -40,9 +39,9 @@ class Game {
         this.Left_UpPressed = false;
         this.Left_DownPressed = false;
         // this.Bar = new Player(this.width / 2 - 5, this.height / 2 - 80, 10, 80, "white", this.ctx, this.canvas, 0, "paddle.png");
-        this.Player1 = new Player(10, (this.canvas.height - 80) / 2, 10, 80, "white", this.ctx, this.canvas, 0, "paddle.png");
-        this.Player2 = new Player(this.canvas.width - 20, (this.canvas.height - 80) / 2, 10, 80, "white", this.ctx, this.canvas, 0, "paddle.png");
-        this.ball = new Ball(this.canvas.width / 2, this.canvas.height / 2, 8, "white", this.ctx, this.canvas, this.Player1, this.Player2);
+        this.Player1 = new Player(10, (this.canvas.height - 20) / 2, 3, 30, "white", this.ctx, this.canvas, 0, "paddle.png");
+        this.Player2 = new Player(this.canvas.width - 20, (this.canvas.height - 20) / 2, 3, 30, "white", this.ctx, this.canvas, 0, "paddle.png");
+        this.ball = new Ball(this.canvas.width / 2, this.canvas.height / 2, 3, "white", this.ctx, this.canvas, this.Player1, this.Player2);
         document.addEventListener("keydown", this.keyDownHandler.bind(this), false);
         document.addEventListener("keyup", this.keyUpHandler.bind(this), false);
         this.start();
@@ -107,20 +106,20 @@ class Game {
         // console.log(window.sessionStorage.getItem("email"));
         // alert(this.P1 +" "+ this.P2);
         if (this.Left_DownPressed && this.P1 === window.sessionStorage.getItem("email")) {
-            this.Player1.moveUp(4);
+            this.Player1.moveUp(1);
             // this.socket.emit('DataToServer', this.ToJson());
         }
         else if (this.Left_UpPressed && this.P1 === window.sessionStorage.getItem("email")) {
-            this.Player1.moveDown(4);
+            this.Player1.moveDown(1);
             // this.socket.emit('DataToServer', this.ToJson());
         }
 
         if (this.Right_DownPressed && this.P2 === window.sessionStorage.getItem("email")) {
-            this.Player2.moveUp(4);
+            this.Player2.moveUp(1);
             // this.socket.emit('DataToServer', this.ToJson());
         }
         else if (this.Right_UpPressed && this.P2 === window.sessionStorage.getItem("email")) {
-            this.Player2.moveDown(4);
+            this.Player2.moveDown(1);
             // this.socket.emit('DataToServer', this.ToJson());
         }
     }
@@ -216,8 +215,8 @@ class Ball {
         this.ctx = ctx;;
         this.ballradius = radius;
         this.canvas = Canvas;
-        this.dx = -3;
-        this.dy = 3;
+        this.dx = -1;
+        this.dy = 1;
         this.Player1 = Player1;
         this.Player2 = Player2;
         this.draw();
@@ -290,10 +289,10 @@ class Ball {
         this.bar_collision(p);
         var y_coordinate_of_ball_on_paddle = this.calculate_coordinates_of_ball_on_paddle(p);
         if (y_coordinate_of_ball_on_paddle < this.y + this.radius) {
-            p.moveUp(7);
+            p.moveUp(3);
         }
         else if (y_coordinate_of_ball_on_paddle > this.y + this.radius) {
-            p.moveDown(7);
+            p.moveDown(3);
         }
     }
 
@@ -416,7 +415,7 @@ const TextCanvas = (prps: any) => {
         var game = new Game(canvasRef.current as any);
         game.start();
     }, []);
-    return <canvas id="canvas" ref={canvasRef} width={800} height={400} />
+    return <canvas id="canvas" ref={canvasRef} width={400} height='auto' />
 }
 
 export default TextCanvas

@@ -51,21 +51,21 @@ a {
 
 #canvas
 {
-  top: 75%;
-  width: 400px;
+  top: 80%;
+  width:auto;
   /* /* height: 200px; */
   height: auto;
   left: 22%;
   /* background-color: black; */
-  background: rgb(0, 0, 0);
+  background-color: rgb(41 34 92 / 0%);
   /* background: linear-gradient(123deg, rgba(13,12,48,1) 2%, rgba(100,78,184,1) 90%, rgba(100,78,184,1) 99%, rgba(100,78,184,1) 99%); */
 
-  border: 5px solid #ffffff;
+  /* border: 5px solid #ffffff; */
 }
 
 
 #login {
-  background-color: #B621F8; 
+  background-color: #B621F8;
   position: absolute;
   left: 94%;
   top: 5%;
@@ -81,4 +81,18 @@ a {
   display: inline-block;
   font-size: 16px;
   border-radius: 50px;
+}
+
+
+#text
+{
+  position: absolute;
+  top: 60%;
+  left: 22%;
+  transform: translate(-50%, -50%);
+  width: 25%;
+  height: auto;
+  text-align: center;
+  font-size: 2em;
+  color: white;
 }
