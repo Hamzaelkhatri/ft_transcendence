@@ -39,8 +39,8 @@ class Game {
         this.Left_UpPressed = false;
         this.Left_DownPressed = false;
         // this.Bar = new Player(this.width / 2 - 5, this.height / 2 - 80, 10, 80, "white", this.ctx, this.canvas, 0, "paddle.png");
-        this.Player1 = new Player(10, (this.canvas.height - 20) / 2, 5, 23, "white", this.ctx, this.canvas, 0, "paddle.png");
-        this.Player2 = new Player(this.canvas.width - 20, (this.canvas.height - 20) / 2, 5, 23, "white", this.ctx, this.canvas, 0, "paddle.png");
+        this.Player1 = new Player(10, (this.canvas.height - 20) / 2, 3, 30, "white", this.ctx, this.canvas, 0, "paddle.png");
+        this.Player2 = new Player(this.canvas.width - 20, (this.canvas.height - 20) / 2, 3, 30, "white", this.ctx, this.canvas, 0, "paddle.png");
         this.ball = new Ball(this.canvas.width / 2, this.canvas.height / 2, 3, "white", this.ctx, this.canvas, this.Player1, this.Player2);
         document.addEventListener("keydown", this.keyDownHandler.bind(this), false);
         document.addEventListener("keyup", this.keyUpHandler.bind(this), false);
