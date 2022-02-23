@@ -39,8 +39,6 @@ const ResponsiveAppBar = (prps: any) => {
 
   const handleSignIn = () => {
     prps.login("http://127.0.0.1:3000/login/42/return");
-     // if(singIn === "Sign In")
-    //  setSignIn("Sign Out")
      // else
      // setSignIn("Sign In")
   }
