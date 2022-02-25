@@ -6,7 +6,8 @@
   "password": "mysecretpassword",
   "database": "my_database",
   "entities": [
-    "**/*.entity{.ts,.js}"
+    null,
+    null
   ],
   "migrationsTableName": "migration",
   "migrations": [
