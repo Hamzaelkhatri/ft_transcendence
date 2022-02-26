@@ -24,5 +24,6 @@ import { User } from './user/user.entity';
   ), UserModule],
   controllers: [AppController],
   providers: [AppService,AuthModuleOptions,AppGateway],
+  exports: [AppGateway],
 })
 export class AppModule {}

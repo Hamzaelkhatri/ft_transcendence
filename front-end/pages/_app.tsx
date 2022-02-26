@@ -141,7 +141,6 @@ function MyApp(props: AppProps) {
         {/* <TextCanvas /> */}
         {
            wri_ter() 
-
         }
         {<TextCanvas />}
         {!popup && <ResponsiveAppBar data={reactData} usecase={singIn} login={login} />}
