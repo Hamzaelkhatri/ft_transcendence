@@ -6,7 +6,7 @@ import { AuthModuleOptions } from '@nestjs/passport';
 
 
 @Module({
-  imports: [ PassportModule,AuthModuleOptions],
+  imports: [PassportModule,AuthModuleOptions],
   providers: [AuthService, LocalStrategy],
   exports : [AuthService],
 })
