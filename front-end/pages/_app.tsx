@@ -84,6 +84,15 @@ function MyApp(props: AppProps) {
           localStorage.setItem("usual_full_name", data.usual_full_name)
           localStorage.setItem("image_url", data.image_url)
           setSingIn("Sign Out")
+          // fetch("http://localhost:3000/user", 
+          // {
+          //   method: "POST",
+          //   headers: {
+          //     "Content-Type": "application/json"
+          //   },
+          //   body: JSON.stringify({
+          //     "emai"
+          // })
           window.close();
         })
     }

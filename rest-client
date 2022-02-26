@@ -2,7 +2,6 @@
 
 POST http://localhost:3000/user
 Content-Type: application/json
-
 {
     "name": "hamza",
     "token": "12345",
