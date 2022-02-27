@@ -9,9 +9,7 @@ import { useState } from 'react'
 import { useEffect } from 'react';
 import ResponsiveAppBar from "./Navbar"
 import TextCanvas from './canvas_text'
-import { Button } from '@mui/material';
-import Typewriter from 'typewriter-effect';
-
+import HomePage from './home'
 
 function MyApp(props: AppProps) {
   let popups;
@@ -19,24 +17,9 @@ function MyApp(props: AppProps) {
   const [reactData, setReactData]: any = useState({});
   const [singIn, setSingIn] = useState("Sign In");
   const ISSERVER = typeof window === "undefined";
-  const [show_text, set_showText] = useState(true);
 
 
-  function wri_ter() {
-    return (
-      <div id="text">
-        <Typewriter
-          onInit={(typewriter) => {
-            typewriter.typeString('Welcome to Ping Pong Game !')
-              .pauseFor(2600)
-              .callFunction(() => {
-              })
-              .start()
-          }}
-        />
-      </div>
-    );
-  }
+  
   if (!ISSERVER) {
 
     const login = (link: string) => {
@@ -47,8 +30,6 @@ function MyApp(props: AppProps) {
         localStorage.clear();
         router.push("/");
       }
-
-      // singIn === "Sign In" ? setSingIn("Sign Out") : setSingIn("Sign In");
       if (singIn === "Sign Out") {
         setReactData({
           //clear local storage
@@ -56,12 +37,7 @@ function MyApp(props: AppProps) {
           displayname: "",
           image_url: ""
         });
-        // setSingIn("Sign In");
       }
-      // else {
-      //   setSingIn("Sign Out");
-      // }
-
     }
 
     if (singIn === "Sign In" && router.query.token !== undefined) {
@@ -98,7 +74,6 @@ function MyApp(props: AppProps) {
     }
 
     const [popup, setPopup] = useState(false);
-    let img: number = 0;
 
     const interval = setInterval(() => {
 
@@ -117,18 +92,7 @@ function MyApp(props: AppProps) {
       }
 
     }, 100);
-
-
-    setInterval(() => {
-      if (img === 0) {
-        window.document.getElementById("cover").src = "/images/cover-girl.png";
-        img = 1;
-      }
-      else {
-        window.document.getElementById("cover").src = "/images/cover-boy.png";
-        img = 0;
-      }
-    }, 2000);
+    
     useEffect(() => {
 
       setReactData(
@@ -147,31 +111,12 @@ function MyApp(props: AppProps) {
 
     return (
       <>
-        {/* <TextCanvas /> */}
-        {
-           wri_ter() 
-        }
-        {<TextCanvas />}
-        {!popup && <ResponsiveAppBar data={reactData} usecase={singIn} login={login} />}
-        {
-          <div >
-            <img id="logo" src="/images/logo2.png" alt="logo" />
-          </div>
-        }
-        <img id="cover" src="/images/cover-girl.png" alt="row" />
-        <div>
-          {
-          // singIn === "Sing Out" &&
-          //   <div className="profile">
-          //     <h1 id="displayname">{reactData.displayname}</h1>
-          //     <img className="ImageProfile" id="img_profile" src={reactData.image_url} alt="" />
-          //     <div>
-          //       <p id="full_name">{reactData.usual_full_name}</p>
-          //     </div>
-          //     <button className="Login_btn" onClick={() => login("http://127.0.0.1:3000/login/42/return")} >{singIn} </button>
-          //   </div>
+        {singIn === "Sign In" &&
+          <HomePage/>
           }
-        </div>
+     
+        {!popup && <ResponsiveAppBar data={reactData} usecase={singIn} login={login} />}
+   
         {
           popup && <div className="popup">
             <div className="popup-inner">
