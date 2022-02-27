@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import ResponsiveAppBar from "./Navbar"
 import TextCanvas from './canvas_text'
 import HomePage from './home'
+import Next_page from './First_pages'
 
 function MyApp(props: AppProps) {
   let popups;
@@ -60,15 +61,6 @@ function MyApp(props: AppProps) {
           localStorage.setItem("usual_full_name", data.usual_full_name)
           localStorage.setItem("image_url", data.image_url)
           setSingIn("Sign Out")
-          // fetch("http://localhost:3000/user", 
-          // {
-          //   method: "POST",
-          //   headers: {
-          //     "Content-Type": "application/json"
-          //   },
-          //   body: JSON.stringify({
-          //     "emai"
-          // })
           window.close();
         })
     }
@@ -116,25 +108,13 @@ function MyApp(props: AppProps) {
           }
      
         {!popup && <ResponsiveAppBar data={reactData} usecase={singIn} login={login} />}
-   
-        {
-          popup && <div className="popup">
-            <div className="popup-inner">
-              <div className="popup-inner-header">
-                <h1>Welcome</h1>
-              </div>
-              <div className="popup-inner-body">
-                <h1>waiting for redirection</h1>
-              </div>
-            </div>
-          </div>
-        }
+        {singIn === "Sign Out" && <Next_page/> }
       </>
     );
   }
   return (
     <>
-      <TextCanvas />
+      {/* <HomePage/> */}
     </>);
 }
 

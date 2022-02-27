@@ -1,212 +1,381 @@
 import React, { useRef, useEffect } from 'react'
 
-export class api {
+
+class _Game {
+    canvas: HTMLCanvasElement;
+    ctx: CanvasRenderingContext2D;
+    width: number;
+    height: number;
+    color: any;
+    Player1: Player;
+    Player2: Player;
+    ball: Ball;
+    Right_UpPressed: boolean;
+    Right_DownPressed: boolean;
+    Left_UpPressed: boolean;
+    Left_DownPressed: boolean;
+    Pause: boolean;
+    Bar: Player;
+    count: number = 0;
+    dist: number = 150;
+    P1: string = "";
+    P2: string = "";
+    // rec:Player;
+    // live:ball;
+
+    constructor(canvas: HTMLCanvasElement) {
+
+        this.canvas = canvas;
+        this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
+        this.width = this.canvas.width;
+        this.height = this.canvas.height;
+        this.color = "#ff9100";
+        this.Pause = false;
+
+        this.canvas.style.backgroundColor = this.color;
+        this.Right_UpPressed = false;
+        this.Right_DownPressed = false;
+        this.Left_UpPressed = false;
+        this.Left_DownPressed = false;
+        this.Bar = new Player(this.canvas.width / 2 ,0 , 3,this.canvas.height, "white", this.ctx, this.canvas, 0, "paddle.png");
+        this.Player1 = new Player(10, (this.canvas.height - 20) / 2, 5, 90, "white", this.ctx, this.canvas, 0, "paddle.png");
+        this.Player2 = new Player(this.canvas.width - 20, (this.canvas.height ) / 2, 5, 90, "white", this.ctx, this.canvas, 0, "paddle.png");
+        this.ball = new Ball(this.canvas.width / 2, this.canvas.height / 2, 7, "white", this.ctx, this.canvas, this.Player1, this.Player2);
+        document.addEventListener("keydown", this.keyDownHandler.bind(this), false);
+        document.addEventListener("keyup", this.keyUpHandler.bind(this), false);
+
+        this.start();
+    }
+
+    ToJson() {
+        return {
+            "Player1": this.Player1.ToJson(),
+            "Player2": this.Player2.ToJson(),
+            "Ball": this.ball.ToJson(),
+            "Pause": this.Pause,
+        }
+    }
+
+
+    show_score() {
+        this.ctx.font = "16px Arial";
+        this.ctx.fillStyle = "white";
+        this.ctx.fillText(this.Player1.Score.toString(), this.canvas.width / 2 - 50, 20);
+        this.ctx.fillText(this.Player2.Score.toString(), this.canvas.width / 2 + 50, 20);
+    }
+
+
+    keyDownHandler(e: KeyboardEvent) {
+        if ((e.key === "Up" || e.key === "ArrowUp")) {
+            this.Right_UpPressed = true;
+        }
+        else if (e.key === "Down" || e.key === "ArrowDown") {
+            this.Right_DownPressed = true;
+        }
+
+        if (e.key === "w" || e.key === "KeyW") {
+            this.Left_UpPressed = true;
+        }
+        else if (e.key === "s" || e.key === "KeyS") {
+            this.Left_DownPressed = true;
+        }
+        if ((e.key === "p" || e.key === "KeyP" || e.key === "P" || e.key === " " || e.key === "Space") && this.P1 === window.sessionStorage.getItem("email")) {
+            this.Pause = !this.Pause;
+        }
+    }
+
+    keyUpHandler(e: KeyboardEvent) {
+        if (e.key === "Up" || e.key === "ArrowUp") {
+            this.Right_UpPressed = false;
+        }
+        else if (e.key === "Down" || e.key === "ArrowDown") {
+            this.Right_DownPressed = false;
+        }
+        if (e.key === "w" || e.key === "KeyW") {
+            this.Left_UpPressed = false;
+        }
+        else if (e.key === "s" || e.key === "KeyS") {
+            this.Left_DownPressed = false;
+        }
+
+    }
+
+    ControleGame() {
+        if (this.Left_DownPressed && this.P1 === window.sessionStorage.getItem("email")) {
+            this.Player1.moveUp(15);
+   
+        }
+        else if (this.Left_UpPressed && this.P1 === window.sessionStorage.getItem("email")) {
+            this.Player1.moveDown(15);
+        }
+
+        if (this.Right_DownPressed && this.P2 === window.sessionStorage.getItem("email")) {
+            this.Player2.moveUp(15);
+        }
+        else if (this.Right_UpPressed && this.P2 === window.sessionStorage.getItem("email")) {
+            this.Player2.moveDown(15);
+        }
+    }
+
+    start() {
+        this.update();
+    }
+
+    update() {
+        this.clear();
+        this.draw();
+        this.ball.bot(this.Player1);
+        this.ball.bot(this.Player2);
+        this.Bar.draw();
+        this.ball.move();
+        this.ball.collision(this.Player1, this.Player2);
+        requestAnimationFrame(() => this.update());
+
+    }
+
+    clear() {
+        this.ctx.clearRect(0, 0, this.width, this.height);
+    }
+
+
+
+    draw() {
+        this.Player1.draw();
+        this.Player2.draw();
+        this.ball.draw();
+        this.ctx.beginPath();
+        this.ctx.fillStyle = "white";
+        this.ctx.arc( 60, 9, 7, 0, Math.PI * 2, true);
+        this.ctx.fill();
+        this.ctx.closePath();
+        this.ctx.font = "16px Arial";
+        this.ctx.fillStyle = "white";
+        this.ctx.fillText("LIVE", 10, 15);
+    }
+
+}
+
+class Ball {
+    x: number;
+    y: number;
+    radius: number;
+    color: string;
+    speed: number;
+    ctx: CanvasRenderingContext2D;
+    dx: number;
+    dy: number;
+    ballradius: number;
+    canvas: HTMLCanvasElement;
+    Player1: Player;
+    Player2: Player;
+
+    constructor(x: number, y: number, radius: number, color: string, ctx: CanvasRenderingContext2D, Canvas: HTMLCanvasElement, Player1: Player, Player2: Player) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = color;
+        this.speed = 1;
+        this.ctx = ctx;;
+        this.ballradius = radius;
+        this.canvas = Canvas;
+        this.dx = -1.8;
+        this.dy = 1.8;
+        this.Player1 = Player1;
+        this.Player2 = Player2;
+        this.draw();
+    }
+
+
+    goal_sound() {
+    }
+
+    move() {
+        this.x += this.dx;
+        this.y += this.dy;
+        if (this.y + this.dy < 0) {// if ball hits the bottom
+            this.dy = -this.dy;
+        }
+        if (this.y + this.dy > this.canvas.height) {// if ball hits the top
+            this.dy = -this.dy;
+        }
+        if (this.y + this.dy > this.canvas.height || this.y + this.dy < 0) { // if ball hits the top or bottom
+            this.dy = -this.dy;
+        }
+
+        if (this.x + this.dx < 0) {
+            this.x = this.canvas.width / 2;
+            this.y = this.canvas.height / 2;
+            this.dx = -this.dx;
+            this.Player2.score++;
+            this.goal_sound();
+        }
+        if (this.x + this.dx > this.canvas.width)// if ball hits the right
+        {
+            this.x = this.canvas.width / 2;
+            this.y = this.canvas.height / 2;
+            this.dx = -this.dx;
+            this.Player1.score++;
+        }
+
+    }
+
+    collision(Player1: Player, Player2: Player) {
+        if (this.x + this.dx < this.Player1.x + this.Player1.width && this.x + this.dx > this.Player1.x && this.y + this.dy > this.Player1.y && this.y + this.dy < this.Player1.y + this.Player1.height) {
+            this.dx = -this.dx;
+            this.speed += 1.5;
+        }
+        if (this.x + this.dx < this.Player2.x + this.Player2.width && this.x + this.dx > this.Player2.x && this.y + this.dy > this.Player2.y && this.y + this.dy < this.Player2.y + this.Player2.height) {
+            this.dx = -this.dx;
+            this.speed += 1.5;
+        }
+    }
+
+
+    calculate_coordinates_of_ball_on_paddle(Player: Player) {
+        var paddle_center = Player.y + Player.height / 2;
+        var ball_center = this.y + this.radius;
+        var distance = paddle_center - ball_center;
+        var y_coordinate_of_ball_on_paddle = distance / Player.height * this.canvas.height;
+        return y_coordinate_of_ball_on_paddle;
+    }
+
+    bar_collision(Bar: Player) 
+    {
+        if (this.x + this.dx < Bar.x + Bar.width && this.x + this.dx > Bar.x && this.y + this.dy > Bar.y && this.y + this.dy < Bar.y + Bar.height) {
+            this.dx = -this.dx;
+            this.dx += 1.5;
+        }
+    }
+
+    bot(p: Player) {
+        this.bar_collision(p);
+        var y_coordinate_of_ball_on_paddle = this.calculate_coordinates_of_ball_on_paddle(p);
+        if (y_coordinate_of_ball_on_paddle < this.y + this.radius) {
+            p.moveUp(4);
+        }
+        else if (y_coordinate_of_ball_on_paddle > this.y + this.radius) {
+            p.moveDown(4);
+        }
+    }
+
+    draw() {
+        this.ctx.beginPath();
+        this.ctx.fillStyle = this.color;
+        this.ctx.arc(this.x, this.y, this.ballradius, 0, Math.PI * 2, true);
+        this.ctx.fill();
+        this.ctx.closePath();
+    }
+
+    ToJson() {
+        return {
+            "x": this.x,
+            "y": this.y,
+            "dx": this.dx,
+            "dy": this.dy,
+            "speed": this.speed,
+            "radius": this.radius,
+            "color": this.color,
+            "ballradius": this.ballradius,
+        }
+    }
+}
+
+class Player {
     x: number;
     y: number;
     width: number;
     height: number;
     color: string;
+    ctx: CanvasRenderingContext2D;
+    Canvas: HTMLCanvasElement;
+    score: number;
+    avatar: string;
+    sound: any;
 
-    constructor(
-        x: number,
-        y: number,
-        width: number,
-        height: number,
-        color: string
-    ) {
+
+    constructor(x: number, y: number, width: number, height: number, color: string, ctx: CanvasRenderingContext2D, Canvas: HTMLCanvasElement, score: number, avatar: string) {
         this.x = x;
         this.y = y;
+        this.color = color;
         this.width = width;
         this.height = height;
-        this.color = color;
-    }
-
-
-
-}
-
-
-
-export class ball {
-    x: number;
-    y: number;
-    radius: number;
-    speed: number;
-    velocityX: number;
-    velocityY: number;
-    color: string;
-    ctx: CanvasRenderingContext2D;
-
-    constructor(
-        ctx: CanvasRenderingContext2D, 
-        x: number,
-        y: number,
-        radius: number,
-        speed: number,
-        velocityX: number,
-        velocityY: number,
-
-        color: string
-    ) {
-        this.x = x;
-        this.y = y;
-        this.radius = radius;
-        this.speed = speed;
-        this.velocityX  = velocityX;
-        this.velocityY  = velocityY;
+        this.Canvas = Canvas;
         this.ctx = ctx;
-        this.color = color;
+        this.score = score;
+        this.avatar = avatar;
+        this.draw();
     }
 
+    paddle_sound() {
 
-    drawBall() {
-        this.ctx.beginPath();
-        this.ctx.beginPath();
-        this.ctx.arc(this.x,this.y , this.radius, 0, Math.PI * 2);
-        this.ctx.fillStyle = this.color;
-        this.ctx.fill();
-        this.ctx.closePath();
-      }
-
-
-}
-
-export class padles {
-    paddle_x: number;
-    paddle_y: number;
-    paddle_width: number;
-    paddle_height: number;
-    paddle_speed: number;
-    ctx: CanvasRenderingContext2D;
-    color: string;
-    constructor(
-        ctx: CanvasRenderingContext2D, 
-        paddle_x: number,
-        paddle_y: number,
-        paddle_width: number,
-        paddle_height: number,
-        paddle_speed: number,
-        color: string
-    ) {
-        this.ctx = ctx;
-        this.paddle_x = paddle_x;
-        this.paddle_y = paddle_y;
-        this.paddle_width = paddle_width;
-        this.paddle_height = paddle_height;
-        this.paddle_speed = paddle_speed;
-        this.color = color;
     }
 
-    draw_padles() {
-        this.ctx.beginPath();
-        this.ctx.rect(
-            this.paddle_x,
-            this.paddle_y,
-            this.paddle_width,
-            this.paddle_height
-        );
-        this.ctx.fillStyle = this.color;
-        this.ctx.fill();
-        this.ctx.closePath();
+    get Height() {
+        return this.height;
     }
-}
 
-
-export class page_one 
-{
-    canvas: HTMLCanvasElement;
-    ctx: any;
-    _ball: ball;
-    paddle_l :padles;
-    paddle_r : padles;
-    constructor(canvas: HTMLCanvasElement, date: any)
-    {
-        this.canvas = canvas;
-        this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
-        this._ball =  new ball(this.ctx,this.canvas.width/2,this.canvas.height/2,10,2,-2,2,"white")
-        this.paddle_l = new padles(this.ctx,0, this.canvas.height / 2, 10, 100, 1,"white");
-        this.paddle_r = new padles(this.ctx,this.canvas.width, this.canvas.height / 2, 10, 100, 1,"white");
+    get Width() {
+        return this.width;
     }
-    collisionDetection() {
-        if (this._ball.y + this._ball.velocityY < this._ball.radius) {
-            this._ball.velocityY *= -1;
-        } else if (
-            this._ball.y + this._ball.velocityY >
-            this.canvas.height - this._ball.radius
-        ) {
-            //ball hits the bottom
-            this._ball.velocityY *= -1;
-        }
 
-        // ball hits rihgt paddle
-        if (this._ball.x + this._ball.velocityX + 5 > this.canvas.width - this._ball.radius - this.paddle_r.paddle_width) {
-            if (
-                this._ball.y > this.paddle_r.paddle_y &&
-                this._ball.y < this.paddle_r.paddle_y + this.paddle_r.paddle_height + 8
-            ) {
-                this._ball.velocityX = -this._ball.velocityX;
-            } else if (this._ball.x + this._ball.velocityX < this.canvas.width - this._ball.radius) {
-                // this.paddle_r._score(1);
-                this._ball.x = this.canvas.width / 2;
-                this._ball.y = this.canvas.height - this.paddle_r.paddle_height;
-                this._ball.velocityX = 2;
-                this._ball.velocityY = -2;
-                this.paddle_l.paddle_y = ((this.canvas.height - this.paddle_l.paddle_height) / 2);
-                this.paddle_r.paddle_y = ((this.canvas.height - this.paddle_r.paddle_height) / 2);
-            }
-        }
-        if (
-            this._ball.x + this._ball.velocityX - 5 <
-            this._ball.radius + this.paddle_l.paddle_width
-        ) {
-            if (
-                this._ball.y > this.paddle_l.paddle_y &&
-                this._ball.y < this.paddle_l.paddle_y + this.paddle_l.paddle_height + 8
-            ) {
-                this._ball.velocityX = -this._ball.velocityX;
-            } else if (this._ball.x + this._ball.velocityX < 10 - this._ball.radius) {
-                // this.paddle_l._score(1);
-                this._ball.x = this.canvas.width / 2;
-                this._ball.y = this.canvas.height - this.paddle_r.paddle_height;
-                this._ball.velocityY = -2;
-                this._ball.velocityX = -2;
-                this.paddle_l.paddle_y = ((this.canvas.height - this.paddle_l.paddle_height) / 2);
-                this.paddle_r.paddle_y = ((this.canvas.height - this.paddle_r.paddle_height) / 2);
-            }
+    get X() {
+        return this.x;
+    }
+
+    get Y() {
+        return this.y;
+    }
+
+    get Score() {
+        return this.score;
+    }
+
+    set Score(value: any) {
+        this.score += value;
+    }
+
+    ToJson() {
+        return {
+            x: this.x,
+            y: this.y,
+            width: this.width,
+            height: this.height,
+            color: this.color,
+            score: this.score,
+            avatar: this.avatar
         }
     }
 
 
     draw() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.paddle_l.draw_padles();
-        this.paddle_r.draw_padles();
-        this._ball.drawBall();
-        // this.center_rec.draw_padle();
+        this.ctx.beginPath();
+        this.ctx.fillStyle = this.color;
+        this.ctx.fillRect(this.x, this.y, this.width, this.height);
+        this.ctx.closePath();
     }
 
+    moveUp(direction: number) {
+        this.y += direction;
+        if (this.Canvas.height < this.y + this.height) {
+            this.y = this.Canvas.height - this.height;
+        }
+    }
 
-    start() {
-        // this.socket.emit('UserToServer',"init"); // push a mesage to the array
-        // console.log(this.email1 + " " + this.email2);
-        // if (this.email1 === window.sessionStorage.getItem("myEmail")) {
-        //     this.keyhook();
-        // }
-        this.draw();
-        this._ball.x += this._ball.velocityX;
-        this._ball.y += this._ball.velocityY;
-        this.collisionDetection();
-        requestAnimationFrame(() => this.start());
-
+    moveDown(direction: number) {
+        this.y -= direction;
+        if (this.y < 0) {
+            this.y = 0;
+        }
     }
 }
 
-const _Canvas = (props: any) => {
+const _Canvas = (prps: any) => {
     const canvasRef = useRef(null)
     useEffect(() => {
-        new page_one(canvasRef.current as any, props.data);
+        var _game = new _Game(canvasRef.current as any);
+        _game.start();
     }, []);
-    return (<canvas ref={canvasRef}  {...props} width={window.innerWidth} height={window.innerHeight} />);
-};
+    return <canvas id="_canvas" ref={canvasRef} width="1000px" height="500px"/>
+}
 
 export default _Canvas;

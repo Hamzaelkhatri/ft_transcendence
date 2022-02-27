@@ -12,7 +12,7 @@ const HomePage = (prps: any)  =>
           <div id="text">
             <Typewriter
               onInit={(typewriter) => {
-                typewriter.typeString('Welcome to Ping Pong Game !')
+                typewriter.typeString('Welcome to Online Ping Pong Game !')
                   .pauseFor(2600)
                   .callFunction(() => {
                   })
@@ -42,7 +42,7 @@ const HomePage = (prps: any)  =>
            {
            wri_ter() 
         }
-        {<TextCanvas />}
+        {/* {<TextCanvas />} */}
             <div >
               <img id="logo" src="/images/logo2.png" alt="logo" />
             </div>
