@@ -1,4 +1,4 @@
-import { Controller, Get, Module } from '@nestjs/common';
+import { Controller, Get, Module, Param, Req } from '@nestjs/common';
 import {Crud, CrudController} from '@nestjsx/crud'; // <-- Import the CrudController
 import { User } from './user.entity';
 import UserService from './user.service';
@@ -37,5 +37,16 @@ export class UserController implements CrudController<User>
     {
         return this.base.createOneBase(request, data);
     }
-    
+
+    //send data to the database using params from the url
+    @Get("me")
+    getMyData(@Req() req)
+    {
+        // find the user by token
+        // return the user
+        //content-type: application/json
+
+        // console.log(this.service.find());
+        return this.service.getUserByToken(req.body.token);
+    }
 }
