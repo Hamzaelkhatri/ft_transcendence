@@ -34,4 +34,3 @@ export class User
     is_verified: boolean
     
 }
- 

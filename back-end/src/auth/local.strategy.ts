@@ -5,6 +5,8 @@ import { AuthService } from './auth.service';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
+
+  // authServices:AuthService;
   constructor(private authService: AuthService)
   {
     super({
@@ -16,8 +18,15 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
   async validate (accessToken: string, refreshToken: string, profile: any) 
   {
-    console.log(accessToken);
-      return accessToken;
+    const user = await this.authService.validateUser(
+      {
+        accessToken: accessToken,
+        profile: profile,
+      }
+    );
+   
+    console.log(user);
+    return accessToken;
   }
 }
   
