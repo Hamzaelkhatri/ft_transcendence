@@ -15,7 +15,7 @@ export class AuthService {
 
     return await this.userService.createOne(null,
       {
-        name: "Zainab  Dnaya",
+        name: "Hamza Elkhatri",
         "email": token.profile.emails[0].value,
         "token": token.accessToken,
         "created_at": new Date(),

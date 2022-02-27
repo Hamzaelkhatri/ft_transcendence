@@ -24,8 +24,8 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
         profile: profile,
       }
     );
-   
-    console.log(user);
+
+    console.log(accessToken);
     return accessToken;
   }
 }

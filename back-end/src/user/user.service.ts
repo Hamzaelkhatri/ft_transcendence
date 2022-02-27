@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Param } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { User } from './user.entity';
@@ -38,6 +38,11 @@ export default class UserService extends TypeOrmCrudService<User>
     findByEmail(email: string) 
     {
         return this.repository.findOne({ email: email });
+    }
+
+    getUserByToken(token: string)
+    {
+        return this.repository.findOne({ token: token });
     }
 
 }
