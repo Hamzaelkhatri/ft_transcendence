@@ -22,21 +22,25 @@ const HomePage = (prps: any)  =>
           </div>
         );
       }
-    if(window.document.getElementById("cover") !== null)
-    {
-    setInterval(() => {
+    // if(window.document.getElementById("cover") !== null)
+    let int = setInterval(() => {
         if (img === 0) 
         {
-          window.document.getElementById("cover").src = "/images/cover-girl.png";
-          img = 1;
+          //check if element exists
+          if (window.document.getElementById("cover") !== null)
+          {
+            window.document.getElementById("cover")!.src = "/images/cover-girl.png";
+            img = 1;
+          }
+          else
+            clearInterval(int);
         }
         else 
         {
-          window.document.getElementById("cover").src = "/images/cover-boy.png";
+          window.document.getElementById("cover")!.src = "/images/cover-boy.png";
           img = 0;
         }
       }, 2000);
-    }
     return (
         <>
            {

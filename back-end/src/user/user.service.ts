@@ -48,17 +48,17 @@ export default class UserService extends TypeOrmCrudService<User>
         return await this.repository.save(user);
     }
 
-    findByEmail(email: string) 
+    findByEmail(email: string) : Promise<User>
     {
         return this.repository.findOne({ email: email });
     }
 
-    getUserByToken(token: string)
+    async getUserByToken(token: string) : Promise<User>
     {
-        return this.repository.findOne({ token: token });
+        return await this.repository.findOne({ token: token });
     }
 
-    fetchAllUsers()
+    fetchAllUsers() : Promise<User[]>
     {
         return this.repository.find();
     }
