@@ -42,25 +42,30 @@ function MyApp(props: AppProps) {
     }
 
     if (singIn === "Sign In" && router.query.token !== undefined) {
-      const res = fetch("https://api.intra.42.fr/v2/me",
+      const res = fetch("http://localhost:3000/user/me",
         {
+          method: "POST",
           headers: {
-            'Authorization': 'Bearer ' + router.query.token,
             'Content-Type': 'application/json'
-          }
+          },
+          
+          //send token
+          body: JSON.stringify({ token: router.query.token })
         })
         .then(res => res.json())
         .then(data => {
+          // console.log(data);
           setReactData(
             {
               email: data.email,
-              usual_full_name: data.usual_full_name,
-              image_url: data.image_url
+              usual_full_name: data.name,
+              image_url: data.image
             })
           localStorage.setItem("email", data.email)
-          localStorage.setItem("usual_full_name", data.usual_full_name)
-          localStorage.setItem("image_url", data.image_url)
+          localStorage.setItem("usual_full_name", data.name)
+          localStorage.setItem("image_url", data.image)
           setSingIn("Sign Out")
+          
           window.close();
         })
     }
@@ -99,7 +104,6 @@ function MyApp(props: AppProps) {
       }
 
     }, [])
-
 
     return (
       <>
