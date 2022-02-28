@@ -29,7 +29,7 @@ class _Game {
         this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
         this.width = this.canvas.width;
         this.height = this.canvas.height;
-        this.color = "#ff9100";
+        this.color = "#A188A6";
         this.Pause = false;
 
         this.canvas.style.backgroundColor = this.color;
@@ -37,10 +37,10 @@ class _Game {
         this.Right_DownPressed = false;
         this.Left_UpPressed = false;
         this.Left_DownPressed = false;
-        this.Bar = new Player(this.canvas.width / 2 ,0 , 3,this.canvas.height, "white", this.ctx, this.canvas, 0, "paddle.png");
-        this.Player1 = new Player(10, (this.canvas.height - 20) / 2, 5, 90, "white", this.ctx, this.canvas, 0, "paddle.png");
-        this.Player2 = new Player(this.canvas.width - 20, (this.canvas.height ) / 2, 5, 90, "white", this.ctx, this.canvas, 0, "paddle.png");
-        this.ball = new Ball(this.canvas.width / 2, this.canvas.height / 2, 7, "white", this.ctx, this.canvas, this.Player1, this.Player2);
+        this.Bar = new Player(this.canvas.width / 2 ,0 , 3,this.canvas.height, "black", this.ctx, this.canvas, 0, "paddle.png");
+        this.Player1 = new Player(10, (this.canvas.height - 20) / 2, 5, 90, "black", this.ctx, this.canvas, 0, "paddle.png");
+        this.Player2 = new Player(this.canvas.width - 20, (this.canvas.height ) / 2, 5, 90, "black", this.ctx, this.canvas, 0, "paddle.png");
+        this.ball = new Ball(this.canvas.width / 2, this.canvas.height / 2, 7, "black", this.ctx, this.canvas, this.Player1, this.Player2);
         document.addEventListener("keydown", this.keyDownHandler.bind(this), false);
         document.addEventListener("keyup", this.keyUpHandler.bind(this), false);
 
@@ -144,12 +144,12 @@ class _Game {
         this.Player2.draw();
         this.ball.draw();
         this.ctx.beginPath();
-        this.ctx.fillStyle = "white";
+        this.ctx.fillStyle = "red";
         this.ctx.arc( 60, 9, 7, 0, Math.PI * 2, true);
         this.ctx.fill();
         this.ctx.closePath();
         this.ctx.font = "16px Arial";
-        this.ctx.fillStyle = "white";
+        this.ctx.fillStyle = "red";
         this.ctx.fillText("LIVE", 10, 15);
     }
 
@@ -222,11 +222,11 @@ class Ball {
     collision(Player1: Player, Player2: Player) {
         if (this.x + this.dx < this.Player1.x + this.Player1.width && this.x + this.dx > this.Player1.x && this.y + this.dy > this.Player1.y && this.y + this.dy < this.Player1.y + this.Player1.height) {
             this.dx = -this.dx;
-            this.speed += 1.5;
+            this.speed += 1;
         }
         if (this.x + this.dx < this.Player2.x + this.Player2.width && this.x + this.dx > this.Player2.x && this.y + this.dy > this.Player2.y && this.y + this.dy < this.Player2.y + this.Player2.height) {
             this.dx = -this.dx;
-            this.speed += 1.5;
+            this.speed += 1;
         }
     }
 
@@ -243,7 +243,7 @@ class Ball {
     {
         if (this.x + this.dx < Bar.x + Bar.width && this.x + this.dx > Bar.x && this.y + this.dy > Bar.y && this.y + this.dy < Bar.y + Bar.height) {
             this.dx = -this.dx;
-            this.dx += 1.5;
+            this.dx += 1;
         }
     }
 

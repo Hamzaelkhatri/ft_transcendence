@@ -38,7 +38,7 @@ const ResponsiveAppBar = (prps: any) => {
   };
 
   const handleSignIn = () => {
-    prps.login("http://127.0.0.1:3000/auth/42/callback");
+    prps.login("http://127.0.0.1:3000/login/42/return");
      // else
      // setSignIn("Sign In")
   }
@@ -128,7 +128,7 @@ const ResponsiveAppBar = (prps: any) => {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center" style={{ color: 'black' }}>{setting}</Typography>
+                  <Typography textAlign="center" style={{ color: 'white' }}>{setting}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -140,7 +140,7 @@ const ResponsiveAppBar = (prps: any) => {
             <Box sx={{ flexGrow: 0 }}>
               <Button
                 variant="contained"
-                style={{ backgroundColor: '#B621F8', color: 'white', display: 'block' }}
+                style={{ backgroundColor: '#f03232', color: 'white', display: 'block' }}
                 sx={{ borderRadius: '60px' }}
                 onClick={handleSignIn}
               >
