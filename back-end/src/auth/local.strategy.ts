@@ -1,6 +1,6 @@
 import { Strategy } from 'passport-42';
 import { PassportSerializer, PassportStrategy } from '@nestjs/passport';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Req, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
 @Injectable()
@@ -16,16 +16,15 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate (accessToken: string, refreshToken: string, profile: any) 
+  async validate (accessToken: string, refreshToken: string, profile: any,@Req() req)
   {
     const user = await this.authService.validateUser(
       {
         accessToken: accessToken,
         profile: profile,
-      }
+      },req
     );
 
-    console.log(accessToken);
     return accessToken;
   }
 }

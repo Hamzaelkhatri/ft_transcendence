@@ -16,6 +16,7 @@ export default class UserService extends TypeOrmCrudService<User>
 
     async createOne(request: CrudRequest, data: Partial<User>) 
     {
+
         let res = await  this.findByEmail(data.email).then(user => 
             {
                 if (user)
@@ -29,12 +30,11 @@ export default class UserService extends TypeOrmCrudService<User>
             }
         );
 
-        // console.log(res);
         if (res)
         {
             return res;
         }
-        
+
         const user = new User();
         user.name = data.name;
         user.email = data.email;
@@ -45,7 +45,8 @@ export default class UserService extends TypeOrmCrudService<User>
         user.updated_at = data.updated_at;
         user.deleted_at = data.deleted_at;
         user.is_verified = data.is_verified;
-        return await this.repository.save(user);
+        this.repository.save(user);
+        return user
     }
 
     findByEmail(email: string) : Promise<User>

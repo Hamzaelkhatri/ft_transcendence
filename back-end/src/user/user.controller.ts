@@ -57,15 +57,10 @@ export class UserController implements CrudController<User>
         return user;
     }
 
+
     @Get("all")
     async getAllUsers(@Res() res)
     {
-        // res.send(
-        //     {
-        //         "Content-Type": "application/json",
-        //         "Access-Control-Allow-Origin": "*",        
-        //     }
-        // )
         return await this.service.fetchAllUsers();
     }
 }
