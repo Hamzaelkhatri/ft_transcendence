@@ -16,11 +16,24 @@ export default class UserService extends TypeOrmCrudService<User>
 
     async createOne(request: CrudRequest, data: Partial<User>) 
     {
-        this.findByEmail(data.email).then(user => {
-            if (user) {
-                throw new Error('User already exists');
+        let res = await  this.findByEmail(data.email).then(user => 
+            {
+                if (user)
+                {
+                    return user;
+                }
+                else
+                {
+                    return null;
+                }
             }
-        });
+        );
+
+        // console.log(res);
+        if (res)
+        {
+            return res;
+        }
         
         const user = new User();
         user.name = data.name;
@@ -43,6 +56,11 @@ export default class UserService extends TypeOrmCrudService<User>
     getUserByToken(token: string)
     {
         return this.repository.findOne({ token: token });
+    }
+
+    fetchAllUsers()
+    {
+        return this.repository.find();
     }
 
 }

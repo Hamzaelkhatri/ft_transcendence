@@ -1,4 +1,4 @@
-import { Column, Entity,PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity,ManyToOne,PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('user')
 export class User 
@@ -34,3 +34,4 @@ export class User
     is_verified: boolean
     
 }
+
