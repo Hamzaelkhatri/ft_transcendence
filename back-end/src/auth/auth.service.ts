@@ -12,6 +12,7 @@ export class AuthService {
 
   async validateUser(token: any): Promise<User> {
 
+    const user = await this.userService.findOne(token.profile.id);
 
     return await this.userService.createOne(null,
       {

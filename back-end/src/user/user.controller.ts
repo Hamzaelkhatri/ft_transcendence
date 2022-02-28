@@ -42,11 +42,12 @@ export class UserController implements CrudController<User>
     @Get("me")
     getMyData(@Req() req)
     {
-        // find the user by token
-        // return the user
-        //content-type: application/json
-
-        // console.log(this.service.find());
         return this.service.getUserByToken(req.body.token);
+    }
+
+    @Get("all")
+    getAllUsers()
+    {
+        return this.service.fetchAllUsers();
     }
 }
