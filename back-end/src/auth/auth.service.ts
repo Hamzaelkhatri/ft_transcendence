@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Req } from '@nestjs/common';
 import UserService from '../user/user.service'
 import { CrudRequest } from '@nestjsx/crud';
 import { User } from 'src/user/user.entity';
@@ -10,11 +10,16 @@ export class AuthService {
     this.userService = userService;
   }
 
-  async validateUser(token: any): Promise<User> {
+  async validateUser(token: any,@Req() req): Promise<User> {
 
-    const user = await this.userService.findOne(token.profile.id);
+    // const user = await this.userService.getUserByToken(token.accessToken).then(res =>{ return (res)})
+    // if(!user)
+    // {
+    //   // this.userService.createOne()
+   
+    // }
 
-    return await this.userService.createOne(null,
+    return await this.userService.createOne(req,
       {
         name: "Hamza Elkhatri",
         "email": token.profile.emails[0].value,
