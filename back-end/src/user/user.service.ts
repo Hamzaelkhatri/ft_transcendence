@@ -64,5 +64,19 @@ export default class UserService extends TypeOrmCrudService<User>
         return this.repository.find();
     }
 
+    getIdbyName(name: string) : number
+    {
+        return this.repository.findOne({ name: name }).then(user =>
+            {
+                return user.id;
+            }
+        );
+    }
+
+    async getNextUser() : Promise<User>
+    {
+        return await this.repository.findOne({ is_online: true });
+    }
+
 }
 

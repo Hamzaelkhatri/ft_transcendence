@@ -1,4 +1,4 @@
-import { Column, Entity,ManyToOne,PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity,ManyToOne,PrimaryGeneratedColumn,JoinColumn } from "typeorm";
 import { User } from "src/user/user.entity";
 
 @Entity('game')
@@ -17,11 +17,20 @@ export class Game
     updated_at: Date;
 
     //foreign key for user
-    @ManyToOne(type => User, user => user.id)
-    user1: User;
+    @ManyToOne(type => User, user => user)
+    @JoinColumn({ name: 'user1' })
+    public user1: User;
 
-    @ManyToOne(type => User, user => user.id)
+    @Column({default:0})
+    public userId1: number;
+
+
+    @ManyToOne(type => User, user => user)
+    @JoinColumn({ name: "user2" })
     user2: User;
+
+    @Column({default:0})
+    public userId2: number;
 
     @Column({default:new Date()})
     TimeBegin: Date;
@@ -32,7 +41,7 @@ export class Game
     @Column({default:0})
     winner: number;
 
-    @Column()
+    @Column({default:false})
     is_finished: boolean;
 
     @Column({default:false})

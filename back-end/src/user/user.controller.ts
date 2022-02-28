@@ -45,13 +45,9 @@ export class UserController implements CrudController<User>
         let user = await this.service.getUserByToken(req.body.token).then(user =>
         {
             if (user)
-            {
                 return user;
-            }
             else
-            {
                 return null;
-            }
         });
         res.json(user);
         return user;
@@ -62,5 +58,11 @@ export class UserController implements CrudController<User>
     async getAllUsers(@Res() res)
     {
         return await this.service.fetchAllUsers();
+    }
+
+    @Get("/next/")
+    async getNextUser()
+    {
+        return await this.service.getNextUser();
     }
 }
