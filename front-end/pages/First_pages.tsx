@@ -7,10 +7,10 @@ import _Canvas from "./page1";
 import "antd/dist/antd.css";
 // import "./index.css";
 import { Card, Avatar } from "antd";
-import { ArrowLeftOutlined, PlayCircleOutlined, ArrowRightOutlined} from "@ant-design/icons";
+import { ArrowLeftOutlined, PlayCircleOutlined, ArrowRightOutlined, TrophyOutlined, DislikeOutlined, FlagOutlined, LikeOutlined, FieldNumberOutlined, EnvironmentOutlined, InfoCircleFilled } from "@ant-design/icons";
 import { height } from "@mui/system";
-
-
+import { Axios } from "axios";
+import Canvas from "./Game";
 const { Meta } = Card;
 
 
@@ -19,58 +19,103 @@ const Next_page = () => {
 
     return (
         <>
-            <_Canvas />
+            <Card
 
-            <div id="User_card">
-                {/* ReactDOM.render( */}
-                <Card
-                    style={{padding:"40px", width:400, left: "70%", top: "28%" , position: "absolute", zIndex: "1",  borderRadius: "10px 100px / 70px" , background: "rgba(0,0,0,0.5)"}}
-                    cover={
-                        <img
-                            alt="example"
-                            src="./images/logo.png"
-                            width='10%'
-                            height="10%"
-                        />
+                style={{ padding: "1%", width: "20%", height: "auto", left: "10%", top: "27%", position: "absolute", zIndex: "2", borderRadius: "3%", background: "white" }}
+                cover={
+                    <img
+                        alt="example"
+                        src="https://joeschmoe.io/api/v1/random"
+                        style={{ width: "100%", height: "auto", borderRadius: "1%" }}
+                    />
+                }
+
+                actions={[
+                    <ArrowLeftOutlined key="previous" onClick={() => {
+                        // Axios.get("http://10.12.3.14:3000/user/").then((res) => {
+                        // }
                     }
-                    actions={[
-                        // <EditOutlined key="edit" />,
-                        <ArrowLeftOutlined key="previous" />,
-                        <PlayCircleOutlined key="play" />,
-                        // <EllipsisOutlined key="ellipsis" />,
-                        <ArrowRightOutlined key="next" />
-                    ]}
-                >
-                    <Meta
-                        avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
-                        title="Card title"
-                        description="This is the description"
-                    />
-                </Card>
-                {/* document.getElementById("container") */}
-            </div>
-            {/* <Card sx={{ maxWidth: 310 }}>
-                    <CardMedia
-                        component="img"
-                        height="100"
-                        image="/images/profile.png"
-                        alt="green iguana"
-                    />
-                    <CardContent>
-                        <Typography gutterBottom variant="h5" component="div">
-                            Lizard
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                            Lizards are a widespread group of squamate reptiles, with over 6,000
-                            species, ranging across all continents except Antarctica
-                        </Typography>
-                    </CardContent>
-                    <CardActions>
-                        <Button size="small">Share</Button>
-                        <Button size="small">Learn More</Button>
-                    </CardActions>
-                </Card>
-          */}
+                    }
+                    />,
+                    <PlayCircleOutlined key="play" onClick={() => {
+                        // {<Canvas />}
+                    }} />,
+                    <ArrowRightOutlined key="next" onClick={() => {
+
+                    }} />
+
+                ]}
+
+            >
+                <Meta
+                    title="User Name"
+                    description={
+                        <ul>
+                            <i id="icons">
+                                <li>
+                                    <InfoCircleFilled /> : Online
+
+                                </li>
+                                <li>
+                                    <EnvironmentOutlined /> :  Morocco
+                                </li>
+                                <li>
+                                    <FieldNumberOutlined /> : Level 2
+                                </li>
+                                <li>
+                                    <LikeOutlined /> : wins 10 Matchs
+                                </li>
+
+                                <li>
+                                    <DislikeOutlined /> : lost 5 Matchs
+                                </li>
+                                <li>
+                                    <FlagOutlined /> : Quit 1 Match
+                                </li>
+{/* 
+                                <li>
+                                    <TrophyOutlined /> :Rank 12 world wide
+                                </li> */}
+
+                            </i>
+
+
+                        </ul>
+
+                        //add text here
+
+                    }
+
+
+
+
+                />
+
+
+            </Card>
+            <Card
+                style={{ padding: "4%", width: 1500, height: 1000, left: "40%", top: "20%", position: "absolute", zIndex: "1", borderRadius: "3%", background: "white" }}
+            // cover={
+            //     <img
+            //         alt="example"
+            //         // src="./images/logo.png"
+            //     />
+            // }
+            // actions={[
+            //     // <EditOutlined key="edit" />,
+            //     <ArrowLeftOutlined key="previous" />,
+            //     <PlayCircleOutlined key="play" />,
+            //     // <EllipsisOutlined key="ellipsis" />,
+            //     <ArrowRightOutlined key="next" />
+            // ]}
+            >
+                <Meta
+                    avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
+                    title="Card title"
+                    description="This is the description"
+
+                />
+            </Card>
         </>
     )
 }
