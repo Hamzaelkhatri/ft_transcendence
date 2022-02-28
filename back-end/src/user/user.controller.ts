@@ -38,7 +38,6 @@ export class UserController implements CrudController<User>
         return this.base.createOneBase(request, data);
     }
 
-    //send data to the database using params from the url
     @Post("me")
     async getMyData(@Req() req,@Res() res)
     {
@@ -52,7 +51,6 @@ export class UserController implements CrudController<User>
         res.json(user);
         return user;
     }
-
 
     @Get("all")
     async getAllUsers(@Res() res)
