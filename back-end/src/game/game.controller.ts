@@ -1,4 +1,4 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post, Req } from '@nestjs/common';
 import { Crud, CrudController } from '@nestjsx/crud';
 import { Game } from './game.entity';
 import {GameService} from './game.service';
@@ -45,13 +45,13 @@ export class GameController implements CrudController<Game> {
     {
         // return all information about all games
         return await this.service.findAll();
-        return await this.service.findAll();
     }
 
     @Post('/invite')
-    async Invite(username1:string, username2:string)
+    async Invite(@Req() req)
     {
-        return await this.service.Invite(username1, username2);
+        console.log(req.body);
+        return await this.service.Invite(req.body.username1, req.body.username2);
     }
 
 }

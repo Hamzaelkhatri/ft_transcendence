@@ -68,6 +68,7 @@ export default class UserService extends TypeOrmCrudService<User>
     {
         return this.repository.findOne({ name: name }).then(user =>
             {
+                console.log(user);
                 return user.id;
             }
         );
