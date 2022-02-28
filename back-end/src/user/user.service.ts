@@ -78,5 +78,23 @@ export default class UserService extends TypeOrmCrudService<User>
         return await this.repository.findOne({ is_online: true });
     }
 
+    async getRandomUser() : Promise<User>
+    {
+        let ids:number[] = await this.repository.find({ is_online: true }).then(users =>
+            {
+                let ids = [];
+                users.forEach(user =>
+                    {
+                        ids.push(user.id);
+                    }
+                );
+                return ids;
+            }
+        );
+
+        let random = Math.floor(Math.random() * ids.length);
+        console.log(random);
+        return await this.repository.findOne({ id: ids[random] });
+    }
 }
 

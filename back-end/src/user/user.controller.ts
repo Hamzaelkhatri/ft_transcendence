@@ -65,4 +65,10 @@ export class UserController implements CrudController<User>
     {
         return await this.service.getNextUser();
     }
+
+    @Get("/random/")
+    async getRandomUser()
+    {
+        return await this.service.getRandomUser();
+    }
 }
