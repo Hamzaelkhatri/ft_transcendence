@@ -26,7 +26,7 @@ export class GameService extends TypeOrmCrudService<Game>
     {
         let game = new Game();
         game.userId1 = await this.userservice.getIdbyName(username1);
-        game.userId2 =await this.userservice.getIdbyName(username2);
+        game.userId2 = await this.userservice.getIdbyName(username2);
         game.created_at = new Date();
         game.updated_at = new Date();
         game.is_accepted_by_user1 = true;
@@ -35,5 +35,10 @@ export class GameService extends TypeOrmCrudService<Game>
         game.is_started = false;
         game.price = 0;
         return await this.repository.save(game);
+    }
+
+    async is_invited(id:number) : Promise<Game>
+    {
+        return await this.repository.findOne({ where: { userId2: id,is_finished:false,is_started:false } });
     }
 }

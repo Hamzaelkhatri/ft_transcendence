@@ -62,6 +62,21 @@ const Next_page = () => {
     //             setOneTime(1);
     //         }
     //     });
+
+    setInterval(() => {
+        {
+            axios.get("http://localhost:3000/game/is_invited/" + localStorage.getItem("id"))
+            .then(res => {
+                if(res.data.length !== 0)
+                {
+                    console.log(res.data);
+                    // send alert to user
+                    // alert("You have been invited to a game");
+                }
+            })
+                    // setData(res.data);
+        }
+    }, 1000);
     axios.get("http://localhost:3000/user/random")
         .then(res => {
             if (oneTime === 0) {
@@ -89,7 +104,18 @@ const Next_page = () => {
                     }
                     />,
                     <PlayCircleOutlined key="play" onClick={() => {
-                        {<Canvas />}
+                        // {<Canvas />}
+                        axios.post("http://localhost:3000/game/invite",
+                            {
+                                "username1": localStorage.getItem("usual_full_name"),
+                                "username2": data['name']
+                            })
+                            .then(res => {
+                                if (oneTime === 0) {
+                                    setData(res.data);
+                                    setOneTime(1);
+                                }
+                            });
                     }} />,
                     <ArrowRightOutlined key="next" onClick={() => {
                         setOneTime(0);
@@ -141,7 +167,7 @@ const Next_page = () => {
 
             </Card>
             <Card
-                style={{ padding: "4%", width: 1500, height: 1000, left: "40%", top: "20%", position: "absolute", zIndex: "1", borderRadius: "3%", background: "white" }}
+                style={{ padding: "4%", width: '50%', height:"68%", left: "40%", top: "27%", position: "absolute", zIndex: "1", borderRadius: "3%", background: "white" }}
             // cover={
             //     <img
             //         alt="example"

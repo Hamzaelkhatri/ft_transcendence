@@ -58,17 +58,19 @@ function MyApp(props: AppProps) {
         })
         .then(res => res.json())
         .then(data => {
-          // console.log(data);
+          console.log(data);
           setReactData(
             {
               email: data.email,
               usual_full_name: data.name,
-              image_url: data.image
+              image_url: data.image,
+              id:data.id
             })
           if (!ISSERVER) {
             localStorage.setItem("email", data.email)
             localStorage.setItem("usual_full_name", data.name)
             localStorage.setItem("image_url", data.image)
+            localStorage.setItem("id", data.id)
             window.close();
           }
           setSingIn("Sign Out")
