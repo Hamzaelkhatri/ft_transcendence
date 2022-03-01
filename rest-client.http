@@ -6,7 +6,7 @@ POST http://localhost:3000/user/me
 Content-Type: application/json
 
 {
-    "token":"448022e392ccddce7f5090df071789fd0472dc4b42b876b525d82f3e02ef175b"
+    "token":"917c97636990e3ccd32c762edcf5718f64d30d2065743c207a6b6350f2bece91"
 }
 
 
@@ -17,7 +17,7 @@ Content-Type: application/json
 
 {
     "name": "Hamza Elkhatri",
-    "email": "helkhatr@student.1337.ma",
+    "email": "hello4@student.1337.ma",
     "token": "448022e392ccddce7f5090df071789fd0472dc4b42b876b525d82f3e02ef175b",
     "created_at": "2022-02-27T20:48:07.487Z",
     "updated_at": "2022-02-27T20:48:07.487Z",
@@ -26,3 +26,19 @@ Content-Type: application/json
     "image": "https://cdn.intra.42.fr/users/helkhatr.jpg",
     "is_verified": true
 }
+
+
+###
+GET http://localhost:3000/user/random
+
+###
+POST  http://localhost:3000/game/invite
+Content-Type: application/json
+
+{
+    "username1": "zdnaya",
+    "username2": "helkhatr"
+}
+
+###
+GET http://localhost:3000/game

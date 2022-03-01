@@ -33,8 +33,7 @@ export class UserController implements CrudController<User>
         return this.base.getOneBase(request);
     }
 
-    createOne(request: any, data:{id:number,name:string,email:string,token:string,created_at:Date,updated_at:Date,deleted_at:Date,is_online:boolean,image:string,is_verified:boolean}) 
-    {
+    createOne(request: any, data:{id:number,name:string,email:string,token:string,created_at:Date,updated_at:Date,deleted_at:Date,is_online:boolean,image:string,is_verified:boolean,country:string,wins:number,loses:number,quit:number,level:number}) { 
         return this.base.createOneBase(request, data);
     }
 

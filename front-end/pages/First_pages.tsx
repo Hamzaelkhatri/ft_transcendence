@@ -9,38 +9,90 @@ import "antd/dist/antd.css";
 import { Card, Avatar } from "antd";
 import { ArrowLeftOutlined, PlayCircleOutlined, ArrowRightOutlined, TrophyOutlined, DislikeOutlined, FlagOutlined, LikeOutlined, FieldNumberOutlined, EnvironmentOutlined, InfoCircleFilled } from "@ant-design/icons";
 import { height } from "@mui/system";
-import { Axios } from "axios";
 import Canvas from "./Game";
+import axios from "axios";
 const { Meta } = Card;
 
 
 const Next_page = () => {
     // console.log("Next page");
 
+    /*
+    {
+"id": 5,
+"name": "Hamza Elkhatri",
+"email": "hello3@student.1337.ma",
+"token": "448022e392ccddce7f5090df071789fd0472dc4b42b876b525d82f3e02ef175b",
+"created_at": "2022-02-27T20:48:07.487Z",
+"updated_at": "2022-02-27T20:48:07.487Z",
+"deleted_at": "2022-02-27T20:48:07.487Z",
+"is_online": true,
+"image": "https://cdn.intra.42.fr/users/helkhatr.jpg",
+"is_verified": true,
+"country": "moroccan",
+"level": 0,
+"wins": 0,
+"loses": 0,
+"quit": 0
+}
+    */
+    const [data, setData] = useState([]);
+    const [oneTime, setOneTime] = useState(0);
+
+    // const result = () => {
+    // if (data.length === 0) {
+    // fetch only one time
+
+
+
+    // const res = fetch("http://localhost:3000/user/random",
+    //     {
+    //         method: "GET"
+    //     }).then(res => res.json())
+    //     .then(res => {
+    //         // console.log(data.length);
+    //         if (oneTime === 0)
+    //         {
+    //             setData(res);
+    //             // console.log(data);
+    //             // data.forEach(element => {
+    //             //     console.log(element)
+    //             // });
+    //             console.log(data['id']);
+    //             setOneTime(1);
+    //         }
+    //     });
+    axios.get("http://localhost:3000/user/random")
+        .then(res => {
+            if (oneTime === 0) {
+                setData(res.data);
+                setOneTime(1);
+            }
+        });
     return (
         <>
             <Card
-
                 style={{ padding: "1%", width: "20%", height: "auto", left: "10%", top: "27%", position: "absolute", zIndex: "2", borderRadius: "3%", background: "white" }}
                 cover={
                     <img
                         alt="example"
-                        src="https://joeschmoe.io/api/v1/random"
+                        // src={data['image']}
+                        src={data['image']}
                         style={{ width: "100%", height: "auto", borderRadius: "1%" }}
                     />
                 }
 
                 actions={[
                     <ArrowLeftOutlined key="previous" onClick={() => {
-                        // Axios.get("http://10.12.3.14:3000/user/").then((res) => {
-                        // }
+                        setOneTime(0);
                     }
                     }
                     />,
                     <PlayCircleOutlined key="play" onClick={() => {
-                        // {<Canvas />}
+                        {<Canvas />}
                     }} />,
                     <ArrowRightOutlined key="next" onClick={() => {
+                        setOneTime(0);
 
                     }} />
 
@@ -48,34 +100,29 @@ const Next_page = () => {
 
             >
                 <Meta
-                    title="User Name"
+                    title={data['name']}
                     description={
                         <ul>
                             <i id="icons">
                                 <li>
                                     <InfoCircleFilled /> : Online
+                                </li>
+                                <li>
+                                    <EnvironmentOutlined /> :  {data['country']}
+                                </li>
+                                <li>
+                                    <FieldNumberOutlined /> : Level {data['level']}
+                                </li>
+                                <li>
+                                    <LikeOutlined /> : wins {data['wins']} Matchs
+                                </li>
 
+                                <li>
+                                    <DislikeOutlined /> : lost {data['loses']} Matchs
                                 </li>
                                 <li>
-                                    <EnvironmentOutlined /> :  Morocco
+                                    <FlagOutlined /> : Quit {data['quit']} Match
                                 </li>
-                                <li>
-                                    <FieldNumberOutlined /> : Level 2
-                                </li>
-                                <li>
-                                    <LikeOutlined /> : wins 10 Matchs
-                                </li>
-
-                                <li>
-                                    <DislikeOutlined /> : lost 5 Matchs
-                                </li>
-                                <li>
-                                    <FlagOutlined /> : Quit 1 Match
-                                </li>
-{/* 
-                                <li>
-                                    <TrophyOutlined /> :Rank 12 world wide
-                                </li> */}
 
                             </i>
 

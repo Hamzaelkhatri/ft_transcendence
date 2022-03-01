@@ -33,5 +33,19 @@ export class User
     @Column()
     is_verified: boolean
     
+    @Column({default:'moroccan'})
+    country: string
+
+    @Column({default:0})
+    level: number
+
+    @Column({default:0})
+    wins: number
+
+    @Column({default:0})
+    loses: number
+
+    @Column({default:0})
+    quit: number
 }
 
