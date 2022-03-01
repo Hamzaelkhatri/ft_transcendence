@@ -6,7 +6,7 @@ POST http://localhost:3000/user/me
 Content-Type: application/json
 
 {
-    "token":"448022e392ccddce7f5090df071789fd0472dc4b42b876b525d82f3e02ef175b"
+    "token":"917c97636990e3ccd32c762edcf5718f64d30d2065743c207a6b6350f2bece91"
 }
 
 

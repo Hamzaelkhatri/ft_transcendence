@@ -10,6 +10,7 @@ import { Card, Avatar } from "antd";
 import { ArrowLeftOutlined, PlayCircleOutlined, ArrowRightOutlined, TrophyOutlined, DislikeOutlined, FlagOutlined, LikeOutlined, FieldNumberOutlined, EnvironmentOutlined, InfoCircleFilled } from "@ant-design/icons";
 import { height } from "@mui/system";
 import Canvas from "./Game";
+import axios from "axios";
 const { Meta } = Card;
 
 
@@ -36,7 +37,7 @@ const Next_page = () => {
 }
     */
     const [data, setData] = useState([]);
-    const [oneTime,setOneTime] = useState(0);
+    const [oneTime, setOneTime] = useState(0);
 
     // const result = () => {
     // if (data.length === 0) {
@@ -44,20 +45,27 @@ const Next_page = () => {
 
 
 
-    const res = fetch("http://localhost:3000/user/random",
-        {
-            method: "GET"
-        }).then(res => res.json())
+    // const res = fetch("http://localhost:3000/user/random",
+    //     {
+    //         method: "GET"
+    //     }).then(res => res.json())
+    //     .then(res => {
+    //         // console.log(data.length);
+    //         if (oneTime === 0)
+    //         {
+    //             setData(res);
+    //             // console.log(data);
+    //             // data.forEach(element => {
+    //             //     console.log(element)
+    //             // });
+    //             console.log(data['id']);
+    //             setOneTime(1);
+    //         }
+    //     });
+    axios.get("http://localhost:3000/user/random")
         .then(res => {
-            // console.log(data.length);
-            if (oneTime === 0)
-            {
-                setData(res);
-                // console.log(data);
-                // data.forEach(element => {
-                //     console.log(element)
-                // });
-                console.log(data['id']);
+            if (oneTime === 0) {
+                setData(res.data);
                 setOneTime(1);
             }
         });
@@ -68,6 +76,7 @@ const Next_page = () => {
                 cover={
                     <img
                         alt="example"
+                        // src={data['image']}
                         src={data['image']}
                         style={{ width: "100%", height: "auto", borderRadius: "1%" }}
                     />
@@ -75,15 +84,15 @@ const Next_page = () => {
 
                 actions={[
                     <ArrowLeftOutlined key="previous" onClick={() => {
-                        // Axios.get("http://10.12.3.14:3000/user/").then((res) => {
-                        // }
+                        setOneTime(0);
                     }
                     }
                     />,
                     <PlayCircleOutlined key="play" onClick={() => {
-                        // {<Canvas />}
+                        {<Canvas />}
                     }} />,
                     <ArrowRightOutlined key="next" onClick={() => {
+                        setOneTime(0);
 
                     }} />
 
@@ -114,10 +123,6 @@ const Next_page = () => {
                                 <li>
                                     <FlagOutlined /> : Quit {data['quit']} Match
                                 </li>
-                                {/* 
-                                <li>
-                                    <TrophyOutlined /> :Rank 12 world wide
-                                </li> */}
 
                             </i>
 

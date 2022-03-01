@@ -1,4 +1,5 @@
 import '../styles/globals.css'
+
 import type { AppProps } from 'next/app'
 import '../styles/Game.css';
 import Canvas from './Game'
@@ -13,15 +14,19 @@ import HomePage from './home'
 import Next_page from './First_pages'
 
 function MyApp(props: AppProps) {
-  let popups;
-  const router = useRouter()
-  const [reactData, setReactData]: any = useState({});
-  const [singIn, setSingIn] = useState("Sign In");
+
   const ISSERVER = typeof window === "undefined";
 
 
-  
-  if (!ISSERVER) {
+
+
+  const router = useRouter()
+  // if (!ISSERVER) 
+  {
+    let popups;
+    const [reactData, setReactData]: any = useState({});
+    const [singIn, setSingIn] = useState("Sign In");
+    const [popup, setPopup] = useState(false);
 
     const login = (link: string) => {
       if (singIn === "Sign In") {
@@ -40,7 +45,6 @@ function MyApp(props: AppProps) {
         });
       }
     }
-
     if (singIn === "Sign In" && router.query.token !== undefined) {
       const res = fetch("http://localhost:3000/user/me",
         {
@@ -48,7 +52,7 @@ function MyApp(props: AppProps) {
           headers: {
             'Content-Type': 'application/json'
           },
-          
+
           //send token
           body: JSON.stringify({ token: router.query.token })
         })
@@ -61,21 +65,20 @@ function MyApp(props: AppProps) {
               usual_full_name: data.name,
               image_url: data.image
             })
-          localStorage.setItem("email", data.email)
-          localStorage.setItem("usual_full_name", data.name)
-          localStorage.setItem("image_url", data.image)
+          if (!ISSERVER) {
+            localStorage.setItem("email", data.email)
+            localStorage.setItem("usual_full_name", data.name)
+            localStorage.setItem("image_url", data.image)
+            window.close();
+          }
           setSingIn("Sign Out")
-          
-          window.close();
         })
     }
-
-    const [popup, setPopup] = useState(false);
-
     const interval = setInterval(() => {
 
       if (popups !== undefined) {
         if (popups.closed) {
+          if(!ISSERVER) {
           setReactData(
             {
               email: localStorage.getItem("email") === undefined ? "" : localStorage.getItem("email"),
@@ -85,11 +88,11 @@ function MyApp(props: AppProps) {
           clearInterval(interval);
           setPopup(false);
           setSingIn("Sign Out");
+          }
         }
       }
 
     }, 100);
-    
     useEffect(() => {
 
       setReactData(
@@ -106,20 +109,23 @@ function MyApp(props: AppProps) {
     }, [])
 
     return (
-      <>
+      <div>
+        {/* <h1>FUCK ALL world</h1> */}
         {singIn === "Sign In" &&
-          <HomePage/>
-          }
-     
+          <HomePage />
+        }
+
         {!popup && <ResponsiveAppBar data={reactData} usecase={singIn} login={login} />}
-        {singIn === "Sign Out" && <Next_page/> }
-      </>
+        {singIn === "Sign Out" && <Next_page />}
+      </div>
     );
   }
+  // return (null);
   return (
     <>
-      {/* <HomePage/> */}
-    </>);
+      {/* <ResponsiveAppBar /> */}
+    </>
+  )
 }
 
 export default MyApp

@@ -11,14 +11,14 @@ export class AuthService {
   }
 
   async validateUser(token: any,@Req() req): Promise<User> {
+    // const user = await this.userService.findOne({
+    //   where: {
+    //     email: token.profile.email,
+    //   },
+    // }).then(user => {
+      
 
-    // const user = await this.userService.getUserByToken(token.accessToken).then(res =>{ return (res)})
-    // if(!user)
-    // {
-    //   // this.userService.createOne()
-   
-    // }
-
+    // if (!user) {
     return await this.userService.createOne(req,
       {
         name: token.profile.displayName,
