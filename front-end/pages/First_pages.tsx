@@ -13,6 +13,8 @@ import Canvas from "./Game";
 import axios from "axios";
 const { Meta } = Card;
 
+import { Button, notification } from 'antd';
+
 
 const Next_page = () => {
     // console.log("Next page");
@@ -36,32 +38,57 @@ const Next_page = () => {
 "quit": 0
 }
     */
+
+    const close = () => {
+        console.log(
+            'Notification was closed. Either the close button was clicked or duration time elapsed.',
+        );
+    };
+    const [ShowCanva, setShowCanva] = useState(false);
+    const onclick = (key : string) => {
+        setShowCanva(true);
+        notification.close(key);
+    };
+    const openNotification = (data: any) => {
+        const key = `open${Date.now()}`;
+        const btn = (
+            <div>
+                <Button type="primary" size="small" onClick={() => onclick(key)}>
+                    Confirm
+                </Button>
+                <span> </span>
+                <Button type="danger" size="small" onClick={() => notification.close(key)}>
+                    Cancel
+                </Button>
+            </div>
+        );
+        notification.open({
+            message: data.user1.name + ' invited you to play a game',
+            description:
+                'Do you want to play with ' + data.name + '?',
+            btn,
+            key,
+            style: {
+                zIndex: 3,
+
+            },
+            onClose: close,
+        });
+    };
     const [data, setData] = useState([]);
     const [oneTime, setOneTime] = useState(0);
+    const [oneTime1, setOneTime1] = useState(0);
 
-    // const result = () => {
-    // if (data.length === 0) {
-    // fetch only one time
-
-
-
-    // const res = fetch("http://localhost:3000/user/random",
-    //     {
-    //         method: "GET"
-    //     }).then(res => res.json())
-    //     .then(res => {
-    //         // console.log(data.length);
-    //         if (oneTime === 0)
-    //         {
-    //             setData(res);
-    //             // console.log(data);
-    //             // data.forEach(element => {
-    //             //     console.log(element)
-    //             // });
-    //             console.log(data['id']);
-    //             setOneTime(1);
-    //         }
-    //     });
+    useEffect(() => {
+        axios.get("http://localhost:3000/game/is_invited/" + localStorage.getItem("id"))
+            .then(res => {
+                if (res.data.length !== 0) {
+                    openNotification(res.data);
+                    setOneTime1(1);
+                    console.log(res.data);
+                }
+            });
+    }, []);
     axios.get("http://localhost:3000/user/random")
         .then(res => {
             if (oneTime === 0) {
@@ -69,15 +96,17 @@ const Next_page = () => {
                 setOneTime(1);
             }
         });
+
     return (
-        <>
-            <Card
+        <div>
+            {ShowCanva ? <Canvas /> : null}
+            {!ShowCanva && <Card
                 style={{ padding: "1%", width: "20%", height: "auto", left: "10%", top: "27%", position: "absolute", zIndex: "2", borderRadius: "3%", background: "white" }}
                 cover={
                     <img
                         alt="example"
                         // src={data['image']}
-                        src={data['image']}
+                        src="https://joeschmoe.io/api/v1/random"
                         style={{ width: "100%", height: "auto", borderRadius: "1%" }}
                     />
                 }
@@ -89,7 +118,19 @@ const Next_page = () => {
                     }
                     />,
                     <PlayCircleOutlined key="play" onClick={() => {
-                        {<Canvas />}
+                        // {<Canvas />}
+
+                        axios.post("http://localhost:3000/game/invite",
+                            {
+                                "username1": localStorage.getItem("usual_full_name"),
+                                "username2": data['name']
+                            })
+                            .then(res => {
+                                if (oneTime === 0) {
+                                    setData(res.data);
+                                    setOneTime(1);
+                                }
+                            });
                     }} />,
                     <ArrowRightOutlined key="next" onClick={() => {
                         setOneTime(0);
@@ -140,30 +181,34 @@ const Next_page = () => {
 
 
             </Card>
-            <Card
-                style={{ padding: "4%", width: 1500, height: 1000, left: "40%", top: "20%", position: "absolute", zIndex: "1", borderRadius: "3%", background: "white" }}
-            // cover={
-            //     <img
-            //         alt="example"
-            //         // src="./images/logo.png"
-            //     />
-            // }
-            // actions={[
-            //     // <EditOutlined key="edit" />,
-            //     <ArrowLeftOutlined key="previous" />,
-            //     <PlayCircleOutlined key="play" />,
-            //     // <EllipsisOutlined key="ellipsis" />,
-            //     <ArrowRightOutlined key="next" />
-            // ]}
-            >
-                <Meta
-                    avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
-                    title="Card title"
-                    description="This is the description"
+            }
+            {!ShowCanva &&
+                <Card
+                    style={{ padding: "4%", width: '50%', height: "68%", left: "40%", top: "27%", position: "absolute", zIndex: "1", borderRadius: "3%", background: "white" }}
+                // cover={
+                //     <img
+                //         alt="example"
+                //         // src="./images/logo.png"
+                //     />
+                // }
+                // actions={[
+                //     // <EditOutlined key="edit" />,
+                //     <ArrowLeftOutlined key="previous" />,
+                //     <PlayCircleOutlined key="play" />,
+                //     // <EllipsisOutlined key="ellipsis" />,
+                //     <ArrowRightOutlined key="next" />
+                // ]}
+                >
+                    <Meta
+                        avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
+                        title="Card title"
+                        description="This is the description"
 
-                />
-            </Card>
-        </>
+                    />
+                </Card>
+            }
+
+        </div>
     )
 }
 

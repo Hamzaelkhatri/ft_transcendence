@@ -2,6 +2,7 @@ import { Controller, Get, Post, Req } from '@nestjs/common';
 import { Crud, CrudController } from '@nestjsx/crud';
 import { Game } from './game.entity';
 import {GameService} from './game.service';
+import {Param} from '@nestjs/common';
 
 @Crud({
     model: {
@@ -43,7 +44,6 @@ export class GameController implements CrudController<Game> {
     @Get('/all')
     async findAll()
     {
-        // return all information about all games
         return await this.service.findAll();
     }
 
@@ -52,6 +52,12 @@ export class GameController implements CrudController<Game> {
     {
         console.log(req.body);
         return await this.service.Invite(req.body.username1, req.body.username2);
+    }
+
+    @Get("/is_invited/:id")
+    async is_invited(@Param("id") id: number)
+    {
+        return await this.service.is_invited(id);
     }
 
 }
