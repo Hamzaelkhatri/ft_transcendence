@@ -50,7 +50,7 @@ const Next_page = () => {
     };
     const [ShowCanva, setShowCanva] = useState(false);
     const onclick = (key: string) => {
-        axios.get("http://localhost:3000/game/invited/confirm/" + localStorage.getItem("id")+'/'+GameInfo['id']).then(res => {
+        axios.get("http://localhost:3000/game/invited/confirm/" + localStorage.getItem("id") + '/' + GameInfo['id']).then(res => {
             setShowCanva(true);
             notification.close(key);
         });
@@ -83,16 +83,25 @@ const Next_page = () => {
     };
 
     useEffect(() => {
-        axios.get("http://localhost:3000/game/is_invited/" + localStorage.getItem("id"))
-            .then(res => {
-                if (res.data.length !== 0) 
-                {
-                    openNotification(res.data);
-                    setOneTime1(1);
-                    console.log(res.data);
-                    setGameInfo(res.data);
-                }
-            });
+        const inter = setInterval(() => {
+            if (oneTime1 == 0) {
+
+                axios.get("http://localhost:3000/game/is_invited/" + localStorage.getItem("id"))
+                    .then(res => {
+                        if (res.data.length !== 0) {
+                            setOneTime1(1);
+                            console.log(res.data);
+                            setGameInfo(res.data);
+                            openNotification(res.data);
+                            clearInterval(inter);
+
+                        }
+                    });
+            }
+            else {
+                clearInterval(inter);
+            }
+        }, 1000);
     }, []);
     axios.get("http://localhost:3000/user/random")
         .then(res => {
@@ -106,7 +115,7 @@ const Next_page = () => {
         <div>
             {ShowCanva ? <Canvas /> : null}
             {!ShowCanva && <Card
-                style={{ padding: "1%", width: "20%", height: "auto", left: "10%", top: "27%", position: "absolute", zIndex: "2", borderRadius: "3%", background: "white" }}
+                style={{ padding: "1%", width: "20%", height: "auto", left: "10%", top: "15%", position: "absolute", zIndex: "2", borderRadius: "3%", background: "white" }}
                 cover={
                     <img
                         alt="example"
