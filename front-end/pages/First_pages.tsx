@@ -13,6 +13,8 @@ import Canvas from "./Game";
 import axios from "axios";
 const { Meta } = Card;
 
+import { Button, notification } from 'antd';
+
 
 const Next_page = () => {
     // console.log("Next page");
@@ -36,8 +38,32 @@ const Next_page = () => {
 "quit": 0
 }
     */
+
+    const close = () => {
+        console.log(
+            'Notification was closed. Either the close button was clicked or duration time elapsed.',
+        );
+    };
+
+    const openNotification = () => {
+        const key = `open${Date.now()}`;
+        const btn = (
+            <Button type="primary" size="small" onClick={() => notification.close(key)}>
+                Confirm
+            </Button>
+        );
+        notification.open({
+            message: 'Notification Title',
+            description:
+                'A function will be be called after the notification is closed (automatically after the "duration" time of manually).',
+            btn,
+            key,
+            onClose: close,
+        });
+    };
     const [data, setData] = useState([]);
     const [oneTime, setOneTime] = useState(0);
+    const [oneTime1, setOneTime1] = useState(0);
 
     // const result = () => {
     // if (data.length === 0) {
@@ -63,20 +89,15 @@ const Next_page = () => {
     //         }
     //     });
 
-    setInterval(() => {
-        {
-            axios.get("http://localhost:3000/game/is_invited/" + localStorage.getItem("id"))
-            .then(res => {
-                if(res.data.length !== 0)
-                {
-                    console.log(res.data);
-                    // send alert to user
-                    // alert("You have been invited to a game");
-                }
-            })
-                    // setData(res.data);
-        }
-    }, 1000);
+    useEffect(() => {
+    axios.get("http://localhost:3000/game/is_invited/" + localStorage.getItem("id"))
+        .then(res => {
+            if (res.data.length !== 0) {
+                openNotification();
+                setOneTime1(1);
+            }
+        });
+    }, []);
     axios.get("http://localhost:3000/user/random")
         .then(res => {
             if (oneTime === 0) {
@@ -84,6 +105,7 @@ const Next_page = () => {
                 setOneTime(1);
             }
         });
+
     return (
         <>
             <Card
@@ -92,7 +114,7 @@ const Next_page = () => {
                     <img
                         alt="example"
                         // src={data['image']}
-                        src={data['image']}
+                        src="https://joeschmoe.io/api/v1/random"
                         style={{ width: "100%", height: "auto", borderRadius: "1%" }}
                     />
                 }
@@ -105,6 +127,7 @@ const Next_page = () => {
                     />,
                     <PlayCircleOutlined key="play" onClick={() => {
                         // {<Canvas />}
+
                         axios.post("http://localhost:3000/game/invite",
                             {
                                 "username1": localStorage.getItem("usual_full_name"),
@@ -167,7 +190,7 @@ const Next_page = () => {
 
             </Card>
             <Card
-                style={{ padding: "4%", width: '50%', height:"68%", left: "40%", top: "27%", position: "absolute", zIndex: "1", borderRadius: "3%", background: "white" }}
+                style={{ padding: "4%", width: '50%', height: "68%", left: "40%", top: "27%", position: "absolute", zIndex: "1", borderRadius: "3%", background: "white" }}
             // cover={
             //     <img
             //         alt="example"

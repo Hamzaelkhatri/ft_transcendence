@@ -98,9 +98,6 @@ export default class UserService extends TypeOrmCrudService<User>
         return await this.repository.findOne({ id: ids[random] });
     }
 
-    async is_invited(id: number) : Promise<User>
-    {
-        return await this.repository.findOne({ id: id });
-    }
+
 }
 
