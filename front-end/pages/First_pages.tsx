@@ -37,7 +37,10 @@ const Next_page = () => {
 "loses": 0,
 "quit": 0
 }
-    */
+*/
+   const [data, setData] = useState([]);
+   const [oneTime, setOneTime] = useState(0);
+   const [oneTime1, setOneTime1] = useState(0);
 
     const close = () => {
         console.log(
@@ -47,6 +50,7 @@ const Next_page = () => {
     const [ShowCanva, setShowCanva] = useState(false);
     const onclick = (key : string) => {
         setShowCanva(true);
+        axios.get("http://localhost:3000/game/invited/confirm/" + localStorage.getItem("id"));
         notification.close(key);
     };
     const openNotification = (data: any) => {
@@ -65,7 +69,7 @@ const Next_page = () => {
         notification.open({
             message: data.user1.name + ' invited you to play a game',
             description:
-                'Do you want to play with ' + data.name + '?',
+                'Do you want to play with ' + data.user1.name + '?',
             btn,
             key,
             style: {
@@ -75,9 +79,6 @@ const Next_page = () => {
             onClose: close,
         });
     };
-    const [data, setData] = useState([]);
-    const [oneTime, setOneTime] = useState(0);
-    const [oneTime1, setOneTime1] = useState(0);
 
     useEffect(() => {
         axios.get("http://localhost:3000/game/is_invited/" + localStorage.getItem("id"))

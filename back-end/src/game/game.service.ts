@@ -50,7 +50,19 @@ export class GameService extends TypeOrmCrudService<Game>
         .leftJoinAndSelect('game.user1', 'user1')
         .leftJoinAndSelect('game.user2', 'user2')
         .where('game.id = :id', { id: id })
+        .where('game.is_accepted_by_user2 = :is_accepted_by_user2', { is_accepted_by_user2: false })
+        .where('game.is_finished = :is_finished', { is_finished: false })
+        .where('game.is_started = :is_started', { is_started: false })
         .getOne();
         return user;
+    }
+
+    async confirmInvitation(id:number) : Promise<Game>
+    {
+        const game = await this.repository.findOne(id);
+        game.is_accepted_by_user2 = true;
+        game.is_started = true;
+        game.TimeBegin = new Date();
+        return await this.repository.save(game);
     }
 }
