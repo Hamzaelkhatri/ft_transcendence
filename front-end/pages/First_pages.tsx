@@ -44,20 +44,34 @@ const Next_page = () => {
             'Notification was closed. Either the close button was clicked or duration time elapsed.',
         );
     };
-
-    const openNotification = () => {
+    const [ShowCanva, setShowCanva] = useState(false);
+    const onclick = (key : string) => {
+        setShowCanva(true);
+        notification.close(key);
+    };
+    const openNotification = (data: any) => {
         const key = `open${Date.now()}`;
         const btn = (
-            <Button type="primary" size="small" onClick={() => notification.close(key)}>
-                Confirm
-            </Button>
+            <div>
+                <Button type="primary" size="small" onClick={() => onclick(key)}>
+                    Confirm
+                </Button>
+                <span> </span>
+                <Button type="danger" size="small" onClick={() => notification.close(key)}>
+                    Cancel
+                </Button>
+            </div>
         );
         notification.open({
-            message: 'Notification Title',
+            message: data.user1.name + ' invited you to play a game',
             description:
-                'A function will be be called after the notification is closed (automatically after the "duration" time of manually).',
+                'Do you want to play with ' + data.name + '?',
             btn,
             key,
+            style: {
+                zIndex: 3,
+
+            },
             onClose: close,
         });
     };
@@ -65,38 +79,15 @@ const Next_page = () => {
     const [oneTime, setOneTime] = useState(0);
     const [oneTime1, setOneTime1] = useState(0);
 
-    // const result = () => {
-    // if (data.length === 0) {
-    // fetch only one time
-
-
-
-    // const res = fetch("http://localhost:3000/user/random",
-    //     {
-    //         method: "GET"
-    //     }).then(res => res.json())
-    //     .then(res => {
-    //         // console.log(data.length);
-    //         if (oneTime === 0)
-    //         {
-    //             setData(res);
-    //             // console.log(data);
-    //             // data.forEach(element => {
-    //             //     console.log(element)
-    //             // });
-    //             console.log(data['id']);
-    //             setOneTime(1);
-    //         }
-    //     });
-
     useEffect(() => {
-    axios.get("http://localhost:3000/game/is_invited/" + localStorage.getItem("id"))
-        .then(res => {
-            if (res.data.length !== 0) {
-                openNotification();
-                setOneTime1(1);
-            }
-        });
+        axios.get("http://localhost:3000/game/is_invited/" + localStorage.getItem("id"))
+            .then(res => {
+                if (res.data.length !== 0) {
+                    openNotification(res.data);
+                    setOneTime1(1);
+                    console.log(res.data);
+                }
+            });
     }, []);
     axios.get("http://localhost:3000/user/random")
         .then(res => {
@@ -107,8 +98,9 @@ const Next_page = () => {
         });
 
     return (
-        <>
-            <Card
+        <div>
+            {ShowCanva ? <Canvas /> : null}
+            {!ShowCanva && <Card
                 style={{ padding: "1%", width: "20%", height: "auto", left: "10%", top: "27%", position: "absolute", zIndex: "2", borderRadius: "3%", background: "white" }}
                 cover={
                     <img
@@ -189,30 +181,34 @@ const Next_page = () => {
 
 
             </Card>
-            <Card
-                style={{ padding: "4%", width: '50%', height: "68%", left: "40%", top: "27%", position: "absolute", zIndex: "1", borderRadius: "3%", background: "white" }}
-            // cover={
-            //     <img
-            //         alt="example"
-            //         // src="./images/logo.png"
-            //     />
-            // }
-            // actions={[
-            //     // <EditOutlined key="edit" />,
-            //     <ArrowLeftOutlined key="previous" />,
-            //     <PlayCircleOutlined key="play" />,
-            //     // <EllipsisOutlined key="ellipsis" />,
-            //     <ArrowRightOutlined key="next" />
-            // ]}
-            >
-                <Meta
-                    avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
-                    title="Card title"
-                    description="This is the description"
+            }
+            {!ShowCanva &&
+                <Card
+                    style={{ padding: "4%", width: '50%', height: "68%", left: "40%", top: "27%", position: "absolute", zIndex: "1", borderRadius: "3%", background: "white" }}
+                // cover={
+                //     <img
+                //         alt="example"
+                //         // src="./images/logo.png"
+                //     />
+                // }
+                // actions={[
+                //     // <EditOutlined key="edit" />,
+                //     <ArrowLeftOutlined key="previous" />,
+                //     <PlayCircleOutlined key="play" />,
+                //     // <EllipsisOutlined key="ellipsis" />,
+                //     <ArrowRightOutlined key="next" />
+                // ]}
+                >
+                    <Meta
+                        avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
+                        title="Card title"
+                        description="This is the description"
 
-                />
-            </Card>
-        </>
+                    />
+                </Card>
+            }
+
+        </div>
     )
 }
 

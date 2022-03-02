@@ -179,6 +179,7 @@ export class Game {
 
     constructor(canvas: HTMLCanvasElement, date: any) {
         this.canvas = canvas;
+        this.canvas.style.backgroundColor = "black";
         this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
         this.uppress = false;
         this.downpress = false;
@@ -191,11 +192,11 @@ export class Game {
         this.paddle_left = new player(0, 10, this.canvas.height / 2, 10, 80, 1, this.ctx, "white");
         this.paddle_right = new player(0, this.canvas.width - 20, (this.canvas.height) / 2, 10, 80, 1, this.ctx, "white");
         this.center_rec = new player(0, this.canvas.width / 2, 0, 1, this.canvas.height, 0, this.ctx, "white");
-        this._ball = new ball(this.ctx, this.canvas.width / 2, this.canvas.height / 2, 8, 4, -4, "red");
+        this._ball = new ball(this.ctx, this.canvas.width / 2, this.canvas.height / 2, 8, 6, -6, "red");
         document.addEventListener("keyup", this.keyUpHandler.bind(this), false);
         document.addEventListener("keydown", this.keyDownHandler.bind(this), false);
         this.socket = io("http://localhost:3080");
-
+        // set color black to cnavas
         this.sender = "";
         this.player = 0;
         this.myId = "";
@@ -321,8 +322,8 @@ export class Game {
                 // this.paddle_right._score(1);
                 this._ball.ball_x = this.canvas.width / 2;
                 this._ball.ball_y = this.canvas.height - this.paddle_right._paddle_height;
-                this._ball._velocity_x = 2;
-                this._ball._velocity_y = -2;
+                this._ball._velocity_x = 6;
+                this._ball._velocity_y = -6;
                 this.paddle_left.paddle_y = ((this.canvas.height - this.paddle_left._paddle_height) / 2);
                 this.paddle_right.paddle_y = ((this.canvas.height - this.paddle_right._paddle_height) / 2);
             }
@@ -340,8 +341,8 @@ export class Game {
                 // this.paddle_left._score(1);
                 this._ball.ball_x = this.canvas.width / 2;
                 this._ball.ball_y = this.canvas.height - this.paddle_right._paddle_height;
-                this._ball._velocity_y = -2;
-                this._ball._velocity_x = -2;
+                this._ball._velocity_y = -6;
+                this._ball._velocity_x = -6;
                 this.paddle_left.paddle_y = ((this.canvas.height - this.paddle_left._paddle_height) / 2);
                 this.paddle_right.paddle_y = ((this.canvas.height - this.paddle_right._paddle_height) / 2);
             }

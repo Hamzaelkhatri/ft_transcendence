@@ -74,6 +74,12 @@ export default class UserService extends TypeOrmCrudService<User>
         );
     }
 
+    async getUserById(id: number) : Promise<User>
+    {
+        return await this.repository.findOne({ id: id });
+    }
+    
+
     async getNextUser() : Promise<User>
     {
         return await this.repository.findOne({ is_online: true });
