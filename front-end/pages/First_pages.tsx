@@ -76,8 +76,8 @@ const Next_page = () => {
             key,
             style: {
                 zIndex: 3,
-
             },
+            duration: 100,
             onClose: close,
         });
     };
@@ -94,7 +94,6 @@ const Next_page = () => {
                             setGameInfo(res.data);
                             openNotification(res.data);
                             clearInterval(inter);
-
                         }
                     });
             }

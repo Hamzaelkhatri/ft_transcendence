@@ -112,7 +112,6 @@ function MyApp(props: AppProps) {
 
     return (
       <div>
-        {/* <h1>FUCK ALL world</h1> */}
         {singIn === "Sign In" &&
           <HomePage />
         }

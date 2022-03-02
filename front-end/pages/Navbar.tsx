@@ -46,7 +46,7 @@ const ResponsiveAppBar = (prps: any) => {
   console.log(prps.usecase)
 
   return (
-    <AppBar style={{ background: 'transparent', boxShadow: '', width: '100%' }}>
+    <AppBar style={{ background: 'transparent', boxShadow: '', width: '100%',zIndex: '1' }}>
       <Container maxWidth="2xl">
         <Toolbar style={{ width: '100%' }}>
 
