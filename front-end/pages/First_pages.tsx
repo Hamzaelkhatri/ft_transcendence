@@ -38,9 +38,10 @@ const Next_page = () => {
 "quit": 0
 }
 */
-   const [data, setData] = useState([]);
-   const [oneTime, setOneTime] = useState(0);
-   const [oneTime1, setOneTime1] = useState(0);
+    const [data, setData] = useState([]);
+    const [oneTime, setOneTime] = useState(0);
+    const [oneTime1, setOneTime1] = useState(0);
+    const [GameInfo, setGameInfo] = useState([]);
 
     const close = () => {
         console.log(
@@ -48,10 +49,11 @@ const Next_page = () => {
         );
     };
     const [ShowCanva, setShowCanva] = useState(false);
-    const onclick = (key : string) => {
-        setShowCanva(true);
-        axios.get("http://localhost:3000/game/invited/confirm/" + localStorage.getItem("id"));
-        notification.close(key);
+    const onclick = (key: string) => {
+        axios.get("http://localhost:3000/game/invited/confirm/" + localStorage.getItem("id")+'/'+GameInfo['id']).then(res => {
+            setShowCanva(true);
+            notification.close(key);
+        });
     };
     const openNotification = (data: any) => {
         const key = `open${Date.now()}`;
@@ -83,10 +85,12 @@ const Next_page = () => {
     useEffect(() => {
         axios.get("http://localhost:3000/game/is_invited/" + localStorage.getItem("id"))
             .then(res => {
-                if (res.data.length !== 0) {
+                if (res.data.length !== 0) 
+                {
                     openNotification(res.data);
                     setOneTime1(1);
                     console.log(res.data);
+                    setGameInfo(res.data);
                 }
             });
     }, []);

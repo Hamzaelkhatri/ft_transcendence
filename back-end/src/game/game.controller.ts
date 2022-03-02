@@ -60,10 +60,10 @@ export class GameController implements CrudController<Game> {
         return await this.service.is_invited(id);
     }
 
-    @Get("/invited/confirm/:id")
-    async confirm(@Param("id") id: number)
+    @Get("/invited/confirm/:id/:idgame")
+    async confirm(@Param("id") id: number, @Param("idgame") idgame: number)
     {
-        return await this.service.confirmInvitation(id);
+        return await this.service.confirmInvitation(id, idgame);
     }
 
 }
