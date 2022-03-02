@@ -37,7 +37,11 @@ const Next_page = () => {
 "loses": 0,
 "quit": 0
 }
-    */
+*/
+    const [data, setData] = useState([]);
+    const [oneTime, setOneTime] = useState(0);
+    const [oneTime1, setOneTime1] = useState(0);
+    const [GameInfo, setGameInfo] = useState([]);
 
     const close = () => {
         console.log(
@@ -45,9 +49,11 @@ const Next_page = () => {
         );
     };
     const [ShowCanva, setShowCanva] = useState(false);
-    const onclick = (key : string) => {
-        setShowCanva(true);
-        notification.close(key);
+    const onclick = (key: string) => {
+        axios.get("http://localhost:3000/game/invited/confirm/" + localStorage.getItem("id") + '/' + GameInfo['id']).then(res => {
+            setShowCanva(true);
+            notification.close(key);
+        });
     };
     const openNotification = (data: any) => {
         const key = `open${Date.now()}`;
@@ -65,7 +71,7 @@ const Next_page = () => {
         notification.open({
             message: data.user1.name + ' invited you to play a game',
             description:
-                'Do you want to play with ' + data.name + '?',
+                'Do you want to play with ' + data.user1.name + '?',
             btn,
             key,
             style: {
@@ -75,19 +81,27 @@ const Next_page = () => {
             onClose: close,
         });
     };
-    const [data, setData] = useState([]);
-    const [oneTime, setOneTime] = useState(0);
-    const [oneTime1, setOneTime1] = useState(0);
 
     useEffect(() => {
-        axios.get("http://localhost:3000/game/is_invited/" + localStorage.getItem("id"))
-            .then(res => {
-                if (res.data.length !== 0) {
-                    openNotification(res.data);
-                    setOneTime1(1);
-                    console.log(res.data);
-                }
-            });
+        const inter = setInterval(() => {
+            if (oneTime1 == 0) {
+
+                axios.get("http://localhost:3000/game/is_invited/" + localStorage.getItem("id"))
+                    .then(res => {
+                        if (res.data.length !== 0) {
+                            setOneTime1(1);
+                            console.log(res.data);
+                            setGameInfo(res.data);
+                            openNotification(res.data);
+                            clearInterval(inter);
+
+                        }
+                    });
+            }
+            else {
+                clearInterval(inter);
+            }
+        }, 1000);
     }, []);
     axios.get("http://localhost:3000/user/random")
         .then(res => {
@@ -101,7 +115,7 @@ const Next_page = () => {
         <div>
             {ShowCanva ? <Canvas /> : null}
             {!ShowCanva && <Card
-                style={{ padding: "1%", width: "20%", height: "auto", left: "10%", top: "27%", position: "absolute", zIndex: "2", borderRadius: "3%", background: "white" }}
+                style={{ padding: "1%", width: "20%", height: "auto", left: "10%", top: "15%", position: "absolute", zIndex: "2", borderRadius: "3%", background: "white" }}
                 cover={
                     <img
                         alt="example"
