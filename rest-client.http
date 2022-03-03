@@ -41,4 +41,6 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/game/is_invited/1
+GET http://localhost:3000/game/is_invited/10
+
+
