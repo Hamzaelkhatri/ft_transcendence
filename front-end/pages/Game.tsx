@@ -65,6 +65,10 @@ export class player {
         this.score += value;
     }
 
+    public get _score() {
+        return this.score;
+    }
+
     ToJson() {
         return (
             {
@@ -300,6 +304,8 @@ export class Game {
         }
     }
 
+  
+
     collisionDetection() {
         if (this._ball.ball_y + this._ball._velocity_y < this._ball._ball_radius) {
             this._ball._velocity_y *= -1;
@@ -319,7 +325,7 @@ export class Game {
             ) {
                 this._ball._velocity_x = -this._ball._velocity_x;
             } else if (this._ball.ball_x + this._ball._velocity_x < this.canvas.width - this._ball.ball_radius) {
-                // this.paddle_right._score(1);
+                this.paddle_right._score = 1;
                 this._ball.ball_x = this.canvas.width / 2;
                 this._ball.ball_y = this.canvas.height - this.paddle_right._paddle_height;
                 this._ball._velocity_x = 6;
@@ -338,7 +344,7 @@ export class Game {
             ) {
                 this._ball._velocity_x = -this._ball._velocity_x;
             } else if (this._ball.ball_x + this._ball._velocity_x < 10 - this._ball.ball_radius) {
-                // this.paddle_left._score(1);
+                this.paddle_left._score =1;
                 this._ball.ball_x = this.canvas.width / 2;
                 this._ball.ball_y = this.canvas.height - this.paddle_right._paddle_height;
                 this._ball._velocity_y = -6;
@@ -358,8 +364,16 @@ export class Game {
         this.center_rec.draw_padle();
     }
 
+    show_score() {
+        this.ctx.font = "30px Arial";
+        this.ctx.fillStyle = "white";
+        this.ctx.fillText(this.paddle_right._score, this.canvas.width / 2 - 100, 30);
+        this.ctx.fillText(this.paddle_left.score, this.canvas.width / 2 + 100, 30);
+    }
+
 
     start() {
+
         this.socket.emit('UserToServer',"init"); // push a mesage to the array
         // if (this.email1 === window.sessionStorage.getItem("myEmail")) {
             this.keyhook();
@@ -368,6 +382,7 @@ export class Game {
         this._ball.ball_x += this._ball._velocity_x;
         this._ball.ball_y += this._ball._velocity_y;
         this.collisionDetection();
+        this.show_score();
         requestAnimationFrame(() => this.start());
 
     }
