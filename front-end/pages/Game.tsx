@@ -217,7 +217,7 @@ export class Game {
         // this.socket.emit('msgToServer', this.paddle_left.ToJson()); // push a mesage to the array
         this.socket.on('UserToClient', (msg) => 
         {
-            console.log(msg);
+            // console.log(msg);
             this.email1 = msg.P1;
             this.email2 = msg.P2;
         });
@@ -361,7 +361,6 @@ export class Game {
 
     start() {
         this.socket.emit('UserToServer',"init"); // push a mesage to the array
-        console.log(this.email1 + " " + this.email2);
         // if (this.email1 === window.sessionStorage.getItem("myEmail")) {
             this.keyhook();
         // }

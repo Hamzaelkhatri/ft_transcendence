@@ -1,7 +1,7 @@
 import '../styles/globals.css'
 
 import type { AppProps } from 'next/app'
-import '../styles/Game.css';
+// import '../styles/Game.css';
 import Canvas from './Game'
 import React from 'react'
 import { useRouter } from 'next/router'

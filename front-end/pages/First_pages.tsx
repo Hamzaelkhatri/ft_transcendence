@@ -7,13 +7,25 @@ import _Canvas from "./page1";
 import "antd/dist/antd.css";
 // import "./index.css";
 import { Card, Avatar } from "antd";
-import { ArrowLeftOutlined, PlayCircleOutlined, ArrowRightOutlined, TrophyOutlined, DislikeOutlined, FlagOutlined, LikeOutlined, FieldNumberOutlined, EnvironmentOutlined, InfoCircleFilled } from "@ant-design/icons";
+import { ArrowLeftOutlined, HeartOutlined, PauseCircleOutlined, ArrowUpOutlined, ArrowDownOutlined, PlayCircleOutlined, ArrowRightOutlined, TrophyOutlined, DislikeOutlined, FlagOutlined, LikeOutlined, FieldNumberOutlined, EnvironmentOutlined, InfoCircleFilled } from "@ant-design/icons";
 import { height } from "@mui/system";
 import Canvas from "./Game";
 import axios from "axios";
 const { Meta } = Card;
 
-import { Button, notification } from 'antd';
+import { Button, notification, Carousel } from 'antd';
+
+const contentStyle = {
+    height: '30%',
+    color: '#fff',
+    lineHeight: '160px',
+    textAlign: 'center',
+    fontSize: '2em',
+    background: 'transparent',
+    margin: '10% auto',
+    zIndex: '2',
+
+};
 
 
 const Next_page = () => {
@@ -219,9 +231,63 @@ const Next_page = () => {
 
                     />
                 </Card>
-            }
 
-        </div>
+
+
+            }
+            {ShowCanva && <Carousel 
+            beforeChange={(current) => {
+                if(current === 3)
+                {
+                    setShowCanva(false);
+                }
+                // console.log(current);
+            }}
+            autoplay={false} >
+                <div>
+                    <h3 style={contentStyle}> Welcome to an  online Ping Pong Match   </h3>
+
+                </div>
+                <div>
+                    <h3 style={contentStyle}>Rules:
+                        <li>
+                            When the game starts you can  PAUSE  it by clicking the Space key .
+                        </li>
+                        <li>
+                            The game PAUSES 10 seconds if You did not start The Game 10 seconds You Lose.
+                        </li>
+                        <li>
+                            If Quit the Game , we will wait for ypu ti joinn in 10 seconds otherwise You Lose.
+                        </li>
+                    </h3>
+                </div>
+                <div>
+                    <h3 style={contentStyle}>To Play  You gonna use 2 keys :
+                        <li>
+                            You Press  < ArrowUpOutlined /> key to Move Up.
+                        </li>
+                        <li>
+                            You Press  <ArrowDownOutlined /> key to Move Up.
+                        </li>
+                        <li> You Press  The Space Key to PAUSE or TO Continue the Game <PauseCircleOutlined /> </li>
+                    </h3>
+                </div>
+                <div>
+                    <h3 style={contentStyle}>Good Luck !<HeartOutlined/>  </h3>
+                    <div className="wrapper">
+
+                        <div className="ping"> </div>
+                        <div className="ping"></div>
+                        <div className="ball "></div>
+                    </div>
+
+                    <div className="button" >
+
+                    </div>
+                </div>
+            </Carousel >}
+
+        </div >
     )
 }
 
