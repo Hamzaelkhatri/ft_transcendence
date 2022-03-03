@@ -18,13 +18,15 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
   async validate (accessToken: string, refreshToken: string, profile: any,@Req() req)
   {
-    const user = await this.authService.validateUser(
+    return await this.authService.validateUser(
       {
         accessToken: accessToken,
         profile: profile,
       },req
-    );
-
-    return accessToken;
+    ).then(user => {
+      return user.token;
+    }).catch(err => {
+      throw new UnauthorizedException();
+    });
   }
 }
