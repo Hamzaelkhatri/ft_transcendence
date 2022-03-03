@@ -46,9 +46,9 @@ export class GameService extends TypeOrmCrudService<Game>
             .leftJoinAndSelect('game.user1', 'user1')
             .leftJoinAndSelect('game.user2', 'user2')
             .where('game.id = :id', { id: id })
-            .where('game.is_accepted_by_user2 = :is_accepted_by_user2', { is_accepted_by_user2: false })
-            .where('game.is_finished = :is_finished', { is_finished: false })
-            .where('game.is_started = :is_started', { is_started: false })
+            .andWhere('game.is_accepted_by_user2 = :is_accepted_by_user2', { is_accepted_by_user2: false })
+            .andWhere('game.is_finished = :is_finished', { is_finished: false })
+            .andWhere('game.is_started = :is_started', { is_started: false })
             .getOne();
         return user;
     }
