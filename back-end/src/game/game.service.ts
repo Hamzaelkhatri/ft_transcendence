@@ -32,8 +32,8 @@ export class GameService extends TypeOrmCrudService<Game>
         });
         game.created_at = new Date();
         game.updated_at = new Date();
-        game.is_accepted_by_user1 = true;
         game.is_accepted_by_user2 = false;
+        game.is_rejected_by_user2 = false;
         game.is_finished = false;
         game.is_started = false;
         game.price = 0;
@@ -76,5 +76,36 @@ export class GameService extends TypeOrmCrudService<Game>
         // game.is_started = true;
         // game.TimeBegin = new Date();
         // return await this.repository.save(game);
+    }
+
+    async rejectInvitation(id: number, idgame: number): Promise<Game> {
+        const user = await this.repository.
+            createQueryBuilder('game')
+            .leftJoinAndSelect('game.user1', 'user1')
+            .leftJoinAndSelect('game.user2', 'user2')
+            .where('game.id = :id', { id: idgame })
+            .where('game.is_accepted_by_user2 = :is_accepted_by_user2', { is_accepted_by_user2: false })
+            .where('game.is_finished = :is_finished', { is_finished: false })
+            .where('game.is_started = :is_started', { is_started: false })
+            .update({
+                is_rejected_by_user2: true,
+                is_finished: true,
+                TimeEnd: new Date(),
+            })
+            .execute();
+        return user;
+    }
+
+    async currentGames()
+    {
+        const user = await this.repository.
+            createQueryBuilder('game')
+            .leftJoinAndSelect('game.user1', 'user1')
+            .leftJoinAndSelect('game.user2', 'user2')
+            .where('game.is_accepted_by_user2 = :is_accepted_by_user2', { is_accepted_by_user2: true })
+            .andWhere('game.is_finished = :is_finished', { is_finished: false })
+            .andWhere('game.is_started = :is_started', { is_started: true })
+            .getMany();
+        return user;
     }
 }

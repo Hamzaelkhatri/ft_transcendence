@@ -11,6 +11,7 @@ import { ArrowLeftOutlined, HeartOutlined, PauseCircleOutlined, ArrowUpOutlined,
 import { height } from "@mui/system";
 import Canvas from "./Game";
 import axios from "axios";
+import MatchLive from "./live_match";
 const { Meta } = Card;
 
 import { Button, notification, Carousel } from 'antd';
@@ -29,36 +30,16 @@ const contentStyle = {
 
 
 const Next_page = () => {
-    // console.log("Next page");
 
-    /*
-    {
-"id": 5,
-"name": "Hamza Elkhatri",
-"email": "hello3@student.1337.ma",
-"token": "448022e392ccddce7f5090df071789fd0472dc4b42b876b525d82f3e02ef175b",
-"created_at": "2022-02-27T20:48:07.487Z",
-"updated_at": "2022-02-27T20:48:07.487Z",
-"deleted_at": "2022-02-27T20:48:07.487Z",
-"is_online": true,
-"image": "https://cdn.intra.42.fr/users/helkhatr.jpg",
-"is_verified": true,
-"country": "moroccan",
-"level": 0,
-"wins": 0,
-"loses": 0,
-"quit": 0
-}
-*/
     const [data, setData] = useState([]);
     const [oneTime, setOneTime] = useState(0);
     const [oneTime1, setOneTime1] = useState(0);
     const [GameInfo, setGameInfo] = useState([]);
 
-    const close = () => {
-        console.log(
-            'Notification was closed. Either the close button was clicked or duration time elapsed.',
-        );
+    const close = (key: string) => {
+        axios.get("http://localhost:3000/game/invited/reject/" + localStorage.getItem("id") + "/" + GameInfo['id']).then(res => {
+        notification.close(key);
+        });
     };
     const [ShowCanva, setShowCanva] = useState(false);
     const onclick = (key: string) => {
@@ -75,8 +56,8 @@ const Next_page = () => {
                     Confirm
                 </Button>
                 <span> </span>
-                <Button type="danger" size="small" onClick={() => notification.close(key)}>
-                    Cancel
+                <Button type="danger" size="small" onClick={() => close(key)}>
+                    Reject
                 </Button>
             </div>
         );
@@ -90,7 +71,7 @@ const Next_page = () => {
                 zIndex: 3,
             },
             duration: 100,
-            onClose: close,
+            // onClose: close,
         });
     };
 
@@ -194,46 +175,14 @@ const Next_page = () => {
 
 
                         </ul>
-
-                        //add text here
-
                     }
-
-
-
-
                 />
-
-
             </Card>
             }
             {!ShowCanva &&
-                <Card
-                    style={{ padding: "4%", width: '50%', height: "68%", left: "40%", top: "27%", position: "absolute", zIndex: "1", borderRadius: "3%", background: "white" }}
-                // cover={
-                //     <img
-                //         alt="example"
-                //         // src="./images/logo.png"
-                //     />
-                // }
-                // actions={[
-                //     // <EditOutlined key="edit" />,
-                //     <ArrowLeftOutlined key="previous" />,
-                //     <PlayCircleOutlined key="play" />,
-                //     // <EllipsisOutlined key="ellipsis" />,
-                //     <ArrowRightOutlined key="next" />
-                // ]}
-                >
-                    <Meta
-                        avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
-                        title="Card title"
-                        description="This is the description"
-
-                    />
-                </Card>
-
-
-
+                <div style={{ position: "absolute", top: "15%", left: "37%", zIndex: "2" }}>
+                 <MatchLive />
+                </div>
             }
             {ShowCanva && <Carousel 
             beforeChange={(current) => {

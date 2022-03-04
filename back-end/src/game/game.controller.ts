@@ -66,4 +66,17 @@ export class GameController implements CrudController<Game> {
         return await this.service.confirmInvitation(id, idgame);
     }
 
+    @Get("/invited/reject/:id/:idgame")
+    async reject(@Param("id") id: number, @Param("idgame") idgame: number)
+    {
+        return await this.service.rejectInvitation(id, idgame);
+    }
+
+    //current games
+    @Get("/current/")
+    async current()
+    {
+        return await this.service.currentGames();
+    }
+
 }
