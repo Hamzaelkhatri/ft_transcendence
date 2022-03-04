@@ -230,7 +230,7 @@ a {
     100%{transform: rotate(85deg) translate(-20vw, -30vw) scale(-1, -1);}
   }
   
-  .count-down {
+  #count-down {
     &-1,
     &-2,
     &-3 {

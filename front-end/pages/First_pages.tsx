@@ -178,7 +178,7 @@ const Next_page = () => {
                 beforeChange={(current) => {
                     if (current === 3) {
                         setShowCanvas(true);
-                        
+
                     }
                     // console.log(current);
                 }}
@@ -222,12 +222,12 @@ const Next_page = () => {
 
                     <div className="button" >
 
-                    </div> */}
-                    <div id="count-down">
-                        <div id="count-down-1">1</div>
-                        <div id="count-down-2">2</div>
-                        <div id="count-down-3">3</div>
-                    </div>
+                </div> */}
+                <div id="count-down">
+                    <div id="count-down-1">1</div>
+                    <div id="count-down-2">2</div>
+                    <div id="count-down-3">3</div>
+                </div>
                 </div>
             </Carousel >}
 
