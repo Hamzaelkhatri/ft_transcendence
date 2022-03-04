@@ -1,7 +1,5 @@
 import '../styles/globals.css'
-
 import type { AppProps } from 'next/app'
-// import '../styles/Game.css';
 import Canvas from './Game'
 import React from 'react'
 import { useRouter } from 'next/router'
@@ -9,7 +7,7 @@ import { GetServerSideProps } from 'next'
 import { useState } from 'react'
 import { useEffect } from 'react';
 import ResponsiveAppBar from "./Navbar"
-import TextCanvas from './canvas_text'
+// import TextCanvas from './canvas_text'
 import HomePage from './home'
 import Next_page from './First_pages'
 
