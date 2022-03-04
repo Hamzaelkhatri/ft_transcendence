@@ -1,6 +1,9 @@
 import Avatar from 'antd/lib/avatar/avatar';
 import React, { useRef, useEffect } from 'react'
 import { Socket, io } from 'socket.io-client';
+import { useState } from 'react';
+import { Modal, Button } from 'antd';
+import  Dialog  from './match_matching';
 
 export class player {
     score: number;
@@ -394,8 +397,6 @@ export class Game {
                 this._ball.ball_y = this.canvas.height - this.paddle_right._paddle_height;
                 this._ball._velocity_y = -6;
                 this._ball._velocity_x = -6;
-                // this.paddle_left.paddle_y = ((this.canvas.height - this.paddle_left._paddle_height) / 2);
-                // this.paddle_right.paddle_y = ((this.canvas.height - this.paddle_right._paddle_height) / 2);
             }
         }
     }
@@ -451,10 +452,7 @@ const Canvas = (props: any) => {
     }, []);
     return (
         <div>
-            {
-                //set avatar up of canvas
-                // <Avatar src="https://joeschmoe.io/api/v1/random" />
-            }
+            <Dialog />
             <canvas ref={canvasRef}  {...props} width={400} height={200} />
         </div>
     );
