@@ -183,8 +183,8 @@ export class Game {
     constructor(canvas: HTMLCanvasElement, date: any) {
         this.canvas = canvas;
         this.canvas.style.backgroundColor = "black";
-        this.canvas.width = window.innerWidth ;
-        this.canvas.height = window.innerHeight;
+        this.canvas.width = 800 ;
+        this.canvas.height = 400;
         this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
         this.uppress = false;
         this.downpress = false;
@@ -385,6 +385,30 @@ export class Game {
         }
     }
 
+    draw_footer() 
+    {
+        // draw line 
+        this.ctx.beginPath();
+        this.ctx.rect(0, this.canvas.height - 40, this.canvas.width, 1);
+        this.ctx.fillStyle = "white";
+        this.ctx.fill();
+        // add image
+        this.ctx.closePath();
+
+        // draw a cercle 
+        // this.ctx.beginPath();
+        // this.ctx.arc(this.canvas.width / 2, this.canvas.height - 20, 10, 0, Math.PI * 2, false);
+        // this.ctx.fillStyle = "white";
+        // this.ctx.fill();
+        let img = new Image();
+        img.src = "https://joeschmoe.io/api/v1/random"
+        this.ctx.drawImage(img, 50, this.canvas.height - 35, 30, 30);
+       
+        let img2 = new Image();
+        img2.src = "https://joeschmoe.io/api/v1/random"
+        this.ctx.drawImage(img2, this.canvas.width - 70, this.canvas.height - 35, 30, 30);
+    }
+
 
     draw() {
         this.draw_countdown();
@@ -393,6 +417,7 @@ export class Game {
         this.paddle_right.draw_padle();
         this._ball.draw_ball();
         this.center_rec.draw_padle();
+        this.draw_footer();
     }
 
     show_score() {
@@ -424,7 +449,7 @@ const Canvas = (props: any) => {
     useEffect(() => {
         new Game(canvasRef.current as any, props.data);
     }, []);
-    return (<canvas ref={canvasRef}  {...props} width={800} height={400} />);
+    return (<canvas ref={canvasRef}  {...props} width={400} height={200} />);
 };
 
 export default Canvas;
