@@ -4,8 +4,8 @@ import { useRef, useEffect } from "react";
 import { useState } from "react";
 import _Canvas from "./page1";
 import "antd/dist/antd.css";
-import { Card, Avatar } from "antd";
-import { ArrowLeftOutlined, HeartOutlined, PauseCircleOutlined, ArrowUpOutlined, ArrowDownOutlined, PlayCircleOutlined, ArrowRightOutlined, TrophyOutlined, DislikeOutlined, FlagOutlined, LikeOutlined, FieldNumberOutlined, EnvironmentOutlined, InfoCircleFilled } from "@ant-design/icons";
+import { Card, Avatar, Badge } from "antd";
+import { ArrowLeftOutlined, PlayCircleOutlined, ArrowRightOutlined, DislikeOutlined, FlagOutlined, LikeOutlined, FieldNumberOutlined, EnvironmentOutlined, InfoCircleFilled } from "@ant-design/icons";
 import Canvas from "./Game";
 import axios from "axios";
 import MatchLive from "./live_match";
@@ -101,90 +101,101 @@ const Next_page = () => {
         });
 
     return (
-        <div>
-            {ShowCanvas ? <Canvas /> : null}
-            {!ShowCanvas && <Card
-                style={{ padding: "1%", width: "20%", height: "auto", left: "10%", top: "15%", position: "absolute", zIndex: "2", borderRadius: "3%", background: "white" }}
-                cover={
-                    <img
-                        alt="example"
-                        // src={data['image']}
-                        src="https://joeschmoe.io/api/v1/random"
-                        style={{ width: "100%", height: "auto", borderRadius: "1%" }}
-                    />
-                }
-                actions={[<ArrowLeftOutlined key="previous" onClick={() => { setOneTime(0); }
-                } />,
-                <PlayCircleOutlined key="play" onClick={() => {
-                    axios.post("http://localhost:3000/game/invite",
-                        {
-                            "username1": localStorage.getItem("usual_full_name"),
-                            "username2": data['name']
-                        })
-                        .then(res => {
-                            if (oneTime === 0) {
-                                setData(res.data);
-                                setOneTime(1);
+        <div className="ant-row">
+            <div className="ant-col ant-col-xs-28 ant-col-xl-24" style={{ top: "90px" }}>
+                {!ShowCanvas &&
+                    <Card
+                        style={{ padding: "1%", width: "20%", height: "auto", left: "10%", top: "15%", position: "absolute", zIndex: "2", borderRadius: "3%", background: "white" }}
+                        cover={
+                            // <img
+                            //     alt="example"
+                            //     // src={data['image']}
+                            //     src="https://joeschmoe.io/api/v1/random"
+                            //     style={{ width: "100%", height: "auto", borderRadius: "1%" }}
+                            // />
+                            <center>
+                                {/* <Badge status="success" > */}
+                                {/* <Badge text="Online" color="#87d068" placement='start'> */}
+                                <Badge.Ribbon text="online" style={{ backgroundColor: '#87d068' }} placement='start' />,
+                                <Avatar shape="square" size={200} src="https://joeschmoe.io/api/v1/random" />
+                                {/* </Badge> */}
+
+                                {/* </Badge> */}
+                            </center>
+                        }
+                        actions={[<ArrowLeftOutlined key="previous" onClick={() => { setOneTime(0); }
+                        } />,
+                        <PlayCircleOutlined key="play" onClick={() => {
+                            axios.post("http://localhost:3000/game/invite",
+                                {
+                                    "username1": localStorage.getItem("usual_full_name"),
+                                    "username2": data['name']
+                                })
+                                .then(res => {
+                                    if (oneTime === 0) {
+                                        setData(res.data);
+                                        setOneTime(1);
+                                    }
+                                });
+                        }} />,
+                        <ArrowRightOutlined key="next" onClick={() => {
+                            setOneTime(0);
+
+                        }} />
+
+                        ]}
+
+                    >
+                        <Meta
+                            title={data['name']}
+                            description={
+                                <ul>
+                                    <i id="icons">
+                                        {/* <li>
+                                        </li> */}
+                                        <li>
+                                            <EnvironmentOutlined /> :  {data['country']}
+                                        </li>
+                                        <li>
+                                            <FieldNumberOutlined /> : Level {data['level']}
+                                        </li>
+                                        <li>
+                                            <LikeOutlined /> : wins {data['wins']} Matchs
+                                        </li>
+
+                                        <li>
+                                            <DislikeOutlined /> : lost {data['loses']} Matchs
+                                        </li>
+                                        <li>
+                                            <FlagOutlined /> : Quit {data['quit']} Match
+                                        </li>
+
+                                    </i>
+
+
+                                </ul>
                             }
-                        });
-                }} />,
-                <ArrowRightOutlined key="next" onClick={() => {
-                    setOneTime(0);
+                        />
+                    </Card>
+                }
+            </div>
+            <div className="ant-col ant-col-xs-28 ant-col-xl-24" style={{ top: "90px" }}>
+                {!ShowCanvas &&
+                    <div style={{ position: "absolute", top: "15%", left: "37%", zIndex: "2" }}>
+                        <MatchLive />
+                    </div>
+                }
+            </div>
 
-                }} />
-
-                ]}
-
-            >
-                <Meta
-                    title={data['name']}
-                    description={
-                        <ul>
-                            <i id="icons">
-                                <li>
-                                    <InfoCircleFilled /> : Online
-                                </li>
-                                <li>
-                                    <EnvironmentOutlined /> :  {data['country']}
-                                </li>
-                                <li>
-                                    <FieldNumberOutlined /> : Level {data['level']}
-                                </li>
-                                <li>
-                                    <LikeOutlined /> : wins {data['wins']} Matchs
-                                </li>
-
-                                <li>
-                                    <DislikeOutlined /> : lost {data['loses']} Matchs
-                                </li>
-                                <li>
-                                    <FlagOutlined /> : Quit {data['quit']} Match
-                                </li>
-
-                            </i>
-
-
-                        </ul>
-                    }
-                />
-            </Card>
-            }
-            {!ShowCanvas &&
-                <div style={{ position: "absolute", top: "15%", left: "37%", zIndex: "2" }}>
-                    <MatchLive />
-                </div>
-            }
-            {ShowCanvas && <Carousel
+            {/* {ShowCanvas && <Carousel
                 beforeChange={(current) => {
                     if (current === 3) {
                         setShowCanvas(true);
-
                     }
-                    // console.log(current);
                 }}
                 autoplay={false} >
                 <div>
-                    <h3 style={contentStyle}> Welcome to an  online Ping Pong Match   </h3>
+                    <h3 style={contentStyle}> Welcome to an online Ping Pong Match   </h3>
 
                 </div>
                 <div>
@@ -213,23 +224,16 @@ const Next_page = () => {
                 </div>
                 <div>
                     <h3 style={contentStyle}>Good Luck !<HeartOutlined />  </h3>
-                    {/* <div className="wrapper">
-
-                        <div className="ping"> </div>
-                        <div className="ping"></div>
-                        <div className="ball "></div>
-                    </div>
-
-                    <div className="button" >
-
-                </div> */}
-                <div id="count-down">
-                    <div id="count-down-1">1</div>
-                    <div id="count-down-2">2</div>
-                    <div id="count-down-3">3</div>
                 </div>
+            </Carousel >} */}
+            {/* {ShowCanvas && <Canvas />} */}
+            {
+                //make Canvas in center of the screen
+                <div className="ant-col ant-col-xs-28 ant-col-xl-24" style={{ top: "20%", position: "absolute", zIndex: "2", left: "50%", transform: "translate(-50%,0)" }}>
+                    {ShowCanvas && <Canvas />}
                 </div>
-            </Carousel >}
+            }
+            {/* {ShowCanvas && <Canvas />} */}
 
         </div >
     )

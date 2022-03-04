@@ -1,5 +1,9 @@
+import Avatar from 'antd/lib/avatar/avatar';
 import React, { useRef, useEffect } from 'react'
 import { Socket, io } from 'socket.io-client';
+import { useState } from 'react';
+import { Modal, Button } from 'antd';
+import  Dialog  from './match_matching';
 
 export class player {
     score: number;
@@ -180,10 +184,11 @@ export class Game {
     email1: string;
     email2: string;
 
-
     constructor(canvas: HTMLCanvasElement, date: any) {
         this.canvas = canvas;
         this.canvas.style.backgroundColor = "black";
+        this.canvas.width = 800;
+        this.canvas.height = 400;
         this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
         this.uppress = false;
         this.downpress = false;
@@ -226,21 +231,48 @@ export class Game {
             this.email1 = msg.P1;
             this.email2 = msg.P2;
         });
+
+        let img = new Image();
+        img.src = "https://joeschmoe.io/api/v1/random";
+        img.onload = () => {
+            this.ctx.drawImage(img, this.canvas.width - 70, this.canvas.height - 38, 34, 34);
+        }
+
+        let img1 = new Image();
+        img1.src = "https://joeschmoe.io/api/v1/random";
+        img1.onload = () => {
+            this.ctx.drawImage(img1, 50, this.canvas.height - 38, 34, 34);
+        }
         this.start();
 
     }
 
     draw_countdown() {
-        this.ctx.beginPath();
-        this.ctx.arc(this.canvas.width / 2, this.canvas.height / 2, this.canvas.width / 2, 0, Math.PI * 2);
-        this.ctx.fillStyle = "white";
-        this.ctx.fill();
-        this.ctx.closePath();
-        this.ctx.font = "50px Arial";
-        this.ctx.fillStyle = "black";
-        this.ctx.fillText("3", this.canvas.width / 2 - 10, this.canvas.height / 2 + 10);
-        this.ctx.fillText("2", this.canvas.width / 2 - 10, this.canvas.height / 2 + 10);
-        this.ctx.fillText("1", this.canvas.width / 2 - 10, this.canvas.height / 2 + 10);
+        // this.ctx.beginPath();
+        // // this.ctx.arc(this.width / 2, this.height / 2, this.width / 6, 0, Math.PI * 2);
+        // // this.ctx.fillStyle = "white";
+        // // this.ctx.fill();
+        // // this.ctx.closePath();
+        // this.ctx.font = "50px Arial";
+        // this.ctx.fillStyle = "white";
+        // this.ctx.fill();
+        // const log = this.height;
+        // const lar = this.width;
+        // var context_ = this.ctx;
+        // var counter = 5;
+        // const refreshIntervalId = setInterval(function () {
+        //         context_.clearRect(0, 0, lar, log);
+        //     if (counter > 0) {
+        //         context_.fillText(counter, lar / 2 - 10, log / 2 - 10);
+        //         counter == counter - 1;
+        //     }
+        //     if (counter === 0) {
+        //         context_.clearRect(0, 0, lar, log);
+        //         context_.fillText("start", lar / 2 - 10, log / 2 - 10);
+        //         clearInterval(refreshIntervalId);
+        //     }
+        // }, 1000);
+
     }
 
     receiveMessage(data: any) {
@@ -304,16 +336,17 @@ export class Game {
         if (this.downpress) {
 
             this.paddle_left.paddle_y += 4;
-            if (this.paddle_left.paddle_y + this.paddle_left._paddle_height > this.canvas.height) {
-                this.paddle_left.paddle_y = this.canvas.height - this.paddle_left._paddle_height;
+            if (this.paddle_left.paddle_y + this.paddle_left._paddle_height + 40 > this.canvas.height) {
+                this.paddle_left.paddle_y = this.canvas.height - this.paddle_left._paddle_height - 41;
             }
             // this.socket.emit('msgToServer', this.paddle_left.ToJson()); // push a mesage to the array
         }
         if (this.downpress1) {
 
             this.paddle_right.paddle_y += 4;
-            if (this.paddle_right._paddle_y + this.paddle_right._paddle_height > this.canvas.height) {
-                this.paddle_right.paddle_y = this.canvas.height - this.paddle_right._paddle_height;
+            if (this.paddle_right._paddle_y + this.paddle_right._paddle_height + 40 > this.canvas.height) //
+            {
+                this.paddle_right.paddle_y = this.canvas.height - this.paddle_right._paddle_height - 41;
             }
         }
     }
@@ -323,8 +356,9 @@ export class Game {
     collisionDetection() {
         if (this._ball.ball_y + this._ball._velocity_y < this._ball._ball_radius) {
             this._ball._velocity_y *= -1;
-        } else if (
-            this._ball.ball_y + this._ball._velocity_y >
+        }
+        else if (
+            this._ball.ball_y + this._ball._velocity_y + 40 >
             this.canvas.height - this._ball._ball_radius
         ) {
             //ball hits the bottom
@@ -344,8 +378,8 @@ export class Game {
                 this._ball.ball_y = this.canvas.height - this.paddle_right._paddle_height;
                 this._ball._velocity_x = 6;
                 this._ball._velocity_y = -6;
-                this.paddle_left.paddle_y = ((this.canvas.height - this.paddle_left._paddle_height) / 2);
-                this.paddle_right.paddle_y = ((this.canvas.height - this.paddle_right._paddle_height) / 2);
+                // this.paddle_left.paddle_y = ((this.canvas.height - this.paddle_left._paddle_height) / 2);
+                // this.paddle_right.paddle_y = ((this.canvas.height - this.paddle_right._paddle_height) / 2);
             }
         }
         if (
@@ -363,20 +397,27 @@ export class Game {
                 this._ball.ball_y = this.canvas.height - this.paddle_right._paddle_height;
                 this._ball._velocity_y = -6;
                 this._ball._velocity_x = -6;
-                this.paddle_left.paddle_y = ((this.canvas.height - this.paddle_left._paddle_height) / 2);
-                this.paddle_right.paddle_y = ((this.canvas.height - this.paddle_right._paddle_height) / 2);
             }
         }
     }
 
+    draw_footer() {
+        // draw line 
+        this.ctx.beginPath();
+        this.ctx.rect(0, this.canvas.height - 40, this.canvas.width, 1);
+        this.ctx.fillStyle = "white";
+        this.ctx.fill();
+        this.ctx.closePath();
+    }
+
 
     draw() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.draw_countdown();
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height - 40);
         this.paddle_left.draw_padle();
         this.paddle_right.draw_padle();
         this._ball.draw_ball();
         this.center_rec.draw_padle();
-        this.draw_countdown();
     }
 
     show_score() {
@@ -396,6 +437,7 @@ export class Game {
         this._ball.ball_y += this._ball._velocity_y;
         this.collisionDetection();
         this.show_score();
+        this.draw_footer();
         requestAnimationFrame(() => this.start());
 
     }
@@ -408,7 +450,12 @@ const Canvas = (props: any) => {
     useEffect(() => {
         new Game(canvasRef.current as any, props.data);
     }, []);
-    return (<canvas ref={canvasRef}  {...props} width={800} height={400} />);
+    return (
+        <div>
+            <Dialog />
+            <canvas ref={canvasRef}  {...props} width={400} height={200} />
+        </div>
+    );
 };
 
 export default Canvas;
