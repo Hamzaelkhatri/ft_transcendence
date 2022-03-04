@@ -48,13 +48,10 @@ export class Game
     is_started: boolean;
 
     @Column({default:false})
-    is_canceled: boolean;
+    is_rejected_by_user1: boolean;
 
     @Column({default:false})
-    is_rejected: boolean;
-
-    @Column({default:true})
-    is_accepted_by_user1: boolean;
+    is_rejected_by_user2: boolean;
 
     @Column({default:false})
     is_accepted_by_user2: boolean;

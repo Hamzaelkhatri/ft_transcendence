@@ -65,6 +65,10 @@ export class player {
         this.score += value;
     }
 
+    public get _score() {
+        return this.score;
+    }
+
     ToJson() {
         return (
             {
@@ -200,6 +204,8 @@ export class Game {
         this.sender = "";
         this.player = 0;
         this.myId = "";
+
+
         this.socket.on('msgToClient', (msg) => {
             // if (msg.email  !== undefined) {
             // this.sender = msg.email;
@@ -209,20 +215,32 @@ export class Game {
             // }
             // if (msg.paddle_x !== undefined) {
 
-                this.paddle_left.paddle_x = msg.paddle_x;
-                this.paddle_left.paddle_y = msg.paddle_y;
+            this.paddle_left.paddle_x = msg.paddle_x;
+            this.paddle_left.paddle_y = msg.paddle_y;
             // }
             // console.log(msg);
         });
         // this.socket.emit('msgToServer', this.paddle_left.ToJson()); // push a mesage to the array
-        this.socket.on('UserToClient', (msg) => 
-        {
-            console.log(msg);
+        this.socket.on('UserToClient', (msg) => {
+            // console.log(msg);
             this.email1 = msg.P1;
             this.email2 = msg.P2;
         });
         this.start();
 
+    }
+
+    draw_countdown() {
+        this.ctx.beginPath();
+        this.ctx.arc(this.canvas.width / 2, this.canvas.height / 2, this.canvas.width / 2, 0, Math.PI * 2);
+        this.ctx.fillStyle = "white";
+        this.ctx.fill();
+        this.ctx.closePath();
+        this.ctx.font = "50px Arial";
+        this.ctx.fillStyle = "black";
+        this.ctx.fillText("3", this.canvas.width / 2 - 10, this.canvas.height / 2 + 10);
+        this.ctx.fillText("2", this.canvas.width / 2 - 10, this.canvas.height / 2 + 10);
+        this.ctx.fillText("1", this.canvas.width / 2 - 10, this.canvas.height / 2 + 10);
     }
 
     receiveMessage(data: any) {
@@ -300,6 +318,8 @@ export class Game {
         }
     }
 
+
+
     collisionDetection() {
         if (this._ball.ball_y + this._ball._velocity_y < this._ball._ball_radius) {
             this._ball._velocity_y *= -1;
@@ -319,7 +339,7 @@ export class Game {
             ) {
                 this._ball._velocity_x = -this._ball._velocity_x;
             } else if (this._ball.ball_x + this._ball._velocity_x < this.canvas.width - this._ball.ball_radius) {
-                // this.paddle_right._score(1);
+                this.paddle_right._score = 1;
                 this._ball.ball_x = this.canvas.width / 2;
                 this._ball.ball_y = this.canvas.height - this.paddle_right._paddle_height;
                 this._ball._velocity_x = 6;
@@ -338,7 +358,7 @@ export class Game {
             ) {
                 this._ball._velocity_x = -this._ball._velocity_x;
             } else if (this._ball.ball_x + this._ball._velocity_x < 10 - this._ball.ball_radius) {
-                // this.paddle_left._score(1);
+                this.paddle_left._score = 1;
                 this._ball.ball_x = this.canvas.width / 2;
                 this._ball.ball_y = this.canvas.height - this.paddle_right._paddle_height;
                 this._ball._velocity_y = -6;
@@ -356,19 +376,26 @@ export class Game {
         this.paddle_right.draw_padle();
         this._ball.draw_ball();
         this.center_rec.draw_padle();
+        this.draw_countdown();
+    }
+
+    show_score() {
+        this.ctx.font = "30px Arial";
+        this.ctx.fillStyle = "white";
+        this.ctx.fillText(this.paddle_right._score, this.canvas.width / 2 - 100, 30);
+        this.ctx.fillText(this.paddle_left.score, this.canvas.width / 2 + 100, 30);
     }
 
 
     start() {
-        this.socket.emit('UserToServer',"init"); // push a mesage to the array
-        console.log(this.email1 + " " + this.email2);
-        // if (this.email1 === window.sessionStorage.getItem("myEmail")) {
-            this.keyhook();
-        // }
+
+        this.socket.emit('UserToServer', "init"); // push a mesage to the array
+        this.keyhook();
         this.draw();
         this._ball.ball_x += this._ball._velocity_x;
         this._ball.ball_y += this._ball._velocity_y;
         this.collisionDetection();
+        this.show_score();
         requestAnimationFrame(() => this.start());
 
     }
@@ -376,12 +403,12 @@ export class Game {
 
 
 const Canvas = (props: any) => {
-        const canvasRef = useRef(null)
-        // console.log(props.date)
-        useEffect(() => {
-            new Game(canvasRef.current as any, props.data);
-        }, []);
-        return (<canvas ref={canvasRef}  {...props} width={800} height={400} />);
+    const canvasRef = useRef(null)
+    // console.log(props.date)
+    useEffect(() => {
+        new Game(canvasRef.current as any, props.data);
+    }, []);
+    return (<canvas ref={canvasRef}  {...props} width={800} height={400} />);
 };
 
 export default Canvas;
