@@ -41,12 +41,7 @@ const columns = [
                 <Button type="primary" onClick={() => {
                 }
                 }>
-                    Accept
-                </Button>
-                <Button type="danger" onClick={() => {
-                }
-                }>
-                    Reject
+                    Watch
                 </Button>
             </Space>
         ),
