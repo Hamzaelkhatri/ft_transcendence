@@ -112,8 +112,8 @@ export class GameService extends TypeOrmCrudService<Game>
         {
             let game = {
                 key: user[i].id,
-                User1: [user[i].user2.name, user[i].user1.image],
-                User2: [user[i].user1.name, user[i].user2.image],
+                User1: [user[i].user1.name, user[i].user1.image],
+                User2: [user[i].user2.name, user[i].user2.image],
                 Time: user[i].TimeBegin,
             }
             games.push(game);

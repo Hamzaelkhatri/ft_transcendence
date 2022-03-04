@@ -134,7 +134,7 @@ export default function MatchLive() {
     return (
         <div>
             {
-                <Table loading={!datas.length} columns={columns} dataSource={datas} pagination={{ pageSize: 4 }} />
+                <Table loading={!datas.length} columns={columns} dataSource={datas} pagination={{ pageSize: 7 }} />
             }
         </div>
     );
