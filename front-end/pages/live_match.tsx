@@ -1,43 +1,55 @@
 import { Table, Tag, Space, Button, Avatar } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from "react";
-
+// import {Date} from 
 
 
 const columns = [
     {
-        title: 'User',
-        dataIndex: 'User',
+        title: 'User1',
+        dataIndex: 'User1',
         key: '1',
-        render: (text, Avatar1) => {
+        render: (res) =>
             <Space>
-                <Avatar src={Avatar1} />
-                <h4> text </h4>
-            </Space>
-        },
+                <Avatar src={res[1]} />
+                <span>{res[0]}</span>
+            </Space>,
     },
     {
-        title: 'Conter',
-        dataIndex: 'Conter',
+        title: 'User2',
+        dataIndex: 'User2',
         key: '2',
-        render: (text, Avatar1) => {
+        render: (res) =>
             <Space>
-                <Avatar src={Avatar1} />
-                <h4> text </h4>
-            </Space>
-        }
+                <Avatar src={res[1]} />
+                <span>{res[0]}</span>
+            </Space>,
     },
     {
         title: 'Time',
         key: '3',
         dataIndex: 'Time',
         render: Date => {
-            var date = new Date(Date);
-            var now = new Date();
-            var diff = (now.getTime() - date.getTime()) / 1000;
-            diff /= 60;
-            return Math.abs(Math.round(diff));
+            return Date;
         }
+    },
+    {
+        title: 'Action',
+        key: '4',
+        render: (res) => (
+            <Space>
+                <Button type="primary" onClick={() => {
+                }
+                }>
+                    Accept
+                </Button>
+                <Button type="danger" onClick={() => {
+                }
+                }>
+                    Reject
+                </Button>
+            </Space>
+        ),
     },
     // {
     //     title: 'Action',
@@ -55,97 +67,74 @@ const columns = [
 ];
 
 // const data = [
-
-// //   {
-// //     key: '1',
-// //     name: 'John Brown',
-// //     age: 32,
-// //     address: 'New York No. 1 Lake Park',
-// //     tags: ['nice', 'developer'],
-// //   },
-// //   {
-// //     key: '2',
-// //     name: 'Jim Green',
-// //     age: 42,
-// //     address: 'London No. 1 Lake Park',
-// //     tags: ['loser'],
-// //   },
-// //   {
-// //     key: '3',
-// //     name: 'Joe Black',
-// //     age: 32,
-// //     address: 'Sidney No. 1 Lake Park',
-// //     tags: ['cool', 'teacher'],
-// //   },
+//   {
+//     key: '1',
+//     User1:['nice', 'https://joeschmoe.io/api/v1/random'],
+//     Time: 54,
+//     // tags: ['nice', 'https://joeschmoe.io/api/v1/random'],
+//   },
+//   {
+//     key: '2',
+//     User1: ['nice', 'https://joeschmoe.io/api/v1/random'],
+//     Time: 42,
+//     // tags: ['nice', 'https://joeschmoe.io/api/v1/random'],
+//   },
+//   {
+//     key: '3',
+//     User: ['cool', 'https://joeschmoe.io/api/v1/random'],
+//     Time:54,
+//     // tags: 
+//   },
 // ];
 
 
 
 
 export default function MatchLive() {
-    const [data, setData] = useState([]);
-    const [Datasource, setDatasource] = useState([]);
-    useEffect(() => {
-        const fet = async () => {
-            await axios.get("http://localhost:3000/game/current/")
-                .then(res => {
+    const [datas, setData] = useState([]);
+    // const [Datasource, setDatasource] = useState([]);
+    const fet = async () => {
+        await axios.get("http://localhost:3000/game/current/")
+            .then(res => {
+                if (datas['id'] === undefined) {
                     setData(res.data);
-                }).finally(() => {
-                    let count = 0;
-                    data.map(item => {
-                        setDatasource
-                            (
-                                [
-                                    ...Datasource,
-                                    {
-                                        key: count,
-                                        User: item.user1.name,
-                                        Conter: item.user2.name,
-                                        Time: item.TimeBegin,
-                                    }
-                                ]
-                            )
-                        count++;
-                    })
-                    console.log(Datasource);
-                });
+                }
+            });
+    }
 
-        }
-        // if (Datasource.length === 0) {
-        // const inter = setInterval(() => {
-        //     if(Datasource.length === 0){
+
+    // console.log(data);
+    // useEffect(() => {
+    // if (Datasource.length === 0) {
+    // const inter = setInterval(() => {
+    // if(Datasource.length === 0){
+    //     fet();
+    // }
+    //     }
+    //     else
+    //     {
+    //         clearInterval(inter);
+    //     }
+    // console.log(Datasource.length);
+    // }, 1000);
+
+    // }
+    // else {
+    // console.log(Datasource);
+    // }
+    // }, []);
+  const ISSERVER = typeof window === "undefined";
+    
+    if (datas.length === 0 && !ISSERVER) {
         fet();
-        //     }
-        //     else
-        //     {
-        //         clearInterval(inter);
-        //     }
-        // console.log(Datasource.length);
-        // }, 1000);
-
-        // }
-        // else {
-        // console.log(Datasource);
-        // }
-    }, []);
+    }
+    else {
+        // console.log(datas);
+    }
     return (
         <div>
             {
-                //fetch DataSource
-                Datasource.length === 0 ?
-                    <div>
-                        <h1>Loading...</h1>
-                    </div>
-                    :
-                    // <Table columns={columns} dataSource={Datasource} />
-                    Datasource.map(item => {
-                        return (
-                            <div>
-                                <h1>{item.User} vs {item.Conter}</h1>
-                                <h1>{item.Time}</h1>
-                            </div>
-                        )
-                    })
+                <Table loading={!datas.length} columns={columns} dataSource={datas} pagination={{ pageSize: 4 }} />
             }
         </div>
     );
