@@ -229,35 +229,3 @@ a {
     82%{transform: rotate(95deg) translate(-30vw, -20vw) scale(-1, -1);}
     100%{transform: rotate(85deg) translate(-20vw, -30vw) scale(-1, -1);}
   }
-  
-  #count-down {
-    &-1,
-    &-2,
-    &-3 {
-      font-size: 200px;
-      font-family: sans-serif;
-      color: #facfbd;
-      position: absolute;
-      z-index:1000;
-      opacity: 0;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      
-      @media (max-width: 750px) {
-        font-size: 150px;
-      }
-    }
-    &-1 {
-      animation: 1s numbercountdown linear;
-      animation-delay: 2s;
-    }
-    &-2 {
-      animation: 1s numbercountdown linear;
-      animation-delay: 1s;
-    }
-    &-3 {
-      animation: 1s numbercountdown linear;
-      animation-delay: 0s;
-    }
-  }

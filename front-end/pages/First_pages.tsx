@@ -2,12 +2,13 @@ import exp from "constants";
 import React from "react";
 import { useRef, useEffect } from "react";
 import { useState } from "react";
-import _Canvas from "./page1";
+// import _Canvas from "./page1";
 import "antd/dist/antd.css";
 import { Card, Avatar } from "antd";
 import { ArrowLeftOutlined, HeartOutlined, PauseCircleOutlined, ArrowUpOutlined, ArrowDownOutlined, PlayCircleOutlined, ArrowRightOutlined, TrophyOutlined, DislikeOutlined, FlagOutlined, LikeOutlined, FieldNumberOutlined, EnvironmentOutlined, InfoCircleFilled } from "@ant-design/icons";
-import Canvas from "./Game";
+// import Canvas from "./Game";
 import axios from "axios";
+import  Canvas from "./countDown";
 import MatchLive from "./live_match";
 
 
@@ -102,7 +103,7 @@ const Next_page = () => {
 
     return (
         <div>
-            {ShowCanvas ? <Canvas /> : null}
+            {ShowCanvas ? <Canvas/> : null}
             {!ShowCanvas && <Card
                 style={{ padding: "1%", width: "20%", height: "auto", left: "10%", top: "15%", position: "absolute", zIndex: "2", borderRadius: "3%", background: "white" }}
                 cover={
@@ -170,7 +171,7 @@ const Next_page = () => {
             </Card>
             }
             {!ShowCanvas &&
-                <div style={{ position: "absolute", top: "15%", left: "37%", zIndex: "2" }}>
+                <div style={{ position: "absolute", top: "5%", left: "37%", zIndex: "2" }}>
                     <MatchLive />
                 </div>
             }
@@ -213,21 +214,12 @@ const Next_page = () => {
                 </div>
                 <div>
                     <h3 style={contentStyle}>Good Luck !<HeartOutlined />  </h3>
-                    {/* <div className="wrapper">
+                    <div className="wrapper">
 
                         <div className="ping"> </div>
                         <div className="ping"></div>
                         <div className="ball "></div>
                     </div>
-
-                    <div className="button" >
-
-                </div> */}
-                <div id="count-down">
-                    <div id="count-down-1">1</div>
-                    <div id="count-down-2">2</div>
-                    <div id="count-down-3">3</div>
-                </div>
                 </div>
             </Carousel >}
 

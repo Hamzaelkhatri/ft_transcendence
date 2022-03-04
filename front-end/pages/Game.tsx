@@ -180,10 +180,11 @@ export class Game {
     email1: string;
     email2: string;
 
-
     constructor(canvas: HTMLCanvasElement, date: any) {
         this.canvas = canvas;
         this.canvas.style.backgroundColor = "black";
+        this.canvas.width = window.innerWidth ;
+        this.canvas.height = window.innerHeight;
         this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
         this.uppress = false;
         this.downpress = false;
@@ -231,16 +232,31 @@ export class Game {
     }
 
     draw_countdown() {
-        this.ctx.beginPath();
-        this.ctx.arc(this.canvas.width / 2, this.canvas.height / 2, this.canvas.width / 2, 0, Math.PI * 2);
-        this.ctx.fillStyle = "white";
-        this.ctx.fill();
-        this.ctx.closePath();
-        this.ctx.font = "50px Arial";
-        this.ctx.fillStyle = "black";
-        this.ctx.fillText("3", this.canvas.width / 2 - 10, this.canvas.height / 2 + 10);
-        this.ctx.fillText("2", this.canvas.width / 2 - 10, this.canvas.height / 2 + 10);
-        this.ctx.fillText("1", this.canvas.width / 2 - 10, this.canvas.height / 2 + 10);
+        // this.ctx.beginPath();
+        // // this.ctx.arc(this.width / 2, this.height / 2, this.width / 6, 0, Math.PI * 2);
+        // // this.ctx.fillStyle = "white";
+        // // this.ctx.fill();
+        // // this.ctx.closePath();
+        // this.ctx.font = "50px Arial";
+        // this.ctx.fillStyle = "white";
+        // this.ctx.fill();
+        // const log = this.height;
+        // const lar = this.width;
+        // var context_ = this.ctx;
+        // var counter = 5;
+        // const refreshIntervalId = setInterval(function () {
+        //         context_.clearRect(0, 0, lar, log);
+        //     if (counter > 0) {
+        //         context_.fillText(counter, lar / 2 - 10, log / 2 - 10);
+        //         counter == counter - 1;
+        //     }
+        //     if (counter === 0) {
+        //         context_.clearRect(0, 0, lar, log);
+        //         context_.fillText("start", lar / 2 - 10, log / 2 - 10);
+        //         clearInterval(refreshIntervalId);
+        //     }
+        // }, 1000);
+
     }
 
     receiveMessage(data: any) {
@@ -371,12 +387,12 @@ export class Game {
 
 
     draw() {
+        this.draw_countdown();
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.paddle_left.draw_padle();
         this.paddle_right.draw_padle();
         this._ball.draw_ball();
         this.center_rec.draw_padle();
-        this.draw_countdown();
     }
 
     show_score() {
