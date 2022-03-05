@@ -197,9 +197,9 @@ export class Game {
         this.uppress = false;
         this.downpress = false;
         this.uppress1 = false;
-        this.email1 = data.user1['email'];
+        // this.email1 = data.user1['email'];
         // console.log(this.email1);
-        this.email2 = data.user2['email'];
+        // this.email2 = data.user2['email'];
         // console.log(this.email2);
         this.downpress1 = false;
         this.paddle_left = new player(0, 10, this.canvas.height / 2, 10, 80, 1, this.ctx, "white");
@@ -213,30 +213,19 @@ export class Game {
         this.sender = "";
         this.player = 0;
         this.myId = "";
+        this.email1 = data['user1']['email'];
+        this.email2 = data['user2']['email'];
 
 
-        this.socket.on('msgToClient', (msg) => {
-            // if (msg.email  !== undefined) {
-            // this.sender = msg.email;
-            // this.sender = msg.sessionId;
-            // this.myId = this.socket.id;
-            // console.log(this.myId);
-            // }
-            // if (msg.paddle_x !== undefined) {
+        this.socket.on('DataToClient', (msg) => {
+            this.paddle_right.paddle_x = msg.paddle_x;
+            this.paddle_right.paddle_y = msg.paddle_y;
+        });
 
+        this.socket.on('DataToClient2', (msg) => {
             this.paddle_left.paddle_x = msg.paddle_x;
             this.paddle_left.paddle_y = msg.paddle_y;
-            // }
-            // console.log(msg);
         });
-        // if(this.player == 0){
-        this.socket.emit('msgToServer', this.paddle_left.ToJson()); // push a mesage to the array
-        this.socket.on('UserToClient', (msg) => {
-            console.log(msg);
-            this.email1 = msg.P1;
-            this.email2 = msg.P2;
-        });
-
         let img = new Image();
         img.src = "https://joeschmoe.io/api/v1/random";
         img.onload = () => {
@@ -248,11 +237,12 @@ export class Game {
         img1.onload = () => {
             this.ctx.drawImage(img1, 50, this.canvas.height - 38, 34, 34);
         }
+        this.receiveMessage(data);
         this.start();
     }
 
     receiveMessage(data: any) {
-        // console.log(`receive: ${data}`);
+        console.log(data);
     }
 
     keyDownHandler(e: KeyboardEvent) {
@@ -290,15 +280,15 @@ export class Game {
 
 
     keyhook() {
-
-        if (this.email1 === this.socket.id) 
-        {
+        console.log(this.email1);
+        console.log(this.email2);
+        if (this.email1 === localStorage.getItem('email')) {
             if (this.uppress === true) {
                 this.paddle_left.paddle_y -= 4;
                 if (this.paddle_left.paddle_y < 0) {
                     this.paddle_left.paddle_y = 0;
                 }
-                // this.socket.emit('msgToServer', this.paddle_left.ToJson()); // push a mesage to the array
+                this.socket.emit('DataToServer2', this.paddle_left.ToJson()); // push a mesage to the array
             }
             if (this.downpress) {
 
@@ -306,27 +296,31 @@ export class Game {
                 if (this.paddle_left.paddle_y + this.paddle_left._paddle_height + 40 > this.canvas.height) {
                     this.paddle_left.paddle_y = this.canvas.height - this.paddle_left._paddle_height - 41;
                 }
-                // this.socket.emit('msgToServer', this.paddle_left.ToJson()); // push a mesage to the array
+                this.socket.emit('DataToServer2', this.paddle_left.ToJson()); // push a mesage to the array
+
             }
         }
-        if (this.uppress1) {
-            this.paddle_right.paddle_y -= 4;
+        if (this.email2 === localStorage.getItem('email')) {
+            if (this.uppress1) {
+                this.paddle_right.paddle_y -= 4;
 
-            if (this.paddle_right._paddle_y < 0) {
-                this.paddle_right.paddle_y = 0;
+                if (this.paddle_right._paddle_y < 0) {
+                    this.paddle_right.paddle_y = 0;
+                }
+                this.socket.emit('DataToServer', this.paddle_right.ToJson()); // push a mesage to the array
+
             }
-        }
-        if (this.downpress1) {
+            if (this.downpress1) {
 
-            this.paddle_right.paddle_y += 4;
-            if (this.paddle_right._paddle_y + this.paddle_right._paddle_height + 40 > this.canvas.height) //
-            {
-                this.paddle_right.paddle_y = this.canvas.height - this.paddle_right._paddle_height - 41;
+                this.paddle_right.paddle_y += 4;
+                if (this.paddle_right._paddle_y + this.paddle_right._paddle_height + 40 > this.canvas.height) //
+                {
+                    this.paddle_right.paddle_y = this.canvas.height - this.paddle_right._paddle_height - 41;
+                }
+                this.socket.emit('DataToServer', this.paddle_right.ToJson()) // push a mesage to the array
             }
         }
     }
-
-
 
     collisionDetection() {
         if (this._ball.ball_y + this._ball._velocity_y < this._ball._ball_radius) {
@@ -403,7 +397,7 @@ export class Game {
 
     start() {
 
-        this.socket.emit('UserToServer', "init"); // push a mesage to the array
+        // this.socket.emit('UserToServer', "init"); // push a mesage to the array
         this.keyhook();
         this.draw();
         this._ball.ball_x += this._ball._velocity_x;

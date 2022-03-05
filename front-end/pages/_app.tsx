@@ -11,7 +11,7 @@ import ResponsiveAppBar from "./Navbar"
 import HomePage from './home'
 import Next_page from './First_pages'
 
-import leaderboard from './leaderboard'
+// import leaderboard from './leaderboard'
 
 function MyApp(props: AppProps) {
 
@@ -58,7 +58,7 @@ function MyApp(props: AppProps) {
         })
         .then(res => res.json())
         .then(data => {
-          console.log(data);
+          // console.log(data);
           setReactData(
             {
               email: data.email,
@@ -119,10 +119,6 @@ function MyApp(props: AppProps) {
         {!popup && <ResponsiveAppBar data={reactData} usecase={singIn} login={login} />}
         {singIn === "Sign Out" &&
           <Next_page />
-          // <div style={{ position: "absolute", top: "15%", left: "37%", zIndex: "2" }}>
-            
-          //   <leaderboard />
-          // </div>
         }
       </div>
     );

@@ -42,7 +42,7 @@ export class GameController implements CrudController<Game> {
 
     @Post('/invite')
     async Invite(@Req() req) {
-        console.log(req.body);
+        // console.log(req.body);
         return await this.service.Invite(req.body.username1, req.body.username2);
     }
 

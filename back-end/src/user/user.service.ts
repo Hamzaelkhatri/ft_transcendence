@@ -58,7 +58,7 @@ export default class UserService extends TypeOrmCrudService<User>
 
     getIdbyName(name: string): number {
         return this.repository.findOne({ name: name }).then(user => {
-            console.log(user);
+            // console.log(user);
             return user.id;
         }
         );
@@ -85,7 +85,6 @@ export default class UserService extends TypeOrmCrudService<User>
         );
 
         let random = Math.floor(Math.random() * ids.length);
-        console.log(random);
         return await this.repository.findOne({ id: ids[random] });
     }
     async leaderboard() {

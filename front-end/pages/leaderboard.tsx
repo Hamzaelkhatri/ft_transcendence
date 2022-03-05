@@ -105,7 +105,6 @@ export default function Leaderboard() {
             <div>
                 <Table loading={!state.length} columns={columns}
                     dataSource={state} pagination={{ pageSize: 7 }}
-
                     scroll={{ y: 500 }}
                 />
             </div>
