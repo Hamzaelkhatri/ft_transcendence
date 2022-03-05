@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 const columns = [
     {
-        title: 'User1',
+        title: 'Player One',
         dataIndex: 'User1',
         key: '1',
         render: (res) =>
@@ -16,7 +16,7 @@ const columns = [
             </Space>,
     },
     {
-        title: 'User2',
+        title: 'Player Two',
         dataIndex: 'User2',
         key: '2',
         render: (res) =>
@@ -46,19 +46,6 @@ const columns = [
             </Space>
         ),
     },
-    // {
-    //     title: 'Action',
-    //     key: 'Action',
-    //     render: (text, record) => (
-    //         <Space size="middle">
-    //             <Button type="primary" onClick={() => {
-    //                 console.log(record);
-    //             }}>
-    //                 View
-    //             </Button>
-    //         </Space>
-    //     ),
-    // },
 ];
 
 // const data = [

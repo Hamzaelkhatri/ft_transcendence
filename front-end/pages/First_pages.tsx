@@ -9,7 +9,7 @@ import { ArrowLeftOutlined, PlayCircleOutlined, ArrowRightOutlined, DislikeOutli
 import Canvas from "./Game";
 import axios from "axios";
 import MatchLive from "./live_match";
-
+import Leaderboard from "./leaderboard";
 
 const { Meta } = Card;
 
@@ -78,9 +78,10 @@ const Next_page = () => {
 
                 axios.get("http://localhost:3000/game/is_invited/" + localStorage.getItem("id"))
                     .then(res => {
+                        // console.log(res.data);
                         if (res.data.length !== 0) {
                             setOneTime1(1);
-                            console.log(res.data);
+                            // console.log(res.data);
                             setGameInfo(res.data);
                             openNotification(res.data);
                             clearInterval(inter);
@@ -91,7 +92,7 @@ const Next_page = () => {
                 clearInterval(inter);
             }
         }, 1000);
-    }, []);
+    }, [GameInfo]);
     axios.get("http://localhost:3000/user/random")
         .then(res => {
             if (oneTime === 0) {
@@ -99,13 +100,12 @@ const Next_page = () => {
                 setOneTime(1);
             }
         });
-
     return (
         <div className="ant-row">
-            <div className="ant-col ant-col-xs-28 ant-col-xl-24" style={{ top: "90px" }}>
+            <div className="ant-col ant-col-xs-28 ant-col-xl-24" style={{ top: "150px" }}>
                 {!ShowCanvas &&
                     <Card
-                        style={{ padding: "1%", width: "20%", height: "auto", left: "10%", top: "15%", position: "absolute", zIndex: "2", borderRadius: "3%", background: "white" }}
+                        style={{ padding: "1%", width: "20%", height: "auto", left: "20%", top: "15%", position: "absolute", zIndex: "2", borderRadius: "3%", background: "white" }}
                         cover={
                             // <img
                             //     alt="example"
@@ -179,10 +179,17 @@ const Next_page = () => {
                     </Card>
                 }
             </div>
-            <div className="ant-col ant-col-xs-28 ant-col-xl-24" style={{ top: "90px" }}>
+            <div className="ant-col ant-col-xs-28 ant-col-xl-24" style={{ top: "150px"  }}>
                 {!ShowCanvas &&
-                    <div style={{ position: "absolute", top: "15%", left: "37%", zIndex: "2" }}>
+                    <div style={{ position: "absolute", top: "15%", left: "50%", zIndex: "2" ,width:"40%" , height:"auto"}}>
                         <MatchLive />
+                    </div>
+                }
+            </div>
+            <div className="ant-col ant-col-xs-28 ant-col-xl-24" style={{ top: "1000px" }}>
+                {!ShowCanvas &&
+                    <div style={{ position: "absolute", left: "25%", zIndex: "2",width: "50%" , height:"auto"}}>
+                        <Leaderboard />
                     </div>
                 }
             </div>
@@ -230,7 +237,7 @@ const Next_page = () => {
             {
                 //make Canvas in center of the screen
                 <div className="ant-col ant-col-xs-28 ant-col-xl-24" style={{ top: "20%", position: "absolute", zIndex: "2", left: "50%", transform: "translate(-50%,0)" }}>
-                    {ShowCanvas && <Canvas />}
+                    {ShowCanvas && <Canvas data={GameInfo} />}
                 </div>
             }
             {/* {ShowCanvas && <Canvas />} */}

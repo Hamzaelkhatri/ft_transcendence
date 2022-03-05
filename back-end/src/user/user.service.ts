@@ -5,7 +5,7 @@ import { User } from './user.entity';
 import { CrudRequest } from '@nestjsx/crud';
 
 @Injectable()
-export default class UserService extends TypeOrmCrudService<User> 
+export default class UserService extends TypeOrmCrudService<User>
 {
 
     repository: any;
@@ -14,24 +14,19 @@ export default class UserService extends TypeOrmCrudService<User>
         this.repository = repository;
     }
 
-    async createOne(request: CrudRequest, data: Partial<User>) 
-    {
+    async createOne(request: CrudRequest, data: Partial<User>) {
 
-        let res = await  this.findByEmail(data.email).then(user => 
-            {
-                if (user)
-                {
-                    return user;
-                }
-                else
-                {
-                    return null;
-                }
+        let res = await this.findByEmail(data.email).then(user => {
+            if (user) {
+                return user;
             }
+            else {
+                return null;
+            }
+        }
         );
 
-        if (res)
-        {
+        if (res) {
             return res;
         }
 
@@ -49,61 +44,68 @@ export default class UserService extends TypeOrmCrudService<User>
         return user
     }
 
-    findByEmail(email: string) : Promise<User>
-    {
+    findByEmail(email: string): Promise<User> {
         return this.repository.findOne({ email: email });
     }
 
-    async getUserByToken(token: string) : Promise<User>
-    {
+    async getUserByToken(token: string): Promise<User> {
         return await this.repository.findOne({ token: token });
     }
 
-    fetchAllUsers() : Promise<User[]>
-    {
+    fetchAllUsers(): Promise<User[]> {
         return this.repository.find();
     }
 
-    getIdbyName(name: string) : number
-    {
-        return this.repository.findOne({ name: name }).then(user =>
-            {
-                console.log(user);
-                return user.id;
-            }
+    getIdbyName(name: string): number {
+        return this.repository.findOne({ name: name }).then(user => {
+            console.log(user);
+            return user.id;
+        }
         );
     }
 
-    async getUserById(id: number) : Promise<User>
-    {
+    async getUserById(id: number): Promise<User> {
         return await this.repository.findOne({ id: id });
     }
-    
 
-    async getNextUser() : Promise<User>
-    {
+
+    async getNextUser(): Promise<User> {
         return await this.repository.findOne({ is_online: true });
     }
 
-    async getRandomUser() : Promise<User>
-    {
-        let ids:number[] = await this.repository.find({ is_online: true }).then(users =>
-            {
-                let ids = [];
-                users.forEach(user =>
-                    {
-                        ids.push(user.id);
-                    }
-                );
-                return ids;
+    async getRandomUser(): Promise<User> {
+        let ids: number[] = await this.repository.find({ is_online: true }).then(users => {
+            let ids = [];
+            users.forEach(user => {
+                ids.push(user.id);
             }
+            );
+            return ids;
+        }
         );
 
         let random = Math.floor(Math.random() * ids.length);
         console.log(random);
         return await this.repository.findOne({ id: ids[random] });
     }
-
+    async leaderboard() {
+        const user = await this.repository.
+            createQueryBuilder('user')
+            .orderBy('user.wins', 'ASC')
+            .getMany();
+        let winners = [];
+        for (let i = 0; i < user.length; i++) {
+            let winner = {
+                image: user[i].image,
+                name: user[i].name,
+                wins: user[i].wins + i,
+                contry: user.contry,
+                key: user[i].id,
+            }
+            winners.push(winner);
+        }
+        return winners;
+    }
 
 }
 

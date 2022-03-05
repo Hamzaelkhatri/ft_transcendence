@@ -11,6 +11,8 @@ import ResponsiveAppBar from "./Navbar"
 import HomePage from './home'
 import Next_page from './First_pages'
 
+import leaderboard from './leaderboard'
+
 function MyApp(props: AppProps) {
 
   const ISSERVER = typeof window === "undefined";
@@ -62,7 +64,7 @@ function MyApp(props: AppProps) {
               email: data.email,
               usual_full_name: data.name,
               image_url: data.image,
-              id:data.id
+              id: data.id
             })
           if (!ISSERVER) {
             localStorage.setItem("email", data.email)
@@ -78,16 +80,16 @@ function MyApp(props: AppProps) {
 
       if (popups !== undefined) {
         if (popups.closed) {
-          if(!ISSERVER) {
-          setReactData(
-            {
-              email: localStorage.getItem("email") === undefined ? "" : localStorage.getItem("email"),
-              usual_full_name: localStorage.getItem("usual_full_name") === undefined ? "" : localStorage.getItem("usual_full_name"),
-              image_url: localStorage.getItem("image_url") === undefined ? "" : localStorage.getItem("image_url")
-            });
-          clearInterval(interval);
-          setPopup(false);
-          setSingIn("Sign Out");
+          if (!ISSERVER) {
+            setReactData(
+              {
+                email: localStorage.getItem("email") === undefined ? "" : localStorage.getItem("email"),
+                usual_full_name: localStorage.getItem("usual_full_name") === undefined ? "" : localStorage.getItem("usual_full_name"),
+                image_url: localStorage.getItem("image_url") === undefined ? "" : localStorage.getItem("image_url")
+              });
+            clearInterval(interval);
+            setPopup(false);
+            setSingIn("Sign Out");
           }
         }
       }
@@ -115,14 +117,18 @@ function MyApp(props: AppProps) {
         }
 
         {!popup && <ResponsiveAppBar data={reactData} usecase={singIn} login={login} />}
-        {singIn === "Sign Out" && <Next_page />}
+        {singIn === "Sign Out" &&
+          <Next_page />
+          // <div style={{ position: "absolute", top: "15%", left: "37%", zIndex: "2" }}>
+            
+          //   <leaderboard />
+          // </div>
+        }
       </div>
     );
   }
-  // return (null);
   return (
     <>
-      {/* <ResponsiveAppBar /> */}
     </>
   )
 }

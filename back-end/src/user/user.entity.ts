@@ -33,7 +33,7 @@ export class User
     @Column()
     is_verified: boolean
     
-    @Column({default:'moroccan'})
+    @Column({default:'Moroco'})
     country: string
 
     @Column({default:0})
