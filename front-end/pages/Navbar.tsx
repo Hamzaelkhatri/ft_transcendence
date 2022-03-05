@@ -43,7 +43,7 @@ const ResponsiveAppBar = (prps: any) => {
      // setSignIn("Sign In")
   }
 
-  console.log(prps.usecase)
+  // console.log(prps.usecase)
 
   return (
     <AppBar style={{ background: 'transparent', boxShadow: '', width: '100%',zIndex: '2' }}>

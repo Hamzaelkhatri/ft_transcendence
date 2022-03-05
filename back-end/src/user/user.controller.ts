@@ -1,5 +1,5 @@
 import { Controller, Get, Module, Param, Post, Req, Res } from '@nestjs/common';
-import {Crud, CrudController} from '@nestjsx/crud'; // <-- Import the CrudController
+import { Crud, CrudController } from '@nestjsx/crud'; // <-- Import the CrudController
 import { User } from './user.entity';
 import UserService from './user.service';
 
@@ -9,15 +9,13 @@ import UserService from './user.service';
     }
 })
 @Controller('user')
-export class UserController implements CrudController<User> 
+export class UserController implements CrudController<User>
 {
-    constructor(public service: UserService) 
-    {
+    constructor(public service: UserService) {
 
     }
 
-    get base(): CrudController<User>
-    {
+    get base(): CrudController<User> {
         return this;
     }
 
@@ -33,15 +31,13 @@ export class UserController implements CrudController<User>
         return this.base.getOneBase(request);
     }
 
-    createOne(request: any, data:{id:number,name:string,email:string,token:string,created_at:Date,updated_at:Date,deleted_at:Date,is_online:boolean,image:string,is_verified:boolean,country:string,wins:number,loses:number,quit:number,level:number}) { 
+    createOne(request: any, data: { id: number, name: string, email: string, token: string, created_at: Date, updated_at: Date, deleted_at: Date, is_online: boolean, image: string, is_verified: boolean, country: string, wins: number, loses: number, quit: number, level: number }) {
         return this.base.createOneBase(request, data);
     }
 
     @Post("me")
-    async getMyData(@Req() req,@Res() res)
-    {
-        let user = await this.service.getUserByToken(req.body.token).then(user =>
-        {
+    async getMyData(@Req() req, @Res() res) {
+        let user = await this.service.getUserByToken(req.body.token).then(user => {
             if (user)
                 return user;
             else
@@ -52,22 +48,24 @@ export class UserController implements CrudController<User>
     }
 
     @Get("all")
-    async getAllUsers(@Res() res)
-    {
+    async getAllUsers(@Res() res) {
         return await this.service.fetchAllUsers();
     }
 
     @Get("/next/")
-    async getNextUser()
-    {
+    async getNextUser() {
         return await this.service.getNextUser();
     }
 
     @Get("/random/")
-    async getRandomUser()
-    {
+    async getRandomUser() {
         return await this.service.getRandomUser();
     }
 
-  
+    @Get("/leaderboard/")
+    async leaderborad() {
+        // console.log("leaderborad");
+        return await this.service.leaderboard();
+    }
+
 }

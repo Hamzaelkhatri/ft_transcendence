@@ -6,11 +6,9 @@ import { Server, Socket } from 'socket.io';
 export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
   private logger: Logger = new Logger('AppGateway');
+  usersConnect = [];
 
   @WebSocketServer() server: Server;
-  Players: any[] = [];
-  P1: string = "0";
-  P2: string = "1";
 
   afterInit(server: Server) {
     this.logger.log('Initialized');
@@ -19,16 +17,21 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 
   handleConnection(client: Socket, ...args: any[]) {
     this.logger.log(`Client connected ${client.id}`);
+    this.usersConnect.push(client.id);
+    console.log(this.usersConnect.length);
   }
 
   handleDisconnect(client: Socket) {
     this.logger.log(`Client desconnected ${client.id}`);
+    this.usersConnect = this.usersConnect.filter(user => user !== client.id);
+    console.log(this.usersConnect.length);
   }
 
 
   @SubscribeMessage('DataToServer')
   handleMessage(client: Socket, payload: any): void {
     client.broadcast.emit('DataToClient', payload);
+    // console.log(payload);
   }
 
   @SubscribeMessage('DataToServer2')
@@ -38,18 +41,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 
   @SubscribeMessage('connectServer')
   connect_users(client: Socket, payload: any): void {
-    if (payload === "init") 
-    {
-      this.server.emit('connectClient', { P1: this.P1, P2: this.P2 });
-      return;
-    }
-    if (this.P1 === "0" && this.P2 === "1" || this.P1 === undefined || this.P2 === undefined) 
-    {
-      this.Players.push(payload.p1 + " " + client.id);
-      console.log(this.Players);
 
-      this.P1 = payload.p1;
-      this.P2 = payload.p2;
-    }
+    // this.server.emit('connectClient', { P1: this.P1, P2: this.P2 });
   }
 }
