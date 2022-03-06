@@ -220,6 +220,8 @@ export class Game {
         this.myId = "";
 
 
+        this.paddle_left.score = 0;
+        this.paddle_right.score = 0;
 
         this.socket.on('DataToClient', (msg) => {
             this.paddle_right.paddle_x = msg.paddle_x;
@@ -229,6 +231,15 @@ export class Game {
         this.socket.on('DataToClient2', (msg) => {
             this.paddle_left.paddle_x = msg.paddle_x;
             this.paddle_left.paddle_y = msg.paddle_y;
+        });
+
+        this.socket.on('BallClient', (msg) => {
+            this._ball.ball_x = msg.ball_x;
+            this._ball.ball_y = msg.ball_y;
+            this._ball.velocity_x = msg.velocity_x;
+            this._ball.velocity_y = msg.velocity_y;
+            this.paddle_left.score = msg.score1;
+            this.paddle_right.score = msg.score2;
         });
         let img = new Image();
         img.src = "https://joeschmoe.io/api/v1/random";
@@ -403,13 +414,23 @@ export class Game {
 
         this.keyhook();
         this.draw();
-        this._ball.ball_x += this._ball._velocity_x;
-        this._ball.ball_y += this._ball._velocity_y;
-        this.collisionDetection();
+        if (this.email1 === localStorage.getItem('email')) {
+            this._ball.ball_x += this._ball._velocity_x;
+            this._ball.ball_y += this._ball._velocity_y;
+            this.collisionDetection();
+            this.socket.emit('BallServer', 
+            {
+                ball_x: this._ball.ball_x,
+                ball_y: this._ball.ball_y,
+                velocity_x: this._ball._velocity_x,
+                velocity_y: this._ball._velocity_y,
+                score1: this.paddle_left.score,
+                score2: this.paddle_right.score,
+            });
+        }
         this.show_score();
         this.draw_footer();
         requestAnimationFrame(() => this.start());
-
     }
 }
 
@@ -428,14 +449,14 @@ const Canvas = (props: any) => {
                 new Game(canvasRef.current as any, data);
             }
             else {
-                console.log(data.length);
-                console.log("interv");
-                axios.get('http://localhost:3000/game/is_waiting/' + localStorage.getItem('id'))
-                    .then(res => {
-                        // if (data['user1'] === "undefined") {
-                        setData(res.data);
-                        // }
-                    })
+                // console.log(data.length);
+                // console.log("interv");
+                if (isWating) {
+                    axios.get('http://localhost:3000/game/is_waiting/' + localStorage.getItem('id'))
+                        .then(res => {
+                            setData(res.data);
+                        })
+                }
             }
         }, 1000);
 

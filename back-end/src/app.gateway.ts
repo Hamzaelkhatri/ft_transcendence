@@ -39,9 +39,8 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
     client.broadcast.emit('DataToClient2', payload);
   }
 
-  @SubscribeMessage('connectServer')
+  @SubscribeMessage('BallServer')
   connect_users(client: Socket, payload: any): void {
-
-    // this.server.emit('connectClient', { P1: this.P1, P2: this.P2 });
-  }
+    client.broadcast.emit('BallClient', payload);
+    }
 }
