@@ -42,7 +42,6 @@ export class GameController implements CrudController<Game> {
 
     @Post('/invite')
     async Invite(@Req() req) {
-        // console.log(req.body);
         return await this.service.Invite(req.body.username1, req.body.username2);
     }
 
@@ -65,5 +64,11 @@ export class GameController implements CrudController<Game> {
     @Get("/current/")
     async current() {
         return await this.service.currentGames();
+    }
+
+    @Get("/is_waiting/:id")
+    async is_begin(@Param("id") id: number) 
+    {
+        return await this.service.is_waiting(id);
     }
 }

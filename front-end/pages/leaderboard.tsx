@@ -32,57 +32,29 @@ export default function Leaderboard() {
 
             title: 'Name',
             dataIndex: 'Name',
-            // key: '1',
+            key: '1',
             width: '10%',
             render: (res) =>
                 <Space>
                     <Avatar src={res[1]} />
                     <span>{res[0]}</span>
                 </Space>,
-            // render: (res) => {
-            //     //     return (
-            //     <Space>
-            //         <Avatar src={res[0]} />
-            //         {/* //             <span>{Name}</span> */}
-
-            // //         </Space>
-            //     //     );
-            // }
         },
 
         {
             title: 'Rank',
             dataIndex: 'Rank',
-            // key: '2',
+            key: '2',
             width: '7.5%',
             sorter: {
                 compare: (a, b) => a.Rank - b.Rank,
             },
-
-
-            // render: (res) =>
-            //     <Space>
-            //         <Avatar src={res[1]} />
-            //         <span>{res[0]}</span>
-            //     </Space>,
         },
         {
             title: 'Contry',
             dataIndex: 'Contry',
-            // key: '3',
+            key: '3',
             width: '7.5%',
-
-            //rennder textAlign
-            // render: (res) => {
-            //     return res.data.Country;
-            // }
-
-            // render: (res) =>
-            //     <Space>
-            //         <Avatar src={res[1]} />
-            //         <span>{res[0]}</span>
-            //     </Space>,
-
         },
     ];
     useEffect(() => {
