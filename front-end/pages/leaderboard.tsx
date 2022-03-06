@@ -18,7 +18,7 @@ export default function Leaderboard() {
             .then(res => {
                 setloading(false);
                 setstate(res.data.map(row => ({
-                    Name: [row.name,row.image],
+                    Name: [row.name, row.image],
                     Rank: row.wins,
                     Contry: "Morocco",
                 })));
@@ -39,15 +39,6 @@ export default function Leaderboard() {
                     <Avatar src={res[1]} />
                     <span>{res[0]}</span>
                 </Space>,
-            // render: (res) => {
-            //     //     return (
-            //     <Space>
-            //         <Avatar src={res[0]} />
-            //         {/* //             <span>{Name}</span> */}
-
-            // //         </Space>
-            //     //     );
-            // }
         },
 
         {
@@ -58,13 +49,6 @@ export default function Leaderboard() {
             sorter: {
                 compare: (a, b) => a.Rank - b.Rank,
             },
-
-
-            // render: (res) =>
-            //     <Space>
-            //         <Avatar src={res[1]} />
-            //         <span>{res[0]}</span>
-            //     </Space>,
         },
         {
             title: 'Contry',
