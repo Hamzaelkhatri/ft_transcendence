@@ -45,14 +45,14 @@ body {
   /* text-shadow: 0 0 10px black;*/
 }
 
-a {
+/* a {
   color: inherit;
   text-decoration: none;
 }
 
 * {
   box-sizing: border-box;
-}
+} */
 
 
 
@@ -114,7 +114,7 @@ a {
   /* top:50%; */
 
 
-  a {
+  /* a {
     color: inherit;
     text-decoration: none;
   }
@@ -123,7 +123,7 @@ a {
     box-sizing: border-box;
   }
   
-  
+   */
   .button {
   
     position: absolute;
@@ -132,7 +132,7 @@ a {
     transform: translate(-50%, -50%);
     background-color: #c48ed1;
   }
-  :root{
+  /* :root{
   --wrapperSize: 30vw;
   }
   
@@ -228,4 +228,4 @@ a {
     76%{transform: rotate(80deg) translate(-19vw, -31vw) scale(-1, -1);}
     82%{transform: rotate(95deg) translate(-30vw, -20vw) scale(-1, -1);}
     100%{transform: rotate(85deg) translate(-20vw, -30vw) scale(-1, -1);}
-  }
+  } */

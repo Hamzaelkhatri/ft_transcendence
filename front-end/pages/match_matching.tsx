@@ -3,7 +3,7 @@ import { Modal, Button, Space } from 'antd';
 import { Spin } from 'antd';
 
 
-const Dialog = () => {
+const Dialog = (props: any) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
 
     const showModal = () => {
@@ -18,19 +18,18 @@ const Dialog = () => {
         setIsModalVisible(false);
     };
 
+    // showModal();
+
     return (
         <>
-            <Button type="primary" onClick={showModal}>
-                Open Modal
-            </Button>
-            <Modal title="Waiting for a match" visible={isModalVisible} onOk={handleOk} maskClosable={false} mask={true} onCancel={handleCancel}
-                footer={[]}
-            >
-                <Space >
-                <Spin size="large"></Spin>
-                Waiting for a match
-            </Space>
-            {/* <Space>        
+                <Modal title="Waiting for a match" visible={true} onOk={handleOk} maskClosable={false} mask={true} onCancel={handleCancel}
+                    footer={[
+                    ]}>
+                    <Space >
+                        <Spin size="large"></Spin>
+                        Waiting for a match
+                    </Space>
+                    {/* <Space>        
                 <div>
                     <div className="wrapper">
 
@@ -44,7 +43,7 @@ const Dialog = () => {
                     </div>
                 </div>
             </Space> */}
-        </Modal>
+                </Modal>
         </>
     );
 };

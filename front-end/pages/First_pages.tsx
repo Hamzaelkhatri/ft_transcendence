@@ -107,25 +107,16 @@ const Next_page = () => {
                     <Card
                         style={{ padding: "1%", width: "20%", height: "auto", left: "20%", top: "15%", position: "absolute", zIndex: "2", borderRadius: "3%", background: "white" }}
                         cover={
-                            // <img
-                            //     alt="example"
-                            //     // src={data['image']}
-                            //     src="https://joeschmoe.io/api/v1/random"
-                            //     style={{ width: "100%", height: "auto", borderRadius: "1%" }}
-                            // />
+                      
                             <center>
-                                {/* <Badge status="success" > */}
-                                {/* <Badge text="Online" color="#87d068" placement='start'> */}
-                                <Badge.Ribbon text="online" style={{ backgroundColor: '#87d068' }} placement='start' />,
+                                <Badge.Ribbon text="online" style={{ backgroundColor: '#87d068' }} placement='start' />
                                 <Avatar shape="square" size={200} src="https://joeschmoe.io/api/v1/random" />
-                                {/* </Badge> */}
-
-                                {/* </Badge> */}
                             </center>
                         }
                         actions={[<ArrowLeftOutlined key="previous" onClick={() => { setOneTime(0); }
                         } />,
                         <PlayCircleOutlined key="play" onClick={() => {
+                            setShowCanvas(true);
                             axios.post("http://localhost:3000/game/invite",
                                 {
                                     "username1": localStorage.getItem("usual_full_name"),
@@ -186,10 +177,10 @@ const Next_page = () => {
                     </div>
                 }
             </div>
-            <div className="ant-col ant-col-xs-28 ant-col-xl-24" >
+            <div className="ant-col ant-col-xs-28 ant-col-xl-24"  style={{ top: "1000px", width:"100%"  , left: "25%", zIndex: "2" }} >
                 {!ShowCanvas &&
                     <div >
-                        {/* <Leaderboard /> */}
+                        <Leaderboard />
                     </div>
                 }
             </div>

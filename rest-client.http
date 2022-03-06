@@ -46,4 +46,7 @@ GET http://localhost:3000/game/is_invited/10
 ###
 GET http://localhost:3000/game/current/
 
+###
+GET http://localhost:3000/game/is_waiting/10
+
 
