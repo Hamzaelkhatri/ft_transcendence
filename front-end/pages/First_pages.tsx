@@ -186,10 +186,10 @@ const Next_page = () => {
                     </div>
                 }
             </div>
-            <div className="ant-col ant-col-xs-28 ant-col-xl-24" >
+            <div className="ant-col ant-col-xs-28 ant-col-xl-24"  style={{ top: "1000px", width:"100%"  , left: "25%", zIndex: "2" }} >
                 {!ShowCanvas &&
                     <div >
-                        {/* <Leaderboard /> */}
+                        <Leaderboard />
                     </div>
                 }
             </div>
