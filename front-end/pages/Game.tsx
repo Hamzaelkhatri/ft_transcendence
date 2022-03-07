@@ -1,12 +1,11 @@
 import Avatar from 'antd/lib/avatar/avatar';
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useContext } from 'react'
 import { Socket, io } from 'socket.io-client';
 import { useState } from 'react';
 import { Modal, Button } from 'antd';
 import Dialog from './match_matching';
 import axios from "axios";
-import { useMyContext } from './ContextProvider';
-
+import {useMyContext} from './ContextProvider';
 
 export class player {
     score: number;
@@ -166,7 +165,8 @@ export class ball {
 
 
 }
-
+// const context = useMyContext();
+var finished = false;
 export class Game {
 
 
@@ -187,11 +187,10 @@ export class Game {
     email1: string;
     email2: string;
     data: any;
-    context:any;
+    pause: boolean;
 
     constructor(canvas: HTMLCanvasElement, data: any) {
 
-        // console.log(data.user1['email']);
         this.canvas = canvas;
         this.canvas.style.backgroundColor = "black";
         this.canvas.width = 800;
@@ -202,6 +201,7 @@ export class Game {
         this.uppress1 = false;
         this.data = data;
         this.email1 = this.data['user1']['email'];
+        this.pause = true;
         this.email2 = this.data['user2']['email'];
         this.downpress1 = false;
         this.paddle_left = new player(0, 10, this.canvas.height / 2, 10, 80, 1, this.ctx, "white");
@@ -216,8 +216,7 @@ export class Game {
         this.sender = "";
         this.player = 0;
         this.myId = "";
-        this.context = useMyContext();
-
+        // this.finish = false;
 
         this.paddle_left.score = 0;
         this.paddle_right.score = 0;
@@ -237,16 +236,16 @@ export class Game {
             this._ball.ball_y = msg.ball_y;
             this._ball.velocity_x = msg.velocity_x;
             this._ball.velocity_y = msg.velocity_y;
-            if(msg.score1 > 10 || msg.score2 > 10)
-            {
-                axios.get('http://localhost:3000/game/finish/' + this.data['id'] +'/'+(msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
+            if ((msg.score1 > 10 || msg.score2 > 10)) {
+                axios.get('http://localhost:3000/game/finish/' + this.data['id'] + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
                 .then(res => {
-                    console.log(res.data);
+                    this.pause = true;
+                    finished = true;
                 });
-                // this.context.setState(false);
             }
             this.paddle_left.score = msg.score1;
             this.paddle_right.score = msg.score2;
+            
         });
         let img = new Image();
         img.src = "https://joeschmoe.io/api/v1/random";
@@ -415,58 +414,71 @@ export class Game {
 
     start() {
 
-        this.keyhook();
         this.draw();
-        if (this.email1 === localStorage.getItem('email')) {
-            this._ball.ball_x += this._ball._velocity_x;
-            this._ball.ball_y += this._ball._velocity_y;
-            this.collisionDetection();
-            this.socket.emit('BallServer', 
-            {
-                ball_x: this._ball.ball_x,
-                ball_y: this._ball.ball_y,
-                velocity_x: this._ball._velocity_x,
-                velocity_y: this._ball._velocity_y,
-                score1: this.paddle_left.score,
-                score2: this.paddle_right.score,
-            });
+        if (this.pause) {
+            this.keyhook();
+            if (this.email1 === localStorage.getItem('email')) {
+                this._ball.ball_x += this._ball._velocity_x;
+                this._ball.ball_y += this._ball._velocity_y;
+                this.collisionDetection();
+                this.socket.emit('BallServer',
+                    {
+                        ball_x: this._ball.ball_x,
+                        ball_y: this._ball.ball_y,
+                        velocity_x: this._ball._velocity_x,
+                        velocity_y: this._ball._velocity_y,
+                        score1: this.paddle_left.score,
+                        score2: this.paddle_right.score,
+                    });
+            }
         }
         this.show_score();
-        this.draw_footer(); 
+        this.draw_footer();
         requestAnimationFrame(() => this.start());
     }
 }
 
-//user1 the One who inited you
-//user2 You
 const Canvas = (props: any) => {
     const [isWating, setIsWating] = useState(true);
     const [data, setData] = useState(props.data ? props.data : []);
     const canvasRef = useRef(null);
+    let context = useMyContext();
+
     useEffect(() => {
         const interv = setInterval(() => {
-            if (data.length != 0 && isWating) {
+            if (data.length != 0 && isWating && finished === false) 
+            {
                 setIsWating(false);
-                clearInterval(interv);
                 console.log("data", data);
                 setTimeout(() => {
                     new Game(canvasRef.current as any, data);
                 }, 1000);
-                    
+                clearInterval(interv);
             }
             else {
-                // console.log(data.length);
-                // console.log("interv");
                 if (isWating) {
                     axios.get('http://localhost:3000/game/is_waiting/' + localStorage.getItem('id'))
                         .then(res => {
-                            setData(res.data);
+                            if (res.data.length != 0) {
+                                setData(res.data);
+                            }
                         })
                 }
             }
+        }, 2000);
+        const int= setInterval(() => {
+            if(finished)
+            {
+                setIsWating(true);
+                finished = false;
+                context.setShowCanvas(false);
+                clearInterval(int);
+            }
         }, 1000);
 
-    }, [isWating, data]);
+    }, [isWating,data]);
+
+   
     return (
         <div>
             {isWating && <Dialog />}

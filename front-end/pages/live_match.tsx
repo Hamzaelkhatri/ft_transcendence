@@ -74,45 +74,25 @@ const columns = [
 
 export default function MatchLive() {
     const [datas, setData] = useState([]);
+    const ISSERVER = typeof window === "undefined";
+
     // const [Datasource, setDatasource] = useState([]);
-    const fet = async () => {
+    const fet = async () =>
+    {
         await axios.get("http://localhost:3000/game/current/")
             .then(res => {
-                if (datas['id'] === undefined) {
+                if (datas['id'] === undefined) 
+                {
                     setData(res.data);
                 }
             });
     }
-
-
-    // console.log(data);
-    // useEffect(() => {
-    // if (Datasource.length === 0) {
-    // const inter = setInterval(() => {
-    // if(Datasource.length === 0){
-    //     fet();
-    // }
-    //     }
-    //     else
-    //     {
-    //         clearInterval(inter);
-    //     }
-    // console.log(Datasource.length);
-    // }, 1000);
-
-    // }
-    // else {
-    // console.log(Datasource);
-    // }
-    // }, []);
-  const ISSERVER = typeof window === "undefined";
     
-    if (datas.length === 0 && !ISSERVER) {
+    useEffect(() => {
+
+    if (datas.length === 0 && !ISSERVER) 
         fet();
-    }
-    else {
-        // console.log(datas);
-    }
+    }, [datas]);
     return (
         <div>
             {
