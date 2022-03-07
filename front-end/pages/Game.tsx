@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Modal, Button } from 'antd';
 import Dialog from './match_matching';
 import axios from "axios";
+import { useMyContext } from './ContextProvider';
 
 
 export class player {
@@ -185,7 +186,8 @@ export class Game {
     player: number;
     email1: string;
     email2: string;
-    data: any
+    data: any;
+    context:any;
 
     constructor(canvas: HTMLCanvasElement, data: any) {
 
@@ -199,10 +201,6 @@ export class Game {
         this.downpress = false;
         this.uppress1 = false;
         this.data = data;
-        // this.email1 = data.user1['email'];
-        // console.log(this.email1);
-        // this.email2 = data.user2['email'];
-        // console.log(this.email2);
         this.email1 = this.data['user1']['email'];
         this.email2 = this.data['user2']['email'];
         this.downpress1 = false;
@@ -218,6 +216,7 @@ export class Game {
         this.sender = "";
         this.player = 0;
         this.myId = "";
+        this.context = useMyContext();
 
 
         this.paddle_left.score = 0;
@@ -238,6 +237,14 @@ export class Game {
             this._ball.ball_y = msg.ball_y;
             this._ball.velocity_x = msg.velocity_x;
             this._ball.velocity_y = msg.velocity_y;
+            if(msg.score1 > 10 || msg.score2 > 10)
+            {
+                axios.get('http://localhost:3000/game/finish/' + this.data['id'] +'/'+(msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
+                .then(res => {
+                    console.log(res.data);
+                });
+                // this.context.setState(false);
+            }
             this.paddle_left.score = msg.score1;
             this.paddle_right.score = msg.score2;
         });
@@ -345,11 +352,9 @@ export class Game {
             this._ball.ball_y + this._ball._velocity_y + 40 >
             this.canvas.height - this._ball._ball_radius
         ) {
-            //ball hits the bottom
             this._ball._velocity_y *= -1;
         }
 
-        // ball hits rihgt paddle
         if (this._ball.ball_x + this._ball._velocity_x + 5 > this.canvas.width - this._ball._ball_radius - this.paddle_right.paddle_width) {
             if (
                 this._ball.ball_y > this.paddle_right._paddle_y &&
@@ -362,8 +367,6 @@ export class Game {
                 this._ball.ball_y = this.canvas.height - this.paddle_right._paddle_height;
                 this._ball._velocity_x = 6;
                 this._ball._velocity_y = -6;
-                // this.paddle_left.paddle_y = ((this.canvas.height - this.paddle_left._paddle_height) / 2);
-                // this.paddle_right.paddle_y = ((this.canvas.height - this.paddle_right._paddle_height) / 2);
             }
         }
         if (
@@ -429,7 +432,7 @@ export class Game {
             });
         }
         this.show_score();
-        this.draw_footer();
+        this.draw_footer(); 
         requestAnimationFrame(() => this.start());
     }
 }
@@ -446,7 +449,10 @@ const Canvas = (props: any) => {
                 setIsWating(false);
                 clearInterval(interv);
                 console.log("data", data);
-                new Game(canvasRef.current as any, data);
+                setTimeout(() => {
+                    new Game(canvasRef.current as any, data);
+                }, 1000);
+                    
             }
             else {
                 // console.log(data.length);

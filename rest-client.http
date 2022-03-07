@@ -49,4 +49,10 @@ GET http://localhost:3000/game/current/
 ###
 GET http://localhost:3000/game/is_waiting/10
 
+###
 
+GET http://localhost:3000/game/finish/88/10
+
+###
+
+GET  http://localhost:3000/game/winner/96/10
