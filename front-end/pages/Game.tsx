@@ -5,7 +5,8 @@ import { useState } from 'react';
 import { Modal, Button } from 'antd';
 import Dialog from './match_matching';
 import axios from "axios";
-import {useMyContext} from './ContextProvider';
+import { useMyContext } from './ContextProvider';
+import { Result } from 'antd';
 
 export class player {
     score: number;
@@ -192,74 +193,94 @@ export class Game {
     constructor(canvas: HTMLCanvasElement, data: any) {
 
         this.canvas = canvas;
-        this.canvas.style.backgroundColor = "black";
-        this.canvas.width = 800;
-        this.canvas.height = 400;
-        this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
-        this.uppress = false;
-        this.downpress = false;
-        this.uppress1 = false;
-        this.data = data;
-        this.email1 = this.data['user1']['email'];
-        this.pause = true;
-        this.email2 = this.data['user2']['email'];
-        this.downpress1 = false;
-        this.paddle_left = new player(0, 10, this.canvas.height / 2, 10, 80, 1, this.ctx, "white");
-        this.paddle_right = new player(0, this.canvas.width - 20, (this.canvas.height) / 2, 10, 80, 1, this.ctx, "white");
-        this.center_rec = new player(0, this.canvas.width / 2, 0, 1, this.canvas.height, 0, this.ctx, "white");
-        this._ball = new ball(this.ctx, this.canvas.width / 2, this.canvas.height / 2, 8, 6, -6, "red");
-        if (this.email1 === localStorage.getItem('email') || this.email2 === localStorage.getItem('email')) {
-            document.addEventListener("keyup", this.keyUpHandler.bind(this), false);
-            document.addEventListener("keydown", this.keyDownHandler.bind(this), false);
-        }
-        this.socket = io("http://localhost:3080");
-        this.sender = "";
-        this.player = 0;
-        this.myId = "";
-        // this.finish = false;
-
-        this.paddle_left.score = 0;
-        this.paddle_right.score = 0;
-
-        this.socket.on('DataToClient', (msg) => {
-            this.paddle_right.paddle_x = msg.paddle_x;
-            this.paddle_right.paddle_y = msg.paddle_y;
-        });
-
-        this.socket.on('DataToClient2', (msg) => {
-            this.paddle_left.paddle_x = msg.paddle_x;
-            this.paddle_left.paddle_y = msg.paddle_y;
-        });
-
-        this.socket.on('BallClient', (msg) => {
-            this._ball.ball_x = msg.ball_x;
-            this._ball.ball_y = msg.ball_y;
-            this._ball.velocity_x = msg.velocity_x;
-            this._ball.velocity_y = msg.velocity_y;
-            if ((msg.score1 > 10 || msg.score2 > 10)) {
-                axios.get('http://localhost:3000/game/finish/' + this.data['id'] + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
-                .then(res => {
-                    this.pause = true;
-                    finished = true;
-                });
+        if (canvas != null) {
+            this.canvas.style.backgroundColor = "black";
+            this.canvas.width = 800;
+            this.canvas.height = 400;
+            this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
+            this.uppress = false;
+            this.downpress = false;
+            this.uppress1 = false;
+            this.data = data;
+            this.email1 = this.data['user1']['email'];
+            this.pause = false;
+            this.email2 = this.data['user2']['email'];
+            this.downpress1 = false;
+            this.paddle_left = new player(0, 10, this.canvas.height / 2, 10, 80, 1, this.ctx, "white");
+            this.paddle_right = new player(0, this.canvas.width - 20, (this.canvas.height) / 2, 10, 80, 1, this.ctx, "white");
+            this.center_rec = new player(0, this.canvas.width / 2, 0, 1, this.canvas.height, 0, this.ctx, "white");
+            this._ball = new ball(this.ctx, this.canvas.width / 2, this.canvas.height / 2, 8, 6, -6, "red");
+            if (this.email1 === localStorage.getItem('email') || this.email2 === localStorage.getItem('email')) {
+                document.addEventListener("keyup", this.keyUpHandler.bind(this), false);
+                document.addEventListener("keydown", this.keyDownHandler.bind(this), false);
             }
-            this.paddle_left.score = msg.score1;
-            this.paddle_right.score = msg.score2;
-            
-        });
-        let img = new Image();
-        img.src = "https://joeschmoe.io/api/v1/random";
-        img.onload = () => {
-            this.ctx.drawImage(img, this.canvas.width - 70, this.canvas.height - 38, 34, 34);
-        }
+            this.socket = io("http://localhost:3080");
+            this.player = 0;
 
-        let img1 = new Image();
-        img1.src = "https://joeschmoe.io/api/v1/random";
-        img1.onload = () => {
-            this.ctx.drawImage(img1, 50, this.canvas.height - 38, 34, 34);
+            this.paddle_left.score = 0;
+            this.paddle_right.score = 0;
+
+            this.socket.on('DataToClient', (msg) => {
+                this.paddle_right.paddle_x = msg.paddle_x;
+                this.paddle_right.paddle_y = msg.paddle_y;
+            });
+
+            this.socket.on('DataToClient2', (msg) => {
+                this.paddle_left.paddle_x = msg.paddle_x;
+                this.paddle_left.paddle_y = msg.paddle_y;
+            });
+
+            this.socket.on('BallClient', (msg) => {
+                this._ball.ball_x = msg.ball_x;
+                this._ball.ball_y = msg.ball_y;
+                this._ball.velocity_x = msg.velocity_x;
+                this._ball.velocity_y = msg.velocity_y;
+                this.paddle_left.score = msg.score1;
+                this.paddle_right.score = msg.score2;
+                this.pause = msg.pause;
+                if ((this.paddle_left.score >= 10 || this.paddle_right.score >= 10)) {
+
+                    axios.get('http://localhost:3000/game/finish/' + this.data['id'] + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
+                        .then(res => {
+                            this.pause = true;
+                        });
+                }
+
+            });
+            let img = new Image();
+            img.src = "https://joeschmoe.io/api/v1/random";
+            img.onload = () => {
+                this.ctx.drawImage(img, this.canvas.width - 70, this.canvas.height - 38, 34, 34);
+            }
+
+            let img1 = new Image();
+            img1.src = "https://joeschmoe.io/api/v1/random";
+            img1.onload = () => {
+                this.ctx.drawImage(img1, 50, this.canvas.height - 38, 34, 34);
+            }
+            this.start();
         }
-        this.receiveMessage(data);
-        this.start();
+    }
+
+    draw_winner(name: string) {
+        this.ctx.font = "30px Arial";
+        this.ctx.fillStyle = "white";
+        this.ctx.fillText("WINNER " + name, this.canvas.width / 2 - this.ctx.measureText("WINNER " + name).width / 2, this.canvas.height / 2);
+
+        // create rectangle
+        this.ctx.beginPath();
+        this.ctx.rect(this.canvas.width / 2 - 100, this.canvas.height / 2 + 100, 200, 40);
+        this.ctx.fillStyle = "white";
+        // add text to rectangle
+        this.ctx.fill();
+        this.ctx.stroke();
+        
+        this.ctx.closePath();
+        this.ctx.font = "20px Arial";
+        this.ctx.fillStyle = "black";
+        this.ctx.fillText("Play Again", this.canvas.width / 2 - this.ctx.measureText("Play Again").width / 2, this.canvas.height / 2 + 130);
+
+        // 
     }
 
     receiveMessage(data: any) {
@@ -301,8 +322,6 @@ export class Game {
 
 
     keyhook() {
-        // console.log(this.email1);
-        // console.log(this.email2);
         if (this.email1 === localStorage.getItem('email')) {
             if (this.uppress === true) {
                 this.paddle_left.paddle_y -= 4;
@@ -411,16 +430,22 @@ export class Game {
         this.ctx.fillText(this.paddle_left.score, this.canvas.width / 2 + 100, 30);
     }
 
+    retryButton() {
+
+    }
+
 
     start() {
 
         this.draw();
-        if (this.pause) {
+        if (!this.pause) {
+            this._ball.ball_x += this._ball._velocity_x;
+            this._ball.ball_y += this._ball._velocity_y;
+            this.collisionDetection();
             this.keyhook();
             if (this.email1 === localStorage.getItem('email')) {
-                this._ball.ball_x += this._ball._velocity_x;
-                this._ball.ball_y += this._ball._velocity_y;
-                this.collisionDetection();
+
+
                 this.socket.emit('BallServer',
                     {
                         ball_x: this._ball.ball_x,
@@ -429,10 +454,19 @@ export class Game {
                         velocity_y: this._ball._velocity_y,
                         score1: this.paddle_left.score,
                         score2: this.paddle_right.score,
+                        pause: this.pause,
                     });
+
             }
+            this.show_score();
         }
-        this.show_score();
+        if (this.paddle_left.score === 10 || this.paddle_right.score === 10) {
+            if (this.paddle_left.score === 10)
+                this.draw_winner(this.data['user1']['name']);
+            else
+                this.draw_winner(this.data['user2']['name']);
+        }
+
         this.draw_footer();
         requestAnimationFrame(() => this.start());
     }
@@ -444,41 +478,31 @@ const Canvas = (props: any) => {
     const canvasRef = useRef(null);
     let context = useMyContext();
 
+
+    const sync = () => {
+        axios.get('http://localhost:3000/game/is_waiting/' + localStorage.getItem('id'))
+            .then(res => {
+                if (res.data.length != 0) {
+                    setData(res.data);
+                }
+            })
+    }
     useEffect(() => {
         const interv = setInterval(() => {
-            if (data.length != 0 && isWating && finished === false) 
-            {
+            if (data.length != 0 && isWating && finished === false) {
                 setIsWating(false);
-                console.log("data", data);
-                setTimeout(() => {
-                    new Game(canvasRef.current as any, data);
-                }, 1000);
+                new Game(canvasRef.current as any, data);
                 clearInterval(interv);
             }
             else {
                 if (isWating) {
-                    axios.get('http://localhost:3000/game/is_waiting/' + localStorage.getItem('id'))
-                        .then(res => {
-                            if (res.data.length != 0) {
-                                setData(res.data);
-                            }
-                        })
+                    sync();
                 }
             }
         }, 2000);
-        const int= setInterval(() => {
-            if(finished)
-            {
-                setIsWating(true);
-                finished = false;
-                context.setShowCanvas(false);
-                clearInterval(int);
-            }
-        }, 1000);
 
-    }, [isWating,data]);
+    }, [isWating, data]);
 
-   
     return (
         <div>
             {isWating && <Dialog />}

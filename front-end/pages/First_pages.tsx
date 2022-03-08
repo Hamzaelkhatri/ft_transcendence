@@ -4,7 +4,7 @@ import { useRef, useEffect } from "react";
 import { useState } from "react";
 import _Canvas from "./page1";
 import "antd/dist/antd.css";
-import { Card, Avatar, Badge } from "antd";
+import { Card, Avatar, Badge, Result } from "antd";
 import { ArrowLeftOutlined, PlayCircleOutlined, ArrowRightOutlined, DislikeOutlined, FlagOutlined, LikeOutlined, FieldNumberOutlined, EnvironmentOutlined, InfoCircleFilled } from "@ant-design/icons";
 import Canvas from "./Game";
 import axios from "axios";
@@ -181,7 +181,7 @@ const Next_page = () => {
             <div className="ant-col ant-col-xs-28 ant-col-xl-24"  style={{ top: "1000px", width:"100%"  , left: "25%", zIndex: "2" }} >
                 {!context.ShowCanvas &&
                     <div >
-                        <Leaderboard />
+                        {/* <Leaderboard /> */}
                     </div>
                 }
             </div>
@@ -230,6 +230,20 @@ const Next_page = () => {
                 <div className="ant-col ant-col-xs-28 ant-col-xl-24" style={{ top: "20%", position: "absolute", zIndex: "2", left: "50%", transform: "translate(-50%,0)" }}>
                     {context.ShowCanvas && <Canvas data={GameInfo} />}
                 </div>
+            }
+
+            {
+            //       <Result style={{ top: "20%", position: "absolute", zIndex: "2", left: "50%", transform: "translate(-50%,0)" }}
+            //       status="success"
+            //       title="Successfully Purchased Cloud Server ECS!"
+            //       subTitle="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait."
+            //       extra={[
+            //           <Button type="primary" key="console">
+            //               Go Console
+            //           </Button>,
+            //           <Button key="buy">Buy Again</Button>,
+            //       ]}
+            //   />
             }
         </div>
     )

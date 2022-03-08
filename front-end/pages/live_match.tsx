@@ -48,50 +48,23 @@ const columns = [
     },
 ];
 
-// const data = [
-//   {
-//     key: '1',
-//     User1:['nice', 'https://joeschmoe.io/api/v1/random'],
-//     Time: 54,
-//     // tags: ['nice', 'https://joeschmoe.io/api/v1/random'],
-//   },
-//   {
-//     key: '2',
-//     User1: ['nice', 'https://joeschmoe.io/api/v1/random'],
-//     Time: 42,
-//     // tags: ['nice', 'https://joeschmoe.io/api/v1/random'],
-//   },
-//   {
-//     key: '3',
-//     User: ['cool', 'https://joeschmoe.io/api/v1/random'],
-//     Time:54,
-//     // tags: 
-//   },
-// ];
-
-
-
-
 export default function MatchLive() {
     const [datas, setData] = useState([]);
     const ISSERVER = typeof window === "undefined";
 
     // const [Datasource, setDatasource] = useState([]);
-    const fet = async () =>
-    {
+    const fet = async () => {
         await axios.get("http://localhost:3000/game/current/")
             .then(res => {
-                if (datas['id'] === undefined) 
-                {
+                if (datas['id'] === undefined) {
                     setData(res.data);
                 }
             });
     }
-    
-    useEffect(() => {
 
-    if (datas.length === 0 && !ISSERVER) 
-        fet();
+    useEffect(() => {
+        if (datas.length === 0 && !ISSERVER)
+            fet();
     }, [datas]);
     return (
         <div>
