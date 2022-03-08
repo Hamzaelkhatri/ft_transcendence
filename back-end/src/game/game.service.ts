@@ -71,11 +71,6 @@ export class GameService extends TypeOrmCrudService<Game>
             })
             .execute();
         return user;
-        // const game = await this.repository.findOne(id);
-        // game.is_accepted_by_user2 = true;
-        // game.is_started = true;
-        // game.TimeBegin = new Date();
-        // return await this.repository.save(game);
     }
 
     async rejectInvitation(id: number, idgame: number): Promise<Game> {
@@ -132,5 +127,25 @@ export class GameService extends TypeOrmCrudService<Game>
             .orderBy('game.created_at', 'DESC')
             .getOne();
         return user;
+    }
+
+    async finishGame(id: number,winner:number): Promise<Game> 
+    {
+        const user = await this.repository
+            .createQueryBuilder('game')
+            .leftJoinAndSelect('game.user1', 'user1')
+            .leftJoinAndSelect('game.user2', 'user2')
+            .where('game.id = :id', { id: id })
+            .andWhere('game.is_accepted_by_user2 = :is_accepted_by_user2', { is_accepted_by_user2: true })
+            .andWhere('game.is_finished = :is_finished', { is_finished: false })
+            .andWhere('game.is_started = :is_started', { is_started: true })
+            .update({
+                is_finished: true,
+                TimeEnd: new Date(),
+                winner: winner,
+                price: 100,
+            })
+            .execute();
+        return await user;
     }
 }

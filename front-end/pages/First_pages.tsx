@@ -4,13 +4,13 @@ import { useRef, useEffect } from "react";
 import { useState } from "react";
 import _Canvas from "./page1";
 import "antd/dist/antd.css";
-import { Card, Avatar, Badge } from "antd";
+import { Card, Avatar, Badge, Result } from "antd";
 import { ArrowLeftOutlined, PlayCircleOutlined, ArrowRightOutlined, DislikeOutlined, FlagOutlined, LikeOutlined, FieldNumberOutlined, EnvironmentOutlined, InfoCircleFilled } from "@ant-design/icons";
 import Canvas from "./Game";
 import axios from "axios";
 import MatchLive from "./live_match";
 import Leaderboard from "./leaderboard";
-
+import {MyProvider, useMyContext} from "./ContextProvider";
 const { Meta } = Card;
 
 import { Button, notification, Carousel } from 'antd';
@@ -34,15 +34,19 @@ const Next_page = () => {
     const [oneTime, setOneTime] = useState(0);
     const [oneTime1, setOneTime1] = useState(0);
     const [GameInfo, setGameInfo] = useState([]);
+
+    let context = useMyContext();
+
+    
     const close = (key: string) => {
         axios.get("http://localhost:3000/game/invited/reject/" + localStorage.getItem("id") + "/" + GameInfo['id']).then(res => {
             notification.close(key);
         });
     };
-    const [ShowCanvas, setShowCanvas] = useState(false);
+    // const [ShowCanvas, setShowCanvas] = useState(false);
     const onclick = (key: string) => {
         axios.get("http://localhost:3000/game/invited/confirm/" + localStorage.getItem("id") + '/' + GameInfo['id']).then(res => {
-            setShowCanvas(true);
+            context.setShowCanvas(true);
             notification.close(key);
         });
     };
@@ -72,7 +76,8 @@ const Next_page = () => {
             // onClose: close,
         });
     };
-    useEffect(() => {
+    useEffect(() => 
+    {
         const inter = setInterval(() => {
             if (oneTime1 == 0) {
 
@@ -98,12 +103,13 @@ const Next_page = () => {
             if (oneTime === 0) {
                 setData(res.data);
                 setOneTime(1);
+                
             }
         });
     return (
         <div className="ant-row">
             <div className="ant-col ant-col-xs-28 ant-col-xl-24" style={{ top: "150px" }}>
-                {!ShowCanvas &&
+                {!context.ShowCanvas &&
                     <Card
                         style={{ padding: "1%", width: "20%", height: "auto", left: "20%", top: "15%", position: "absolute", zIndex: "2", borderRadius: "3%", background: "white" }}
                         cover={
@@ -116,7 +122,7 @@ const Next_page = () => {
                         actions={[<ArrowLeftOutlined key="previous" onClick={() => { setOneTime(0); }
                         } />,
                         <PlayCircleOutlined key="play" onClick={() => {
-                            setShowCanvas(true);
+                            context.setShowCanvas(true);
                             axios.post("http://localhost:3000/game/invite",
                                 {
                                     "username1": localStorage.getItem("usual_full_name"),
@@ -131,19 +137,14 @@ const Next_page = () => {
                         }} />,
                         <ArrowRightOutlined key="next" onClick={() => {
                             setOneTime(0);
-
                         }} />
-
                         ]}
-
                     >
                         <Meta
                             title={data['name']}
                             description={
                                 <ul>
                                     <i id="icons">
-                                        {/* <li>
-                                        </li> */}
                                         <li>
                                             <EnvironmentOutlined /> :  {data['country']}
                                         </li>
@@ -171,16 +172,16 @@ const Next_page = () => {
                 }
             </div>
             <div className="ant-col ant-col-xs-28 ant-col-xl-24" style={{ top: "150px"  }}>
-                {!ShowCanvas &&
+                {!context.ShowCanvas &&
                     <div style={{ position: "absolute", top: "15%", left: "50%", zIndex: "2" ,width:"40%" , height:"auto"}}>
                         <MatchLive />
                     </div>
                 }
             </div>
             <div className="ant-col ant-col-xs-28 ant-col-xl-24"  style={{ top: "1000px", width:"100%"  , left: "25%", zIndex: "2" }} >
-                {!ShowCanvas &&
+                {!context.ShowCanvas &&
                     <div >
-                        <Leaderboard />
+                        {/* <Leaderboard /> */}
                     </div>
                 }
             </div>
@@ -224,16 +225,27 @@ const Next_page = () => {
                     <h3 style={contentStyle}>Good Luck !<HeartOutlined />  </h3>
                 </div>
             </Carousel >} */}
-            {/* {ShowCanvas && <Canvas />} */}
             {
                 //make Canvas in center of the screen
                 <div className="ant-col ant-col-xs-28 ant-col-xl-24" style={{ top: "20%", position: "absolute", zIndex: "2", left: "50%", transform: "translate(-50%,0)" }}>
-                    {ShowCanvas && <Canvas data={GameInfo} />}
+                    {context.ShowCanvas && <Canvas data={GameInfo} />}
                 </div>
             }
-            {/* {ShowCanvas && <Canvas />} */}
 
-        </div >
+            {
+            //       <Result style={{ top: "20%", position: "absolute", zIndex: "2", left: "50%", transform: "translate(-50%,0)" }}
+            //       status="success"
+            //       title="Successfully Purchased Cloud Server ECS!"
+            //       subTitle="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait."
+            //       extra={[
+            //           <Button type="primary" key="console">
+            //               Go Console
+            //           </Button>,
+            //           <Button key="buy">Buy Again</Button>,
+            //       ]}
+            //   />
+            }
+        </div>
     )
 }
 

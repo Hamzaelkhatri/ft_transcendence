@@ -10,6 +10,7 @@ import ResponsiveAppBar from "./Navbar"
 // import TextCanvas from './canvas_text'
 import HomePage from './home'
 import Next_page from './First_pages'
+import {MyProvider} from './ContextProvider'
 
 // import leaderboard from './leaderboard'
 
@@ -111,7 +112,7 @@ function MyApp(props: AppProps) {
     }, [])
 
     return (
-      <div>
+      <MyProvider>
         {singIn === "Sign In" &&
           <HomePage />
         }
@@ -120,13 +121,9 @@ function MyApp(props: AppProps) {
         {singIn === "Sign Out" &&
           <Next_page />
         }
-      </div>
+      </MyProvider>
     );
   }
-  return (
-    <>
-    </>
-  )
 }
 
 export default MyApp

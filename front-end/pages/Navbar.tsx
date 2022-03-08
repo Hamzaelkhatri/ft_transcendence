@@ -38,12 +38,8 @@ const ResponsiveAppBar = (prps: any) => {
   };
 
   const handleSignIn = () => {
-    prps.login("http://127.0.0.1:3000/auth/42/callback");
-     // else
-     // setSignIn("Sign In")
+    prps.login("http://localhost:3000/auth/42/callback");
   }
-
-  // console.log(prps.usecase)
 
   return (
     <AppBar style={{ background: 'transparent', boxShadow: '', width: '100%',zIndex: '2' }}>

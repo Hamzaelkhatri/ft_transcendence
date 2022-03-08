@@ -71,4 +71,9 @@ export class GameController implements CrudController<Game> {
     {
         return await this.service.is_waiting(id);
     }
+
+    @Get("/finish/:id/:winner")
+    async finishGame(@Param("id") id: number, @Param("winner") winner: number) {
+        return await this.service.finishGame(id, winner);
+    }
 }
