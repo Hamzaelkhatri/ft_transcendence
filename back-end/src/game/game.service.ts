@@ -54,7 +54,7 @@ export class GameService extends TypeOrmCrudService<Game>
     }
 
     async confirmInvitation(id: number, idgame: number): Promise<Game> {
-        const user = await this.repository.
+         this.repository.
             createQueryBuilder('game')
             .leftJoinAndSelect('game.user1', 'user1')
             .leftJoinAndSelect('game.user2', 'user2')
@@ -70,6 +70,12 @@ export class GameService extends TypeOrmCrudService<Game>
                 is_finished: false,
             })
             .execute();
+        const user = await this.repository.
+            createQueryBuilder('game')
+            .leftJoinAndSelect('game.user1', 'user1')
+            .leftJoinAndSelect('game.user2', 'user2')
+            .where('game.id = :id', { id: idgame })
+            .getOne();
         return user;
     }
 
@@ -147,5 +153,18 @@ export class GameService extends TypeOrmCrudService<Game>
             })
             .execute();
         return await user;
+    }
+
+    async watch(id: number): Promise<Game> {
+        const user = await this.repository.
+            createQueryBuilder('game')
+            .leftJoinAndSelect('game.user1', 'user1')
+            .leftJoinAndSelect('game.user2', 'user2')
+            .where('game.id = :id', { id: id })
+            .andWhere('game.is_accepted_by_user2 = :is_accepted_by_user2', { is_accepted_by_user2: true })
+            .andWhere('game.is_finished = :is_finished', { is_finished: false })
+            .andWhere('game.is_started = :is_started', { is_started: true })
+            .getOne();
+        return user;
     }
 }

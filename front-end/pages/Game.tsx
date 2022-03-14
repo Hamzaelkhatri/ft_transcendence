@@ -213,8 +213,9 @@ export class Game {
             if (this.email1 === localStorage.getItem('email') || this.email2 === localStorage.getItem('email')) {
                 document.addEventListener("keyup", this.keyUpHandler.bind(this), false);
                 document.addEventListener("keydown", this.keyDownHandler.bind(this), false);
+                // document.addEventListener("mousemove", this.mouseMoveHandler.bind(this), false);
             }
-            this.socket = io("http://localhost:3080");
+            this.socket = io("http://10.12.6.12:3080");
             this.player = 0;
 
             this.paddle_left.score = 0;
@@ -240,7 +241,7 @@ export class Game {
                 this.pause = msg.pause;
                 if ((this.paddle_left.score >= 10 || this.paddle_right.score >= 10)) {
 
-                    axios.get('http://localhost:3000/game/finish/' + this.data['id'] + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
+                    axios.get('http://10.12.6.12:3000/game/finish/' + this.data['id'] + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
                         .then(res => {
                             this.pause = true;
                         });
@@ -258,7 +259,24 @@ export class Game {
             img1.onload = () => {
                 this.ctx.drawImage(img1, 50, this.canvas.height - 38, 34, 34);
             }
-            this.start();
+
+            let time: number = 3;
+
+            // let t = setInterval(() => {
+            //     //coutn down timer
+            //     this.ctx.font = "30px Arial";
+            //     this.ctx.fillStyle = "white";
+            //     this.ctx.fillText(time, this.canvas.width / 2 - 20, this.canvas.height / 2);
+            //     time--;
+            //     if (time < 0) {
+            //         clearInterval(t);
+            //     }
+            //     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height - 40);
+
+            // }, 3000);
+            setTimeout(() => {
+                this.start();
+            }, 3000);
         }
     }
 
@@ -274,17 +292,17 @@ export class Game {
         // add text to rectangle
         this.ctx.fill();
         this.ctx.stroke();
-        
+
         this.ctx.closePath();
         this.ctx.font = "20px Arial";
         this.ctx.fillStyle = "black";
-        this.ctx.fillText("Play Again", this.canvas.width / 2 - this.ctx.measureText("Play Again").width / 2, this.canvas.height / 2 + 130);
+        this.ctx.fillText("HOME", this.canvas.width / 2 - this.ctx.measureText("Play Again").width / 2, this.canvas.height / 2 + 130);
 
         // 
     }
 
     receiveMessage(data: any) {
-        console.log(data);
+        // console.(data);
     }
 
     keyDownHandler(e: KeyboardEvent) {
@@ -302,6 +320,10 @@ export class Game {
         if (e.key === "s" || e.key === "KeyS") {
             this.downpress1 = true;
         }
+
+        if (e.key === "p" || e.key === "KeyP") {
+            this.pause = !this.pause;
+        }
     }
 
     keyUpHandler(e: KeyboardEvent) {
@@ -318,10 +340,14 @@ export class Game {
         if (e.key === "s" || e.key === "KeyS") {
             this.downpress1 = false;
         }
+        // if (e.key === "p" || e.key === "KeyP") {
+        //     this.pause = !this.pause;
+        // }
     }
 
 
     keyhook() {
+
         if (this.email1 === localStorage.getItem('email')) {
             if (this.uppress === true) {
                 this.paddle_left.paddle_y -= 4;
@@ -436,29 +462,26 @@ export class Game {
 
 
     start() {
-
         this.draw();
         if (!this.pause) {
+            this.keyhook();
             this._ball.ball_x += this._ball._velocity_x;
             this._ball.ball_y += this._ball._velocity_y;
             this.collisionDetection();
-            this.keyhook();
-            if (this.email1 === localStorage.getItem('email')) {
-
-
-                this.socket.emit('BallServer',
-                    {
-                        ball_x: this._ball.ball_x,
-                        ball_y: this._ball.ball_y,
-                        velocity_x: this._ball._velocity_x,
-                        velocity_y: this._ball._velocity_y,
-                        score1: this.paddle_left.score,
-                        score2: this.paddle_right.score,
-                        pause: this.pause,
-                    });
-
-            }
             this.show_score();
+        }
+        if (this.email1 === localStorage.getItem('email')) {
+            this.socket.emit('BallServer',
+                {
+                    ball_x: this._ball.ball_x,
+                    ball_y: this._ball.ball_y,
+                    velocity_x: this._ball._velocity_x,
+                    velocity_y: this._ball._velocity_y,
+                    score1: this.paddle_left.score,
+                    score2: this.paddle_right.score,
+                    pause: this.pause,
+                });
+
         }
         if (this.paddle_left.score === 10 || this.paddle_right.score === 10) {
             if (this.paddle_left.score === 10)
@@ -473,24 +496,31 @@ export class Game {
 }
 
 const Canvas = (props: any) => {
-    const [isWating, setIsWating] = useState(true);
     const [data, setData] = useState(props.data ? props.data : []);
     const canvasRef = useRef(null);
     let context = useMyContext();
+    console.log(props.data);
+    const [isWating, setIsWating] = useState((context.ShowCanvas.gameInfo['user1']['email'] === localStorage.getItem('email') || context.ShowCanvas.gameInfo['user2']['email'] === localStorage.getItem('email')) ? true : false);
+    //  console.log(context.GameInfo);
 
 
     const sync = () => {
-        axios.get('http://localhost:3000/game/is_waiting/' + localStorage.getItem('id'))
-            .then(res => {
-                if (res.data.length != 0) {
-                    setData(res.data);
-                }
-            })
+        // if (props.data.lenght != 0) 
+        // {
+        //     axios.get('http://10.12.6.12:3000/game/is_waiting/' + localStorage.getItem('id'))
+        //         .then(res => {
+        //             if (res.data.length != 0) {
+        //                 setData(res.data);
+        //             }
+        //         })
+        // }
     }
     useEffect(() => {
         const interv = setInterval(() => {
-            if (data.length != 0 && isWating && finished === false) {
+            if (data.length != 0 && finished === false )
+             {
                 setIsWating(false);
+                console.log("here");
                 new Game(canvasRef.current as any, data);
                 clearInterval(interv);
             }
@@ -502,6 +532,7 @@ const Canvas = (props: any) => {
         }, 2000);
 
     }, [isWating, data]);
+    // new Game(canvasRef.current as any, data);
 
     return (
         <div>
