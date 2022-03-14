@@ -38,7 +38,7 @@ const ResponsiveAppBar = (prps: any) => {
   };
 
   const handleSignIn = () => {
-    prps.login("http://localhost:3000/auth/42/callback");
+    prps.login("http://10.12.6.12:3000/auth/42/callback");
   }
 
   return (

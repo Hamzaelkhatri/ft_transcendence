@@ -33,20 +33,28 @@ const Next_page = () => {
     const [data, setData] = useState([]);
     const [oneTime, setOneTime] = useState(0);
     const [oneTime1, setOneTime1] = useState(0);
-    const [GameInfo, setGameInfo] = useState([]);
+    // const [GameInfo, setGameInfo] = useState([]);
 
     let context = useMyContext();
 
     
     const close = (key: string) => {
-        axios.get("http://localhost:3000/game/invited/reject/" + localStorage.getItem("id") + "/" + GameInfo['id']).then(res => {
+        axios.get("http://10.12.6.12:3000/game/invited/reject/" + localStorage.getItem("id") + "/" + context.ShowCanvas.gameInfo['id']).then(res => {
             notification.close(key);
         });
     };
     // const [ShowCanvas, setShowCanvas] = useState(false);
     const onclick = (key: string) => {
-        axios.get("http://localhost:3000/game/invited/confirm/" + localStorage.getItem("id") + '/' + GameInfo['id']).then(res => {
-            context.setShowCanvas(true);
+        console.log(context.ShowCanvas.gameInfo);
+
+        axios.get("http://10.12.6.12:3000/game/invited/confirm/" + localStorage.getItem("id") + '/' + context.ShowCanvas.gameInfo['id']).then(res => {
+        console.log(res.data);    
+        context.setShowCanvas(
+                {
+                    gameInfo: res.data,
+                    show: true
+                }
+            )
             notification.close(key);
         });
     };
@@ -64,9 +72,9 @@ const Next_page = () => {
             </div>
         );
         notification.open({
-            message: data.user1.name + ' invited you to play a game',
+            message:' invited you to play a game',
             description:
-                'Do you want to play with ' + data.user1.name + '?',
+                'Do you want to play with ge:',
             btn,
             key,
             style: {
@@ -81,13 +89,19 @@ const Next_page = () => {
         const inter = setInterval(() => {
             if (oneTime1 == 0) {
 
-                axios.get("http://localhost:3000/game/is_invited/" + localStorage.getItem("id"))
+                axios.get("http://10.12.6.12:3000/game/is_invited/" + localStorage.getItem("id"))
                     .then(res => {
-                        // console.log(res.data);
-                        if (res.data.length !== 0) {
+                        if (res.data['id'] !== undefined)
+                         {
                             setOneTime1(1);
-                            // console.log(res.data);
-                            setGameInfo(res.data);
+                            context.setShowCanvas(
+                                {
+                                    show: false,
+                                    gameInfo: res.data
+                                }
+                            );
+                            console.log('here',context.ShowCanvas.gameInfo);
+                            context.ShowCanvas.gameInfo = res.data;
                             openNotification(res.data);
                             clearInterval(inter);
                         }
@@ -97,8 +111,8 @@ const Next_page = () => {
                 clearInterval(inter);
             }
         }, 1000);
-    }, [GameInfo]);
-    axios.get("http://localhost:3000/user/random")
+    }, [context.ShowCanvas.gameInfo]);
+    axios.get("http://10.12.6.12:3000/user/random")
         .then(res => {
             if (oneTime === 0) {
                 setData(res.data);
@@ -109,7 +123,7 @@ const Next_page = () => {
     return (
         <div className="ant-row">
             <div className="ant-col ant-col-xs-28 ant-col-xl-24" style={{ top: "150px" }}>
-                {!context.ShowCanvas &&
+                {!context.ShowCanvas.show &&
                     <Card
                         style={{ padding: "1%", width: "20%", height: "auto", left: "20%", top: "15%", position: "absolute", zIndex: "2", borderRadius: "3%", background: "white" }}
                         cover={
@@ -122,16 +136,22 @@ const Next_page = () => {
                         actions={[<ArrowLeftOutlined key="previous" onClick={() => { setOneTime(0); }
                         } />,
                         <PlayCircleOutlined key="play" onClick={() => {
-                            context.setShowCanvas(true);
-                            axios.post("http://localhost:3000/game/invite",
-                                {
-                                    "username1": localStorage.getItem("usual_full_name"),
-                                    "username2": data['name']
-                                })
-                                .then(res => {
-                                    if (oneTime === 0) {
-                                        setData(res.data);
-                                        setOneTime(1);
+                            axios.post("http://10.12.6.12:3000/game/invite",
+                            {
+                                "username1": localStorage.getItem("usual_full_name"),
+                                "username2": data['name']
+                            })
+                            .then(res => {
+                                // if (oneTime === 0) {
+                                    if (res.data.length !== 0) {
+                                    setData(res.data);
+                                    context.setShowCanvas(
+                                        {
+                                            show: true,
+                                            gameInfo: res.data
+                                        }
+                                    )
+                                    setOneTime(1);
                                     }
                                 });
                         }} />,
@@ -172,14 +192,14 @@ const Next_page = () => {
                 }
             </div>
             <div className="ant-col ant-col-xs-28 ant-col-xl-24" style={{ top: "150px"  }}>
-                {!context.ShowCanvas &&
+                {!context.ShowCanvas.show &&
                     <div style={{ position: "absolute", top: "15%", left: "50%", zIndex: "2" ,width:"40%" , height:"auto"}}>
                         <MatchLive />
                     </div>
                 }
             </div>
             <div className="ant-col ant-col-xs-28 ant-col-xl-24"  style={{ top: "1000px", width:"100%"  , left: "25%", zIndex: "2" }} >
-                {!context.ShowCanvas &&
+                {!context.ShowCanvas.show &&
                     <div >
                         {/* <Leaderboard /> */}
                     </div>
@@ -228,7 +248,7 @@ const Next_page = () => {
             {
                 //make Canvas in center of the screen
                 <div className="ant-col ant-col-xs-28 ant-col-xl-24" style={{ top: "20%", position: "absolute", zIndex: "2", left: "50%", transform: "translate(-50%,0)" }}>
-                    {context.ShowCanvas && <Canvas data={GameInfo} />}
+                    {context.ShowCanvas.show && <Canvas data={context.ShowCanvas['gameInfo']} />}
                 </div>
             }
 

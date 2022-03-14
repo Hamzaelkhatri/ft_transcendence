@@ -6,12 +6,19 @@ import {useState,useContext} from "react";
 const MyContext = React.createContext() as any;
 
 
-export function useMyContext() {
+export function useMyContext()
+{
     return useContext(MyContext);
 }
 
 export function MyProvider({ children }) {
-    const [ShowCanvas, setShowCanvas] = useState(false);
+    const [ShowCanvas, setShowCanvas] = useState(
+        {
+            show: false,
+            gameInfo: {}
+            
+        }
+    );
 
     return (
         <MyContext.Provider value={{ShowCanvas, setShowCanvas}}>

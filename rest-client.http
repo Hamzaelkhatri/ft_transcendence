@@ -1,38 +1,38 @@
-# GET http://localhost:3000/user
+# GET http://10.12.6.12:3000/user
 
-##POST http://localhost:3000/user
+##POST http://10.12.6.12:3000/user
 
-POST http://localhost:3000/user/me
+POST http://10.12.6.12:3000/user/me
 Content-Type: application/json
 
 {
-    "token":"917c97636990e3ccd32c762edcf5718f64d30d2065743c207a6b6350f2bece91"
+    "token":"44de22e392ccddce7f5090df071789fd0472dc4b42b876b525d82f3e02ef175b"
 }
 
 
 ###
-POST http://localhost:3000/user
+POST http://10.12.6.12:3000/user
 Content-Type: application/json
 
 
 {
-    "name": "Hamza Elkhatri",
-    "email": "hello4@student.1337.ma",
-    "token": "448022e392ccddce7f5090df071789fd0472dc4b42b876b525d82f3e02ef175b",
+    "name": "kid-bouh",
+    "email": "kid-bouh@student.1337.ma",
+    "token": "44de22e392ccddce7f5090df071789fd0472dc4b42b876b525d82f3e02ef175b",
     "created_at": "2022-02-27T20:48:07.487Z",
     "updated_at": "2022-02-27T20:48:07.487Z",
     "deleted_at": "2022-02-27T20:48:07.487Z",
     "is_online": true,
-    "image": "https://cdn.intra.42.fr/users/helkhatr.jpg",
+    "image": "https://cdn.intra.42.fr/users/kid-bouh.jpg",
     "is_verified": true
 }
 
 
 ###
-GET http://localhost:3000/user/random
+GET http://10.12.6.12:3000/user/random
 
 ###
-POST  http://localhost:3000/game/invite
+POST  http://10.12.6.12:3000/game/invite
 Content-Type: application/json
 
 {
@@ -41,18 +41,25 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/game/is_invited/10
+GET http://10.12.6.12:3000/game/is_invited/10
 
 ###
-GET http://localhost:3000/game/current/
+GET http://10.12.6.12:3000/game/current/
 
 ###
-GET http://localhost:3000/game/is_waiting/10
-
-###
-
-GET http://localhost:3000/game/finish/88/10
+GET http://10.12.6.12:3000/game/is_waiting/10
 
 ###
 
-GET  http://localhost:3000/game/winner/96/10
+GET http://10.12.6.12:3000/game/finish/88/10
+
+###
+
+GET  http://10.12.6.12:3000/game/watch/219
+
+###
+GET http://10.12.6.12:3000/game/is_invited/10
+
+###
+
+GET http://10.12.6.12:3000/game/invited/confirm/10/245
