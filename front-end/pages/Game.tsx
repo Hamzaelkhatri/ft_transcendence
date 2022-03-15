@@ -215,7 +215,7 @@ export class Game {
                 document.addEventListener("keydown", this.keyDownHandler.bind(this), false);
                 // document.addEventListener("mousemove", this.mouseMoveHandler.bind(this), false);
             }
-            this.socket = io("http://10.12.6.12:3080");
+            this.socket = io("http://10.12.5.9:3080");
             this.player = 0;
 
             this.paddle_left.score = 0;
@@ -241,7 +241,7 @@ export class Game {
                 this.pause = msg.pause;
                 if ((this.paddle_left.score >= 10 || this.paddle_right.score >= 10)) {
 
-                    axios.get('http://10.12.6.12:3000/game/finish/' + this.data['id'] + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
+                    axios.get('http://10.12.5.9:3000/game/finish/' + this.data['id'] + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
                         .then(res => {
                             this.pause = true;
                         });
@@ -489,7 +489,6 @@ export class Game {
             else
                 this.draw_winner(this.data['user2']['name']);
         }
-
         this.draw_footer();
         requestAnimationFrame(() => this.start());
     }
@@ -503,36 +502,25 @@ const Canvas = (props: any) => {
     const [isWating, setIsWating] = useState((context.ShowCanvas.gameInfo['user1']['email'] === localStorage.getItem('email') || context.ShowCanvas.gameInfo['user2']['email'] === localStorage.getItem('email')) ? true : false);
     //  console.log(context.GameInfo);
 
-
-    const sync = () => {
-        // if (props.data.lenght != 0) 
-        // {
-        //     axios.get('http://10.12.6.12:3000/game/is_waiting/' + localStorage.getItem('id'))
-        //         .then(res => {
-        //             if (res.data.length != 0) {
-        //                 setData(res.data);
-        //             }
-        //         })
-        // }
-    }
+    let socket = io('http://10.12.5.9:3080');
+    // socket.on('ConnectClient', (res: any) => {
+    //     if (res >= 2) 
+    //     {
+    //         console.log(res);
+    //         setIsWating(false);
+    //         new Game(canvasRef.current as any, data);
+    //     }
+    // });
+    console.log(context.ShowCanvas.gameInfo);
     useEffect(() => {
-        const interv = setInterval(() => {
-            if (data.length != 0 && finished === false )
-             {
-                setIsWating(false);
-                console.log("here");
-                new Game(canvasRef.current as any, data);
-                clearInterval(interv);
-            }
-            else {
-                if (isWating) {
-                    sync();
-                }
-            }
-        }, 2000);
 
-    }, [isWating, data]);
-    // new Game(canvasRef.current as any, data);
+        if ((context.ShowCanvas.gameInfo['user1']['email'] === localStorage.getItem('email') || context.ShowCanvas.gameInfo['user2']['email'] === localStorage.getItem('email')))
+            socket.emit('ConnectServer', {
+                GameInfo:context.ShowCanvas.gameInfo,
+                idUser : localStorage.getItem('id')
+            });
+
+    }, []);
 
     return (
         <div>
