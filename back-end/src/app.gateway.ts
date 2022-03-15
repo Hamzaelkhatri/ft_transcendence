@@ -31,6 +31,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
   @SubscribeMessage('DataToServer')
   handleMessage(client: Socket, payload: any): void {
     client.broadcast.emit('DataToClient', payload);
+    
     // console.log(payload);
   }
 
