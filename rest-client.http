@@ -1,8 +1,8 @@
-# GET http://10.12.6.12:3000/user
+# GET http://10.12.5.14:3000/user
 
-##POST http://10.12.6.12:3000/user
+##POST http://10.12.5.14:3000/user
 
-POST http://10.12.6.12:3000/user/me
+POST http://10.12.5.14:3000/user/me
 Content-Type: application/json
 
 {
@@ -11,7 +11,7 @@ Content-Type: application/json
 
 
 ###
-POST http://10.12.6.12:3000/user
+POST http://10.12.5.14:3000/user
 Content-Type: application/json
 
 
@@ -29,10 +29,10 @@ Content-Type: application/json
 
 
 ###
-GET http://10.12.6.12:3000/user/random
+GET http://10.12.5.14:3000/user/random
 
 ###
-POST  http://10.12.6.12:3000/game/invite
+POST  http://10.12.5.14:3000/game/invite
 Content-Type: application/json
 
 {
@@ -41,25 +41,25 @@ Content-Type: application/json
 }
 
 ###
-GET http://10.12.6.12:3000/game/is_invited/10
+GET http://10.12.5.14:3000/game/is_invited/10
 
 ###
-GET http://10.12.6.12:3000/game/current/
+GET http://10.12.5.14:3000/game/current/
 
 ###
-GET http://10.12.6.12:3000/game/is_waiting/10
-
-###
-
-GET http://10.12.6.12:3000/game/finish/88/10
+GET http://10.12.5.14:3000/game/is_waiting/10
 
 ###
 
-GET  http://10.12.6.12:3000/game/watch/219
-
-###
-GET http://10.12.6.12:3000/game/is_invited/10
+GET http://10.12.5.14:3000/game/finish/88/10
 
 ###
 
-GET http://10.12.6.12:3000/game/invited/confirm/10/245
+GET  http://10.12.5.14:3000/game/watch/219
+
+###
+GET http://10.12.5.14:3000/game/is_invited/10
+
+###
+
+GET http://10.12.5.14:3000/game/invited/confirm/10/245

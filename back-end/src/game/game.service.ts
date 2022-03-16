@@ -106,8 +106,8 @@ export class GameService extends TypeOrmCrudService<Game>
             .andWhere('game.is_finished = :is_finished', { is_finished: false })
             .andWhere('game.is_started = :is_started', { is_started: true })
             .getMany();
-        //create new object 
-        let games = [];
+
+            let games = [];
         for (let i = 0; i < user.length; i++) {
             let game = {
                 key: user[i].id,

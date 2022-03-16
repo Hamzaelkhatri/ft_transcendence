@@ -39,7 +39,7 @@ const Next_page = () => {
 
     
     const close = (key: string) => {
-        axios.get("http://10.12.6.12:3000/game/invited/reject/" + localStorage.getItem("id") + "/" + context.ShowCanvas.gameInfo['id']).then(res => {
+        axios.get("http://10.12.5.14:3000/game/invited/reject/" + localStorage.getItem("id") + "/" + context.ShowCanvas.gameInfo['id']).then(res => {
             notification.close(key);
         });
     };
@@ -47,7 +47,7 @@ const Next_page = () => {
     const onclick = (key: string) => {
         console.log(context.ShowCanvas.gameInfo);
 
-        axios.get("http://10.12.6.12:3000/game/invited/confirm/" + localStorage.getItem("id") + '/' + context.ShowCanvas.gameInfo['id']).then(res => {
+        axios.get("http://10.12.5.14:3000/game/invited/confirm/" + localStorage.getItem("id") + '/' + context.ShowCanvas.gameInfo['id']).then(res => {
         console.log(res.data);    
         context.setShowCanvas(
                 {
@@ -89,7 +89,7 @@ const Next_page = () => {
         const inter = setInterval(() => {
             if (oneTime1 == 0) {
 
-                axios.get("http://10.12.6.12:3000/game/is_invited/" + localStorage.getItem("id"))
+                axios.get("http://10.12.5.14:3000/game/is_invited/" + localStorage.getItem("id"))
                     .then(res => {
                         if (res.data['id'] !== undefined)
                          {
@@ -112,7 +112,7 @@ const Next_page = () => {
             }
         }, 1000);
     }, [context.ShowCanvas.gameInfo]);
-    axios.get("http://10.12.6.12:3000/user/random")
+    axios.get("http://10.12.5.14:3000/user/random")
         .then(res => {
             if (oneTime === 0) {
                 setData(res.data);
@@ -136,7 +136,7 @@ const Next_page = () => {
                         actions={[<ArrowLeftOutlined key="previous" onClick={() => { setOneTime(0); }
                         } />,
                         <PlayCircleOutlined key="play" onClick={() => {
-                            axios.post("http://10.12.6.12:3000/game/invite",
+                            axios.post("http://10.12.5.14:3000/game/invite",
                             {
                                 "username1": localStorage.getItem("usual_full_name"),
                                 "username2": data['name']

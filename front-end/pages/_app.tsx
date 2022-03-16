@@ -47,7 +47,7 @@ function MyApp(props: AppProps) {
       }
     }
     if (singIn === "Sign In" && router.query.token !== undefined) {
-      const res = fetch("http://10.12.6.12:3000/user/me",
+      const res = fetch("http://10.12.5.14:3000/user/me",
         {
           method: "POST",
           headers: {
@@ -112,6 +112,7 @@ function MyApp(props: AppProps) {
     }, [])
 
     return (
+      <div>
       <MyProvider>
         {singIn === "Sign In" &&
           <HomePage />
@@ -122,6 +123,7 @@ function MyApp(props: AppProps) {
           <Next_page />
         }
       </MyProvider>
+      </div>
     );
   }
 }
