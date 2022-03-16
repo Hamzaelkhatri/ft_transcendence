@@ -215,7 +215,7 @@ export class Game {
                 document.addEventListener("keydown", this.keyDownHandler.bind(this), false);
                 // document.addEventListener("mousemove", this.mouseMoveHandler.bind(this), false);
             }
-            this.socket = io("http://10.12.5.9:3080");
+            this.socket = io("http://10.12.5.14:3080");
             this.player = 0;
 
             this.paddle_left.score = 0;
@@ -239,9 +239,9 @@ export class Game {
                 this.paddle_left.score = msg.score1;
                 this.paddle_right.score = msg.score2;
                 this.pause = msg.pause;
-                if ((this.paddle_left.score >= 10 || this.paddle_right.score >= 10)) {
-
-                    axios.get('http://10.12.5.9:3000/game/finish/' + this.data['id'] + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
+                if ((this.paddle_left.score >= 10 || this.paddle_right.score >= 10)) 
+                {
+                    axios.get('http://10.12.5.14:3000/game/finish/' + this.data['id'] + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
                         .then(res => {
                             this.pause = true;
                         });
@@ -321,9 +321,7 @@ export class Game {
             this.downpress1 = true;
         }
 
-        if (e.key === "p" || e.key === "KeyP") {
-            this.pause = !this.pause;
-        }
+        
     }
 
     keyUpHandler(e: KeyboardEvent) {
@@ -470,7 +468,7 @@ export class Game {
             this.collisionDetection();
             this.show_score();
         }
-        if (this.email1 === localStorage.getItem('email')) {
+        if (this.email1 === localStorage.getItem('email') && !this.pause) {
             this.socket.emit('BallServer',
                 {
                     ball_x: this._ball.ball_x,
@@ -485,9 +483,9 @@ export class Game {
         }
         if (this.paddle_left.score === 10 || this.paddle_right.score === 10) {
             if (this.paddle_left.score === 10)
-                this.draw_winner(this.data['user1']['name']);
-            else
                 this.draw_winner(this.data['user2']['name']);
+            else
+                this.draw_winner(this.data['user1']['name']);
         }
         this.draw_footer();
         requestAnimationFrame(() => this.start());
@@ -499,25 +497,27 @@ const Canvas = (props: any) => {
     const canvasRef = useRef(null);
     let context = useMyContext();
     console.log(props.data);
-    const [isWating, setIsWating] = useState((context.ShowCanvas.gameInfo['user1']['email'] === localStorage.getItem('email') || context.ShowCanvas.gameInfo['user2']['email'] === localStorage.getItem('email')) ? true : false);
+    const [isWating, setIsWating] = useState(true);
     //  console.log(context.GameInfo);
 
-    let socket = io('http://10.12.5.9:3080');
-    // socket.on('ConnectClient', (res: any) => {
-    //     if (res >= 2) 
-    //     {
-    //         console.log(res);
-    //         setIsWating(false);
-    //         new Game(canvasRef.current as any, data);
-    //     }
-    // });
+    let socket = io('http://10.12.5.14:3080');
+    socket.on('ConnectClient', (res: any) => {
+
+        {
+            console.log("checked");
+            if (res['is_started'] === true && res['id'] === context.ShowCanvas.gameInfo['id']) {
+                setIsWating(false);
+                // context.ShowCanvas.start();
+                new Game(canvasRef.current as HTMLCanvasElement, data);
+            }
+        }
+    });
     console.log(context.ShowCanvas.gameInfo);
     useEffect(() => {
-
-        if ((context.ShowCanvas.gameInfo['user1']['email'] === localStorage.getItem('email') || context.ShowCanvas.gameInfo['user2']['email'] === localStorage.getItem('email')))
+        // if ((context.ShowCanvas.gameInfo['user1']['email'] === localStorage.getItem('email') || context.ShowCanvas.gameInfo['user2']['email'] === localStorage.getItem('email')))
             socket.emit('ConnectServer', {
-                GameInfo:context.ShowCanvas.gameInfo,
-                idUser : localStorage.getItem('id')
+                GameInfo: context.ShowCanvas.gameInfo,
+                idUser: localStorage.getItem('id')
             });
 
     }, []);

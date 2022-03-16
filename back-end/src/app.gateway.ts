@@ -52,31 +52,42 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
 
   @SubscribeMessage('DataToServer')
   handleMessage(client: Socket, payload: any): void {
-    client.broadcast.emit('DataToClient', payload);
+    this.server.emit('DataToClient', payload);
     
     // console.log(payload);
   }
 
   @SubscribeMessage('DataToServer2')
   handleBall(client: Socket, payload: any): void {
-    client.broadcast.emit('DataToClient2', payload);
+    this.server.emit('DataToClient2', payload);
   }
 
   @SubscribeMessage('BallServer')
   connect_users(client: Socket, payload: any): void {
-    client.broadcast.emit('BallClient', payload);
+    this.server.emit('BallClient', payload);
     }
   
   @SubscribeMessage('ConnectServer')
   connect_users2(client: Socket, payload: any): void 
   {
     console.log(payload);
-
-    //find current game
-    let game_id = this.game.findIndex(game => game.id == payload.game_id);
+    let game_id = this.game.findIndex(game => game.id == payload.GameInfo.id);
+    console.log(this.game[game_id]);
     if(game_id == -1)
-      this.game.push(new Game(payload.GameInfo.game_id, payload.GameInfo.user1, payload.GameInfo.user2, false, false, false));
-    client.emit('ConnectClient', this.i);
+    {
+      this.game.push(new Game(payload.GameInfo.id, payload.GameInfo.userId1, payload.GameInfo.userId2, false, true, false));
+    }
+    else
+    {
+      if(this.game[game_id].user1 == payload.idUser || this.game[game_id].user2 == payload.idUser)
+      {
+        this.game[game_id].is_started = true;
+        this.game[game_id].user1_accepted = true;
+        this.game[game_id].user2_accepted = true;
+      }
+    }
+    game_id = this.game.findIndex(game => game.id == payload.GameInfo.id);
+    this.server.emit('ConnectClient', this.game[game_id]);
   }
 
 }
