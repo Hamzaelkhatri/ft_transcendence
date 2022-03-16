@@ -86,7 +86,6 @@ export class player {
                 "paddle_speed": this.paddle_speed,
                 "ctx": this.ctx,
                 "color": this.color,
-
             });
     }
 }
@@ -170,7 +169,7 @@ export class ball {
 var finished = false;
 export class Game {
 
-
+    id_game: number;
     canvas: HTMLCanvasElement;
     ctx: any;
     paddle_right: player;
@@ -205,6 +204,7 @@ export class Game {
             this.email1 = this.data['user1']['email'];
             this.pause = false;
             this.email2 = this.data['user2']['email'];
+            this.id_game = this.data['id'];
             this.downpress1 = false;
             this.paddle_left = new player(0, 10, this.canvas.height / 2, 10, 80, 1, this.ctx, "white");
             this.paddle_right = new player(0, this.canvas.width - 20, (this.canvas.height) / 2, 10, 80, 1, this.ctx, "white");
@@ -222,44 +222,50 @@ export class Game {
             this.paddle_right.score = 0;
 
             this.socket.on('DataToClient', (msg) => {
-                this.paddle_right.paddle_x = msg.paddle_x;
-                this.paddle_right.paddle_y = msg.paddle_y;
+                // if (msg.id_game === this.id_game) {
+                    console.log("["+this.id_game+"]"+"DataToClient");
+                    this.paddle_right.paddle_x = msg.paddle.paddle_x;
+                    this.paddle_right.paddle_y = msg.paddle.paddle_y;
+                // }
             });
 
             this.socket.on('DataToClient2', (msg) => {
-                this.paddle_left.paddle_x = msg.paddle_x;
-                this.paddle_left.paddle_y = msg.paddle_y;
+                // if (msg.id_game === this.id_game) {
+                    console.log("["+this.id_game+"]"+"DataToClient2");
+                    this.paddle_left.paddle_x = msg.paddle.paddle_x;
+                    this.paddle_left.paddle_y = msg.paddle.paddle_y;
+                // }
             });
 
             this.socket.on('BallClient', (msg) => {
-                this._ball.ball_x = msg.ball_x;
-                this._ball.ball_y = msg.ball_y;
-                this._ball.velocity_x = msg.velocity_x;
-                this._ball.velocity_y = msg.velocity_y;
-                this.paddle_left.score = msg.score1;
-                this.paddle_right.score = msg.score2;
-                this.pause = msg.pause;
-                if ((this.paddle_left.score >= 10 || this.paddle_right.score >= 10)) 
-                {
-                    axios.get('http://10.12.5.14:3000/game/finish/' + this.data['id'] + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
-                        .then(res => {
-                            this.pause = true;
-                        });
-                }
-
+                // if (msg.id_game === this.id_game) {
+                    console.log("["+this.id_game+"]"+"BallClient");
+                    this._ball.ball_x = msg.ball_x;
+                    this._ball.ball_y = msg.ball_y;
+                    this._ball.velocity_x = msg.velocity_x;
+                    this._ball.velocity_y = msg.velocity_y;
+                    this.paddle_left.score = msg.score1;
+                    this.paddle_right.score = msg.score2;
+                    this.pause = msg.pause;
+                    if ((this.paddle_left.score >= 10 || this.paddle_right.score >= 10)) {
+                        axios.get('http://10.12.5.14:3000/game/finish/' + this.data['id'] + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
+                            .then(res => {
+                                this.pause = true;
+                            });
+                    }
+                // }
             });
             let img = new Image();
-            img.src = "https://joeschmoe.io/api/v1/random";
+            img.src = this.data['user2']['image'];
             img.onload = () => {
                 this.ctx.drawImage(img, this.canvas.width - 70, this.canvas.height - 38, 34, 34);
             }
 
             let img1 = new Image();
-            img1.src = "https://joeschmoe.io/api/v1/random";
+            img1.src = this.data['user1']['image'];
             img1.onload = () => {
                 this.ctx.drawImage(img1, 50, this.canvas.height - 38, 34, 34);
             }
-
             let time: number = 3;
 
             // let t = setInterval(() => {
@@ -321,7 +327,9 @@ export class Game {
             this.downpress1 = true;
         }
 
-        
+
+
+
     }
 
     keyUpHandler(e: KeyboardEvent) {
@@ -338,9 +346,9 @@ export class Game {
         if (e.key === "s" || e.key === "KeyS") {
             this.downpress1 = false;
         }
-        // if (e.key === "p" || e.key === "KeyP") {
-        //     this.pause = !this.pause;
-        // }
+        if (e.key === "p" || e.key === "KeyP" || e.key === " ") {
+            this.pause = !this.pause;
+        }
     }
 
 
@@ -352,7 +360,11 @@ export class Game {
                 if (this.paddle_left.paddle_y < 0) {
                     this.paddle_left.paddle_y = 0;
                 }
-                this.socket.emit('DataToServer2', this.paddle_left.ToJson()); // push a mesage to the array
+                this.socket.emit('DataToServer2',
+                    {
+                        paddle: this.paddle_left.ToJson(),
+                        gameid: this.id_game
+                    }); // push a mesage to the array
             }
             if (this.downpress) {
 
@@ -360,7 +372,11 @@ export class Game {
                 if (this.paddle_left.paddle_y + this.paddle_left._paddle_height + 40 > this.canvas.height) {
                     this.paddle_left.paddle_y = this.canvas.height - this.paddle_left._paddle_height - 41;
                 }
-                this.socket.emit('DataToServer2', this.paddle_left.ToJson()); // push a mesage to the array
+                this.socket.emit('DataToServer2',
+                    {
+                        paddle: this.paddle_left.ToJson(),
+                        gameid: this.id_game
+                    });
 
             }
         }
@@ -371,7 +387,11 @@ export class Game {
                 if (this.paddle_right._paddle_y < 0) {
                     this.paddle_right.paddle_y = 0;
                 }
-                this.socket.emit('DataToServer', this.paddle_right.ToJson()); // push a mesage to the array
+                this.socket.emit('DataToServer',
+                    {
+                        paddle: this.paddle_right.ToJson(),
+                        gameid: this.id_game
+                    }); // push a mesage to the array
 
             }
             if (this.downpress1) {
@@ -381,7 +401,11 @@ export class Game {
                 {
                     this.paddle_right.paddle_y = this.canvas.height - this.paddle_right._paddle_height - 41;
                 }
-                this.socket.emit('DataToServer', this.paddle_right.ToJson()) // push a mesage to the array
+                this.socket.emit('DataToServer',
+                    {
+                        paddle: this.paddle_right.ToJson(),
+                        gameid: this.id_game
+                    }) // push a mesage to the array
             }
         }
     }
@@ -468,7 +492,7 @@ export class Game {
             this.collisionDetection();
             this.show_score();
         }
-        if (this.email1 === localStorage.getItem('email') && !this.pause) {
+        if (this.email1 === localStorage.getItem('email')) {
             this.socket.emit('BallServer',
                 {
                     ball_x: this._ball.ball_x,
@@ -478,6 +502,7 @@ export class Game {
                     score1: this.paddle_left.score,
                     score2: this.paddle_right.score,
                     pause: this.pause,
+                    gameid: this.id_game
                 });
 
         }
@@ -515,10 +540,10 @@ const Canvas = (props: any) => {
     console.log(context.ShowCanvas.gameInfo);
     useEffect(() => {
         // if ((context.ShowCanvas.gameInfo['user1']['email'] === localStorage.getItem('email') || context.ShowCanvas.gameInfo['user2']['email'] === localStorage.getItem('email')))
-            socket.emit('ConnectServer', {
-                GameInfo: context.ShowCanvas.gameInfo,
-                idUser: localStorage.getItem('id')
-            });
+        socket.emit('ConnectServer', {
+            GameInfo: context.ShowCanvas.gameInfo,
+            idUser: localStorage.getItem('id')
+        });
 
     }, []);
 
