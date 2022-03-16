@@ -19,7 +19,6 @@ class Game
         this.is_started = is_started;
         this.user1_accepted = false;
         this.user2_accepted = false;
-        
     }
 }
 
