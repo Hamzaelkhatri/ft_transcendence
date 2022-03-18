@@ -188,6 +188,7 @@ export class Game {
     email2: string;
     data: any;
     pause: boolean;
+    windos: any;
 
     constructor(canvas: HTMLCanvasElement, data: any) {
 
@@ -195,6 +196,7 @@ export class Game {
         if (canvas != null) {
             this.canvas.style.backgroundColor = "black";
             this.canvas.width = 800;
+            this.windos = window;
             this.canvas.height = 400;
             this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
             this.uppress = false;
@@ -213,9 +215,10 @@ export class Game {
             if (this.email1 === localStorage.getItem('email') || this.email2 === localStorage.getItem('email')) {
                 document.addEventListener("keyup", this.keyUpHandler.bind(this), false);
                 document.addEventListener("keydown", this.keyDownHandler.bind(this), false);
+                document.addEventListener("onunload", this.onunload.bind(this), false);
                 // document.addEventListener("mousemove", this.mouseMoveHandler.bind(this), false);
             }
-            this.socket = io("http://10.12.5.14:3080");
+            this.socket = io("http://localhost:3080");
             this.player = 0;
 
             this.paddle_left.score = 0;
@@ -223,38 +226,39 @@ export class Game {
 
             this.socket.on('DataToClient', (msg) => {
                 // if (msg.id_game === this.id_game) {
-                    console.log("["+this.id_game+"]"+"DataToClient");
-                    this.paddle_right.paddle_x = msg.paddle.paddle_x;
-                    this.paddle_right.paddle_y = msg.paddle.paddle_y;
+                // console.log("[" + this.id_game + "]" + "DataToClient");
+                this.paddle_right.paddle_x = msg.paddle.paddle_x;
+                this.paddle_right.paddle_y = msg.paddle.paddle_y;
                 // }
             });
 
             this.socket.on('DataToClient2', (msg) => {
                 // if (msg.id_game === this.id_game) {
-                    console.log("["+this.id_game+"]"+"DataToClient2");
-                    this.paddle_left.paddle_x = msg.paddle.paddle_x;
-                    this.paddle_left.paddle_y = msg.paddle.paddle_y;
+                // console.log("[" + this.id_game + "]" + "DataToClient2");
+                this.paddle_left.paddle_x = msg.paddle.paddle_x;
+                this.paddle_left.paddle_y = msg.paddle.paddle_y;
                 // }
             });
 
-            this.socket.on('BallClient', (msg) => {
-                // if (msg.id_game === this.id_game) {
-                    console.log("["+this.id_game+"]"+"BallClient");
-                    this._ball.ball_x = msg.ball_x;
-                    this._ball.ball_y = msg.ball_y;
-                    this._ball.velocity_x = msg.velocity_x;
-                    this._ball.velocity_y = msg.velocity_y;
-                    this.paddle_left.score = msg.score1;
-                    this.paddle_right.score = msg.score2;
-                    this.pause = msg.pause;
-                    if ((this.paddle_left.score >= 10 || this.paddle_right.score >= 10)) {
-                        axios.get('http://10.12.5.14:3000/game/finish/' + this.data['id'] + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
-                            .then(res => {
-                                this.pause = true;
-                            });
-                    }
-                // }
-            });
+            // this.canvas
+
+            // this.socket.on('BallClient', (msg) => {
+            //     // if (msg.id_game === this.id_game) {
+            //     console.log("[" + this.id_game + "]" + "BallClient");
+            //     this._ball.ball_x = msg.ball_x;
+            //     this._ball.ball_y = msg.ball_y;
+            //     this._ball.velocity_x = msg.velocity_x;
+            //     this._ball.velocity_y = msg.velocity_y;
+            //     this.paddle_left.score = msg.score1;
+            //     this.paddle_right.score = msg.score2;
+            //     this.pause = msg.pause;
+            //     if ((this.paddle_left.score >= 10 || this.paddle_right.score >= 10)) {
+            //         axios.get('http://localhost:3000/game/finish/' + this.data['id'] + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
+            //             .then(res => {
+            //                 this.pause = true;
+            //             });
+            //     }
+            // });
             let img = new Image();
             img.src = this.data['user2']['image'];
             img.onload = () => {
@@ -280,6 +284,12 @@ export class Game {
             //     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height - 40);
 
             // }, 3000);
+            // window.onunload = () => {
+            //     console.log("[" + this.id_game + "]" + "onunload");
+            // }
+
+            // catch websocket close
+
             setTimeout(() => {
                 this.start();
             }, 3000);
@@ -307,6 +317,10 @@ export class Game {
         // 
     }
 
+    onunload() {
+        console.log("[" + this.id_game + "]" + "onunload");
+    }
+
     receiveMessage(data: any) {
         // console.(data);
     }
@@ -326,10 +340,6 @@ export class Game {
         if (e.key === "s" || e.key === "KeyS") {
             this.downpress1 = true;
         }
-
-
-
-
     }
 
     keyUpHandler(e: KeyboardEvent) {
@@ -485,6 +495,10 @@ export class Game {
 
     start() {
         this.draw();
+        //check if window is active
+        if (!document.hasFocus()) {
+            this.pause = true;
+        }
         if (!this.pause) {
             this.keyhook();
             this._ball.ball_x += this._ball._velocity_x;
@@ -521,37 +535,39 @@ const Canvas = (props: any) => {
     const [data, setData] = useState(props.data ? props.data : []);
     const canvasRef = useRef(null);
     let context = useMyContext();
-    console.log(props.data);
+    // console.log(props.data);
     const [isWating, setIsWating] = useState(true);
     //  console.log(context.GameInfo);
 
-    let socket = io('http://10.12.5.14:3080');
-    socket.on('ConnectClient', (res: any) => {
+    // let socket = io('http://localhost:3080');
+    // socket.on('ConnectClient', (res: any) => {
 
-        {
-            console.log("checked");
-            if (res['is_started'] === true && res['id'] === context.ShowCanvas.gameInfo['id']) {
-                setIsWating(false);
-                // context.ShowCanvas.start();
-                new Game(canvasRef.current as HTMLCanvasElement, data);
-            }
-        }
-    });
-    console.log(context.ShowCanvas.gameInfo);
-    useEffect(() => {
-        // if ((context.ShowCanvas.gameInfo['user1']['email'] === localStorage.getItem('email') || context.ShowCanvas.gameInfo['user2']['email'] === localStorage.getItem('email')))
-        socket.emit('ConnectServer', {
-            GameInfo: context.ShowCanvas.gameInfo,
-            idUser: localStorage.getItem('id')
-        });
+    //     {
+    //         console.log("checked");
+    //         if (res['is_started'] === true && res['id'] === context.ShowCanvas.gameInfo['id']) {
+    //             setIsWating(false);
+    //             // context.ShowCanvas.start();
+    //         }
+    //     }
+    // });
+    new Game(canvasRef.current as HTMLCanvasElement, data);
+    console.log(window);
+    // console.log(context.ShowCanvas.gameInfo);
+    // useEffect(() => {
+    //     // if ((context.ShowCanvas.gameInfo['user1']['email'] === localStorage.getItem('email') || context.ShowCanvas.gameInfo['user2']['email'] === localStorage.getItem('email')))
+    //     socket.emit('ConnectServer', {
+    //         GameInfo: context.ShowCanvas.gameInfo,
+    //         idUser: localStorage.getItem('id')
+    //     });
 
-    }, []);
+    // }, []);
 
     return (
-        <div>
-            {isWating && <Dialog />}
-            {!isWating && < canvas ref={canvasRef}  {...props} width={400} height={200} />}
-        </div>
+        // <div>
+        //     {/* {isWating && <Dialog />} !isWating && */}
+        //     {}
+        // </div>
+        < canvas id='canvas' ref={canvasRef}  {...props} width={400} height={200} />
     );
 };
 
