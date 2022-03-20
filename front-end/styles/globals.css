@@ -229,3 +229,14 @@ body {
     82%{transform: rotate(95deg) translate(-30vw, -20vw) scale(-1, -1);}
     100%{transform: rotate(85deg) translate(-20vw, -30vw) scale(-1, -1);}
   } */
+  /* .ant-btn-primary {
+
+  color: #fff;
+  border-color: rgb(0 0 0 / 85%);
+  background: #6b4dc3;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+  width: auto;
+  height: auto;
+  top: 25%;
+  } */

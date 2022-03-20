@@ -86,7 +86,6 @@ export class player {
                 "paddle_speed": this.paddle_speed,
                 "ctx": this.ctx,
                 "color": this.color,
-
             });
     }
 }
@@ -170,7 +169,7 @@ export class ball {
 var finished = false;
 export class Game {
 
-
+    gameid: number;
     canvas: HTMLCanvasElement;
     ctx: any;
     paddle_right: player;
@@ -189,13 +188,15 @@ export class Game {
     email2: string;
     data: any;
     pause: boolean;
+    windos: any;
 
-    constructor(canvas: HTMLCanvasElement, data: any) {
+    constructor(canvas: HTMLCanvasElement, data: any, socket: Socket) {
 
         this.canvas = canvas;
         if (canvas != null) {
             this.canvas.style.backgroundColor = "black";
             this.canvas.width = 800;
+            this.windos = window;
             this.canvas.height = 400;
             this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
             this.uppress = false;
@@ -205,75 +206,78 @@ export class Game {
             this.email1 = this.data['user1']['email'];
             this.pause = false;
             this.email2 = this.data['user2']['email'];
+            this.gameid = this.data['id'];
             this.downpress1 = false;
-            this.paddle_left = new player(0, 10, this.canvas.height / 2, 10, 80, 1, this.ctx, "white");
-            this.paddle_right = new player(0, this.canvas.width - 20, (this.canvas.height) / 2, 10, 80, 1, this.ctx, "white");
+            this.paddle_left = new player(0, 10, this.canvas.height / 2, 10, 80, 5, this.ctx, "white");
+            this.paddle_right = new player(0, this.canvas.width - 20, (this.canvas.height) / 2, 10, 80, 5, this.ctx, "white");
             this.center_rec = new player(0, this.canvas.width / 2, 0, 1, this.canvas.height, 0, this.ctx, "white");
             this._ball = new ball(this.ctx, this.canvas.width / 2, this.canvas.height / 2, 8, 6, -6, "red");
             if (this.email1 === localStorage.getItem('email') || this.email2 === localStorage.getItem('email')) {
                 document.addEventListener("keyup", this.keyUpHandler.bind(this), false);
                 document.addEventListener("keydown", this.keyDownHandler.bind(this), false);
+                // document.addEventListener("onunload", this.onunload.bind(this), false);
                 // document.addEventListener("mousemove", this.mouseMoveHandler.bind(this), false);
             }
-            this.socket = io("http://10.12.5.14:3080");
+            this.socket = socket;
             this.player = 0;
 
             this.paddle_left.score = 0;
             this.paddle_right.score = 0;
 
             this.socket.on('DataToClient', (msg) => {
-                this.paddle_right.paddle_x = msg.paddle_x;
-                this.paddle_right.paddle_y = msg.paddle_y;
+                if (msg.gameid === this.gameid) {
+                    this.paddle_right.paddle_x = msg.paddle.paddle_x;
+                    this.paddle_right.paddle_y = msg.paddle.paddle_y;
+                }
             });
 
             this.socket.on('DataToClient2', (msg) => {
-                this.paddle_left.paddle_x = msg.paddle_x;
-                this.paddle_left.paddle_y = msg.paddle_y;
+                if (msg.gameid === this.gameid) {
+                    // console.log("[" + this.gameid + "]" + "DataToClient2");
+                    this.paddle_left.paddle_x = msg.paddle.paddle_x;
+                    this.paddle_left.paddle_y = msg.paddle.paddle_y;
+
+                }
             });
+
+            // this.canvas
 
             this.socket.on('BallClient', (msg) => {
-                this._ball.ball_x = msg.ball_x;
-                this._ball.ball_y = msg.ball_y;
-                this._ball.velocity_x = msg.velocity_x;
-                this._ball.velocity_y = msg.velocity_y;
-                this.paddle_left.score = msg.score1;
-                this.paddle_right.score = msg.score2;
-                this.pause = msg.pause;
-                if ((this.paddle_left.score >= 10 || this.paddle_right.score >= 10)) 
-                {
-                    axios.get('http://10.12.5.14:3000/game/finish/' + this.data['id'] + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
-                        .then(res => {
-                            this.pause = true;
-                        });
+                if (msg.gameid === this.gameid) {
+                    this._ball.ball_x = msg.ball_x;
+                    this._ball.ball_y = msg.ball_y;
+                    this._ball.velocity_x = msg.velocity_x;
+                    this._ball.velocity_y = msg.velocity_y;
+                    this.paddle_left.score = msg.score1;
+                    this.paddle_right.score = msg.score2;
+                    if ((this.paddle_left.score >= 10 || this.paddle_right.score >= 10)) {
+                        axios.get('http://10.12.8.15:3000/game/finish/' + this.gameid + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
+                            .then(res => {
+                                // this.pause = true;
+                            });
+                    }
                 }
+            });
 
+            this.socket.on('PauseClient', (msg) => {
+                console.log('PauseClient', msg);
+                if (msg.gameid === this.gameid) {
+                    this.pause = !this.pause;
+                }
             });
             let img = new Image();
-            img.src = "https://joeschmoe.io/api/v1/random";
+            img.src = this.data['user2']['image'];
             img.onload = () => {
                 this.ctx.drawImage(img, this.canvas.width - 70, this.canvas.height - 38, 34, 34);
             }
 
             let img1 = new Image();
-            img1.src = "https://joeschmoe.io/api/v1/random";
+            img1.src = this.data['user1']['image'];
             img1.onload = () => {
                 this.ctx.drawImage(img1, 50, this.canvas.height - 38, 34, 34);
             }
-
             let time: number = 3;
 
-            // let t = setInterval(() => {
-            //     //coutn down timer
-            //     this.ctx.font = "30px Arial";
-            //     this.ctx.fillStyle = "white";
-            //     this.ctx.fillText(time, this.canvas.width / 2 - 20, this.canvas.height / 2);
-            //     time--;
-            //     if (time < 0) {
-            //         clearInterval(t);
-            //     }
-            //     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height - 40);
-
-            // }, 3000);
             setTimeout(() => {
                 this.start();
             }, 3000);
@@ -301,6 +305,10 @@ export class Game {
         // 
     }
 
+    onunload() {
+        console.log("[" + this.gameid + "]" + "onunload");
+    }
+
     receiveMessage(data: any) {
         // console.(data);
     }
@@ -320,8 +328,6 @@ export class Game {
         if (e.key === "s" || e.key === "KeyS") {
             this.downpress1 = true;
         }
-
-        
     }
 
     keyUpHandler(e: KeyboardEvent) {
@@ -338,9 +344,13 @@ export class Game {
         if (e.key === "s" || e.key === "KeyS") {
             this.downpress1 = false;
         }
-        // if (e.key === "p" || e.key === "KeyP") {
-        //     this.pause = !this.pause;
-        // }
+        if (e.key === "p" || e.key === "KeyP" || e.key === " ") {
+            this.socket.emit('PauseServer',
+                {
+                    gameid: this.gameid,
+                    // pause: this.pause,
+                });
+        }
     }
 
 
@@ -352,7 +362,12 @@ export class Game {
                 if (this.paddle_left.paddle_y < 0) {
                     this.paddle_left.paddle_y = 0;
                 }
-                this.socket.emit('DataToServer2', this.paddle_left.ToJson()); // push a mesage to the array
+                this.socket.emit('DataToServer2',
+                    {
+                        paddle: this.paddle_left.ToJson(),
+                        gameid: this.gameid,
+
+                    }); // push a mesage to the array
             }
             if (this.downpress) {
 
@@ -360,7 +375,11 @@ export class Game {
                 if (this.paddle_left.paddle_y + this.paddle_left._paddle_height + 40 > this.canvas.height) {
                     this.paddle_left.paddle_y = this.canvas.height - this.paddle_left._paddle_height - 41;
                 }
-                this.socket.emit('DataToServer2', this.paddle_left.ToJson()); // push a mesage to the array
+                this.socket.emit('DataToServer2',
+                    {
+                        paddle: this.paddle_left.ToJson(),
+                        gameid: this.gameid,
+                    });
 
             }
         }
@@ -371,7 +390,11 @@ export class Game {
                 if (this.paddle_right._paddle_y < 0) {
                     this.paddle_right.paddle_y = 0;
                 }
-                this.socket.emit('DataToServer', this.paddle_right.ToJson()); // push a mesage to the array
+                this.socket.emit('DataToServer',
+                    {
+                        paddle: this.paddle_right.ToJson(),
+                        gameid: this.gameid,
+                    }); // push a mesage to the array
 
             }
             if (this.downpress1) {
@@ -381,7 +404,11 @@ export class Game {
                 {
                     this.paddle_right.paddle_y = this.canvas.height - this.paddle_right._paddle_height - 41;
                 }
-                this.socket.emit('DataToServer', this.paddle_right.ToJson()) // push a mesage to the array
+                this.socket.emit('DataToServer',
+                    {
+                        paddle: this.paddle_right.ToJson(),
+                        gameid: this.gameid,
+                    }) // push a mesage to the array
             }
         }
     }
@@ -407,8 +434,8 @@ export class Game {
                 this.paddle_right._score = 1;
                 this._ball.ball_x = this.canvas.width / 2;
                 this._ball.ball_y = this.canvas.height - this.paddle_right._paddle_height;
-                this._ball._velocity_x = 6;
-                this._ball._velocity_y = -6;
+                this._ball._velocity_x = 4;
+                this._ball._velocity_y = -4;
             }
         }
         if (
@@ -424,8 +451,8 @@ export class Game {
                 this.paddle_left._score = 1;
                 this._ball.ball_x = this.canvas.width / 2;
                 this._ball.ball_y = this.canvas.height - this.paddle_right._paddle_height;
-                this._ball._velocity_y = -6;
-                this._ball._velocity_x = -6;
+                this._ball._velocity_y = -4;
+                this._ball._velocity_x = -4;
             }
         }
     }
@@ -460,6 +487,7 @@ export class Game {
 
 
     start() {
+
         this.draw();
         if (!this.pause) {
             this.keyhook();
@@ -467,25 +495,43 @@ export class Game {
             this._ball.ball_y += this._ball._velocity_y;
             this.collisionDetection();
             this.show_score();
-        }
-        if (this.email1 === localStorage.getItem('email') && !this.pause) {
-            this.socket.emit('BallServer',
-                {
-                    ball_x: this._ball.ball_x,
-                    ball_y: this._ball.ball_y,
-                    velocity_x: this._ball._velocity_x,
-                    velocity_y: this._ball._velocity_y,
-                    score1: this.paddle_left.score,
-                    score2: this.paddle_right.score,
-                    pause: this.pause,
-                });
+            if (this.email1 === localStorage.getItem('email')) {
+                this.socket.emit('BallServer',
+                    {
+                        ball_x: this._ball.ball_x,
+                        ball_y: this._ball.ball_y,
+                        velocity_x: this._ball._velocity_x,
+                        velocity_y: this._ball._velocity_y,
+                        score1: this.paddle_left.score,
+                        score2: this.paddle_right.score,
+                        gameid: this.gameid,
+                    });
 
+            }
         }
         if (this.paddle_left.score === 10 || this.paddle_right.score === 10) {
             if (this.paddle_left.score === 10)
                 this.draw_winner(this.data['user2']['name']);
             else
                 this.draw_winner(this.data['user1']['name']);
+            this.socket.emit('PauseServer',
+                {
+                    gameid: this.gameid,
+                });
+            this.pause = true;
+            // this.socket.close();
+
+        }
+        if (this.email1 === localStorage.getItem('email') || this.email2 === localStorage.getItem('email')) 
+        {
+            if (!document.hasFocus() && !this.pause) 
+            {
+                this.socket.emit('PauseServer',
+                    {
+                        gameid: this.gameid,
+                    });
+            }
+
         }
         this.draw_footer();
         requestAnimationFrame(() => this.start());
@@ -496,37 +542,38 @@ const Canvas = (props: any) => {
     const [data, setData] = useState(props.data ? props.data : []);
     const canvasRef = useRef(null);
     let context = useMyContext();
-    console.log(props.data);
+    // console.log(props.data);
     const [isWating, setIsWating] = useState(true);
     //  console.log(context.GameInfo);
 
-    let socket = io('http://10.12.5.14:3080');
-    socket.on('ConnectClient', (res: any) => {
-
-        {
-            console.log("checked");
-            if (res['is_started'] === true && res['id'] === context.ShowCanvas.gameInfo['id']) {
-                setIsWating(false);
-                // context.ShowCanvas.start();
-                new Game(canvasRef.current as HTMLCanvasElement, data);
-            }
-        }
-    });
-    console.log(context.ShowCanvas.gameInfo);
+    // console.log(window);
+    // console.log(context.ShowCanvas.gameInfo);
     useEffect(() => {
+        let socket = io('http://10.12.8.15:3080');
+        socket.on('ConnectClient', (res: any) => {
+
+            {
+                console.log("checked");
+                if (res['is_started'] === true && res['id'] === context.ShowCanvas.gameInfo['id']) {
+                    setIsWating(false);
+                    new Game(canvasRef.current as HTMLCanvasElement, data, socket);
+                }
+            }
+        });
         // if ((context.ShowCanvas.gameInfo['user1']['email'] === localStorage.getItem('email') || context.ShowCanvas.gameInfo['user2']['email'] === localStorage.getItem('email')))
-            socket.emit('ConnectServer', {
-                GameInfo: context.ShowCanvas.gameInfo,
-                idUser: localStorage.getItem('id')
-            });
+        socket.emit('ConnectServer', {
+            GameInfo: context.ShowCanvas.gameInfo,
+            idUser: localStorage.getItem('id')
+        });
 
     }, []);
 
     return (
         <div>
             {isWating && <Dialog />}
-            {!isWating && < canvas ref={canvasRef}  {...props} width={400} height={200} />}
+            {!isWating && < canvas id='canvas' ref={canvasRef}  {...props} width={400} height={200} />}
         </div>
+
     );
 };
 

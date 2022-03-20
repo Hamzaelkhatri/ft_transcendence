@@ -47,7 +47,7 @@ function MyApp(props: AppProps) {
       }
     }
     if (singIn === "Sign In" && router.query.token !== undefined) {
-      const res = fetch("http://10.12.5.14:3000/user/me",
+      const res = fetch("http://10.12.8.15:3000/user/me",
         {
           method: "POST",
           headers: {

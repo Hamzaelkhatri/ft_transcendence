@@ -54,7 +54,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
   handleMessage(client: Socket, payload: any): void {
     this.server.emit('DataToClient', payload);
     
-    // console.log(payload);
+    console.log(payload);
   }
 
   @SubscribeMessage('DataToServer2')
@@ -70,9 +70,9 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
   @SubscribeMessage('ConnectServer')
   connect_users2(client: Socket, payload: any): void 
   {
-    console.log(payload);
+    // console.log(payload);
     let game_id = this.game.findIndex(game => game.id == payload.GameInfo.id);
-    console.log(this.game[game_id]);
+    // console.log(this.game[game_id]);
     if(game_id == -1)
     {
       this.game.push(new Game(payload.GameInfo.id, payload.GameInfo.userId1, payload.GameInfo.userId2, false, true, false));
@@ -90,4 +90,9 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
     this.server.emit('ConnectClient', this.game[game_id]);
   }
 
+
+  @SubscribeMessage('PauseServer')
+  pause(client: Socket, payload: any): void {
+    this.server.emit('PauseClient', payload);
+    }
 }
