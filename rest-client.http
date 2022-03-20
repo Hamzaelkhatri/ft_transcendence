@@ -63,3 +63,8 @@ GET http://10.12.8.15:3000/game/is_invited/10
 ###
 
 GET http://10.12.8.15:3000/game/invited/confirm/10/245
+
+
+###
+
+GET http://10.12.8.15:3000/game/matchmaking/10

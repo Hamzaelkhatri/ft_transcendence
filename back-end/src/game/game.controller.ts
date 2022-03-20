@@ -82,4 +82,10 @@ export class GameController implements CrudController<Game> {
     async watch(@Param("id") id: number) {
         return await this.service.watch(id);
     }
+
+    //matchmaking
+    @Get("/matchmaking/:id")
+    async matchmaking(@Param("id") id: number) {
+        return await this.service.matchmaking(id);
+    }
 }

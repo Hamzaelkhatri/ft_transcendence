@@ -167,4 +167,57 @@ export class GameService extends TypeOrmCrudService<Game>
             .getOne();
         return user;
     }
+
+    //matchmaking
+    async matchmaking(id: number): Promise<Game> {
+        const user = await this.repository.
+            createQueryBuilder('game')
+            .leftJoinAndSelect('game.user1', 'user1')
+            .leftJoinAndSelect('game.user2', 'user2')
+            .where('game.user2.id IS NULL', {})
+            .andWhere('game.is_accepted_by_user2 = :is_accepted_by_user2', { is_accepted_by_user2: false })
+            .andWhere('game.is_finished = :is_finished', { is_finished: false })
+            .andWhere('game.is_started = :is_started', { is_started: false })
+            .orderBy('game.created_at', 'DESC')
+            .getOne(); /// 
+        if (user) {
+           let t = await this.repository
+            .createQueryBuilder('game')
+                .update({
+                    is_accepted_by_user2: true,
+                    is_started: true,
+                    TimeBegin: new Date(),
+                    updated_at: new Date(),
+                    TimeEnd: new Date(),
+                    is_finished: false,
+                    user2: await this.userservice.getUserById(id).then(user => {
+                        return user;
+                    }),
+                    userId2: id,
+                }).execute();
+                return await this.repository.
+                createQueryBuilder('game')
+                .leftJoinAndSelect('game.user1', 'user1')
+                .leftJoinAndSelect('game.user2', 'user2')
+                .where('game.id = :id', { id: user.id })
+                .getOne();
+        }
+        else {
+            const game = new Game();
+            game.user1 = await this.userservice.getUserById(id).then(user => {
+                return user;
+            });
+            game.userId1 = id;
+            game.is_accepted_by_user2 = false;
+            game.is_finished = false;
+            game.is_started = false;
+            game.TimeBegin = new Date();
+            game.TimeEnd = new Date();
+            game.created_at = new Date();
+            game.updated_at = new Date();
+            game.winner = 0;
+            game.price = 100;
+            return await this.repository.save(game);
+        }
+    }
 }

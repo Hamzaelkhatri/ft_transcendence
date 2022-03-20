@@ -251,9 +251,9 @@ export class Game {
                     this.paddle_left.score = msg.score1;
                     this.paddle_right.score = msg.score2;
                     if ((this.paddle_left.score >= 10 || this.paddle_right.score >= 10)) {
-                        axios.get('http://10.12.8.15:3000/game/finish/' + this.data['id'] + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
+                        axios.get('http://10.12.8.15:3000/game/finish/' + this.gameid + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
                             .then(res => {
-                                this.pause = true;
+                                // this.pause = true;
                             });
                     }
                 }
@@ -261,9 +261,8 @@ export class Game {
 
             this.socket.on('PauseClient', (msg) => {
                 console.log('PauseClient', msg);
-                if (msg.gameid === this.gameid) 
-                {
-                    this.pause = msg.pause;
+                if (msg.gameid === this.gameid) {
+                    this.pause = !this.pause;
                 }
             });
             let img = new Image();
@@ -346,7 +345,11 @@ export class Game {
             this.downpress1 = false;
         }
         if (e.key === "p" || e.key === "KeyP" || e.key === " ") {
-            this.pause = !this.pause;
+            this.socket.emit('PauseServer',
+                {
+                    gameid: this.gameid,
+                    // pause: this.pause,
+                });
         }
     }
 
@@ -511,20 +514,24 @@ export class Game {
                 this.draw_winner(this.data['user2']['name']);
             else
                 this.draw_winner(this.data['user1']['name']);
-            this.socket.close();
-            
-        }
-        // if (this.email1 === localStorage.getItem('email') || this.email2 === localStorage.getItem('email')) 
-        {
-            if (!document.hasFocus() )
-            {
-                this.pause = true;
-            }
             this.socket.emit('PauseServer',
                 {
                     gameid: this.gameid,
-                    pause: this.pause,
                 });
+            this.pause = true;
+            // this.socket.close();
+
+        }
+        if (this.email1 === localStorage.getItem('email') || this.email2 === localStorage.getItem('email')) 
+        {
+            if (!document.hasFocus() && !this.pause) 
+            {
+                this.socket.emit('PauseServer',
+                    {
+                        gameid: this.gameid,
+                    });
+            }
+
         }
         this.draw_footer();
         requestAnimationFrame(() => this.start());
