@@ -251,7 +251,7 @@ export class Game {
                     this.paddle_left.score = msg.score1;
                     this.paddle_right.score = msg.score2;
                     if ((this.paddle_left.score >= 10 || this.paddle_right.score >= 10)) {
-                        axios.get('http://10.12.8.15:3000/game/finish/' + this.gameid + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
+                        axios.get('http://localhost:3000/game/finish/' + this.gameid + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
                             .then(res => {
                                 // this.pause = true;
                             });
@@ -519,8 +519,6 @@ export class Game {
                     gameid: this.gameid,
                 });
             this.pause = true;
-            // this.socket.close();
-
         }
         if (this.email1 === localStorage.getItem('email') || this.email2 === localStorage.getItem('email')) 
         {
@@ -548,18 +546,22 @@ const Canvas = (props: any) => {
 
     // console.log(window);
     // console.log(context.ShowCanvas.gameInfo);
-    useEffect(() => {
-        let socket = io('http://10.12.8.15:3080');
-        socket.on('ConnectClient', (res: any) => {
+    let socket = io('http://localhost:3080');
+    socket.on('ConnectClient', (res: any) => {
 
-            {
-                console.log("checked");
-                if (res['is_started'] === true && res['id'] === context.ShowCanvas.gameInfo['id']) {
-                    setIsWating(false);
-                    new Game(canvasRef.current as HTMLCanvasElement, data, socket);
-                }
+        {
+            console.log('res',res);
+            // console.log('gameid',context.ShowCanvas.gameInfo);
+            // console.log("checked");
+            if (res['is_started'] === true && res['id'] === context.ShowCanvas.gameInfo['id']) {
+                setIsWating(false);
+                setData(res);
+                context.ShowCanvas.gameInfo = res;
+                new Game(canvasRef.current as HTMLCanvasElement, res, socket);
             }
-        });
+        }
+    });
+    useEffect(() => {
         // if ((context.ShowCanvas.gameInfo['user1']['email'] === localStorage.getItem('email') || context.ShowCanvas.gameInfo['user2']['email'] === localStorage.getItem('email')))
         socket.emit('ConnectServer', {
             GameInfo: context.ShowCanvas.gameInfo,
