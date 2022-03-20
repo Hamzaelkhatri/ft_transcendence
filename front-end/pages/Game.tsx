@@ -169,7 +169,7 @@ export class ball {
 var finished = false;
 export class Game {
 
-    id_game: number;
+    gameid: number;
     canvas: HTMLCanvasElement;
     ctx: any;
     paddle_right: player;
@@ -190,7 +190,7 @@ export class Game {
     pause: boolean;
     windos: any;
 
-    constructor(canvas: HTMLCanvasElement, data: any) {
+    constructor(canvas: HTMLCanvasElement, data: any, socket: Socket) {
 
         this.canvas = canvas;
         if (canvas != null) {
@@ -206,59 +206,66 @@ export class Game {
             this.email1 = this.data['user1']['email'];
             this.pause = false;
             this.email2 = this.data['user2']['email'];
-            this.id_game = this.data['id'];
+            this.gameid = this.data['id'];
             this.downpress1 = false;
-            this.paddle_left = new player(0, 10, this.canvas.height / 2, 10, 80, 1, this.ctx, "white");
-            this.paddle_right = new player(0, this.canvas.width - 20, (this.canvas.height) / 2, 10, 80, 1, this.ctx, "white");
+            this.paddle_left = new player(0, 10, this.canvas.height / 2, 10, 80, 5, this.ctx, "white");
+            this.paddle_right = new player(0, this.canvas.width - 20, (this.canvas.height) / 2, 10, 80, 5, this.ctx, "white");
             this.center_rec = new player(0, this.canvas.width / 2, 0, 1, this.canvas.height, 0, this.ctx, "white");
             this._ball = new ball(this.ctx, this.canvas.width / 2, this.canvas.height / 2, 8, 6, -6, "red");
             if (this.email1 === localStorage.getItem('email') || this.email2 === localStorage.getItem('email')) {
                 document.addEventListener("keyup", this.keyUpHandler.bind(this), false);
                 document.addEventListener("keydown", this.keyDownHandler.bind(this), false);
-                document.addEventListener("onunload", this.onunload.bind(this), false);
+                // document.addEventListener("onunload", this.onunload.bind(this), false);
                 // document.addEventListener("mousemove", this.mouseMoveHandler.bind(this), false);
             }
-            this.socket = io("http://localhost:3080");
+            this.socket = socket;
             this.player = 0;
 
             this.paddle_left.score = 0;
             this.paddle_right.score = 0;
 
             this.socket.on('DataToClient', (msg) => {
-                // if (msg.id_game === this.id_game) {
-                // console.log("[" + this.id_game + "]" + "DataToClient");
-                this.paddle_right.paddle_x = msg.paddle.paddle_x;
-                this.paddle_right.paddle_y = msg.paddle.paddle_y;
-                // }
+                if (msg.gameid === this.gameid) {
+                    this.paddle_right.paddle_x = msg.paddle.paddle_x;
+                    this.paddle_right.paddle_y = msg.paddle.paddle_y;
+                }
             });
 
             this.socket.on('DataToClient2', (msg) => {
-                // if (msg.id_game === this.id_game) {
-                // console.log("[" + this.id_game + "]" + "DataToClient2");
-                this.paddle_left.paddle_x = msg.paddle.paddle_x;
-                this.paddle_left.paddle_y = msg.paddle.paddle_y;
-                // }
+                if (msg.gameid === this.gameid) {
+                    // console.log("[" + this.gameid + "]" + "DataToClient2");
+                    this.paddle_left.paddle_x = msg.paddle.paddle_x;
+                    this.paddle_left.paddle_y = msg.paddle.paddle_y;
+
+                }
             });
 
             // this.canvas
 
-            // this.socket.on('BallClient', (msg) => {
-            //     // if (msg.id_game === this.id_game) {
-            //     console.log("[" + this.id_game + "]" + "BallClient");
-            //     this._ball.ball_x = msg.ball_x;
-            //     this._ball.ball_y = msg.ball_y;
-            //     this._ball.velocity_x = msg.velocity_x;
-            //     this._ball.velocity_y = msg.velocity_y;
-            //     this.paddle_left.score = msg.score1;
-            //     this.paddle_right.score = msg.score2;
-            //     this.pause = msg.pause;
-            //     if ((this.paddle_left.score >= 10 || this.paddle_right.score >= 10)) {
-            //         axios.get('http://localhost:3000/game/finish/' + this.data['id'] + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
-            //             .then(res => {
-            //                 this.pause = true;
-            //             });
-            //     }
-            // });
+            this.socket.on('BallClient', (msg) => {
+                if (msg.gameid === this.gameid) {
+                    this._ball.ball_x = msg.ball_x;
+                    this._ball.ball_y = msg.ball_y;
+                    this._ball.velocity_x = msg.velocity_x;
+                    this._ball.velocity_y = msg.velocity_y;
+                    this.paddle_left.score = msg.score1;
+                    this.paddle_right.score = msg.score2;
+                    if ((this.paddle_left.score >= 10 || this.paddle_right.score >= 10)) {
+                        axios.get('http://10.12.8.15:3000/game/finish/' + this.data['id'] + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
+                            .then(res => {
+                                this.pause = true;
+                            });
+                    }
+                }
+            });
+
+            this.socket.on('PauseClient', (msg) => {
+                console.log('PauseClient', msg);
+                if (msg.gameid === this.gameid) 
+                {
+                    this.pause = msg.pause;
+                }
+            });
             let img = new Image();
             img.src = this.data['user2']['image'];
             img.onload = () => {
@@ -271,24 +278,6 @@ export class Game {
                 this.ctx.drawImage(img1, 50, this.canvas.height - 38, 34, 34);
             }
             let time: number = 3;
-
-            // let t = setInterval(() => {
-            //     //coutn down timer
-            //     this.ctx.font = "30px Arial";
-            //     this.ctx.fillStyle = "white";
-            //     this.ctx.fillText(time, this.canvas.width / 2 - 20, this.canvas.height / 2);
-            //     time--;
-            //     if (time < 0) {
-            //         clearInterval(t);
-            //     }
-            //     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height - 40);
-
-            // }, 3000);
-            // window.onunload = () => {
-            //     console.log("[" + this.id_game + "]" + "onunload");
-            // }
-
-            // catch websocket close
 
             setTimeout(() => {
                 this.start();
@@ -318,7 +307,7 @@ export class Game {
     }
 
     onunload() {
-        console.log("[" + this.id_game + "]" + "onunload");
+        console.log("[" + this.gameid + "]" + "onunload");
     }
 
     receiveMessage(data: any) {
@@ -373,7 +362,8 @@ export class Game {
                 this.socket.emit('DataToServer2',
                     {
                         paddle: this.paddle_left.ToJson(),
-                        gameid: this.id_game
+                        gameid: this.gameid,
+
                     }); // push a mesage to the array
             }
             if (this.downpress) {
@@ -385,7 +375,7 @@ export class Game {
                 this.socket.emit('DataToServer2',
                     {
                         paddle: this.paddle_left.ToJson(),
-                        gameid: this.id_game
+                        gameid: this.gameid,
                     });
 
             }
@@ -400,7 +390,7 @@ export class Game {
                 this.socket.emit('DataToServer',
                     {
                         paddle: this.paddle_right.ToJson(),
-                        gameid: this.id_game
+                        gameid: this.gameid,
                     }); // push a mesage to the array
 
             }
@@ -414,7 +404,7 @@ export class Game {
                 this.socket.emit('DataToServer',
                     {
                         paddle: this.paddle_right.ToJson(),
-                        gameid: this.id_game
+                        gameid: this.gameid,
                     }) // push a mesage to the array
             }
         }
@@ -441,8 +431,8 @@ export class Game {
                 this.paddle_right._score = 1;
                 this._ball.ball_x = this.canvas.width / 2;
                 this._ball.ball_y = this.canvas.height - this.paddle_right._paddle_height;
-                this._ball._velocity_x = 6;
-                this._ball._velocity_y = -6;
+                this._ball._velocity_x = 4;
+                this._ball._velocity_y = -4;
             }
         }
         if (
@@ -458,8 +448,8 @@ export class Game {
                 this.paddle_left._score = 1;
                 this._ball.ball_x = this.canvas.width / 2;
                 this._ball.ball_y = this.canvas.height - this.paddle_right._paddle_height;
-                this._ball._velocity_y = -6;
-                this._ball._velocity_x = -6;
+                this._ball._velocity_y = -4;
+                this._ball._velocity_x = -4;
             }
         }
     }
@@ -494,37 +484,47 @@ export class Game {
 
 
     start() {
+
         this.draw();
-        //check if window is active
-        if (!document.hasFocus()) {
-            this.pause = true;
-        }
         if (!this.pause) {
             this.keyhook();
             this._ball.ball_x += this._ball._velocity_x;
             this._ball.ball_y += this._ball._velocity_y;
             this.collisionDetection();
             this.show_score();
-        }
-        if (this.email1 === localStorage.getItem('email')) {
-            this.socket.emit('BallServer',
-                {
-                    ball_x: this._ball.ball_x,
-                    ball_y: this._ball.ball_y,
-                    velocity_x: this._ball._velocity_x,
-                    velocity_y: this._ball._velocity_y,
-                    score1: this.paddle_left.score,
-                    score2: this.paddle_right.score,
-                    pause: this.pause,
-                    gameid: this.id_game
-                });
+            if (this.email1 === localStorage.getItem('email')) {
+                this.socket.emit('BallServer',
+                    {
+                        ball_x: this._ball.ball_x,
+                        ball_y: this._ball.ball_y,
+                        velocity_x: this._ball._velocity_x,
+                        velocity_y: this._ball._velocity_y,
+                        score1: this.paddle_left.score,
+                        score2: this.paddle_right.score,
+                        gameid: this.gameid,
+                    });
 
+            }
         }
         if (this.paddle_left.score === 10 || this.paddle_right.score === 10) {
             if (this.paddle_left.score === 10)
                 this.draw_winner(this.data['user2']['name']);
             else
                 this.draw_winner(this.data['user1']['name']);
+            this.socket.close();
+            
+        }
+        // if (this.email1 === localStorage.getItem('email') || this.email2 === localStorage.getItem('email')) 
+        {
+            if (!document.hasFocus() )
+            {
+                this.pause = true;
+            }
+            this.socket.emit('PauseServer',
+                {
+                    gameid: this.gameid,
+                    pause: this.pause,
+                });
         }
         this.draw_footer();
         requestAnimationFrame(() => this.start());
@@ -539,35 +539,34 @@ const Canvas = (props: any) => {
     const [isWating, setIsWating] = useState(true);
     //  console.log(context.GameInfo);
 
-    // let socket = io('http://localhost:3080');
-    // socket.on('ConnectClient', (res: any) => {
-
-    //     {
-    //         console.log("checked");
-    //         if (res['is_started'] === true && res['id'] === context.ShowCanvas.gameInfo['id']) {
-    //             setIsWating(false);
-    //             // context.ShowCanvas.start();
-    //         }
-    //     }
-    // });
-    new Game(canvasRef.current as HTMLCanvasElement, data);
-    console.log(window);
+    // console.log(window);
     // console.log(context.ShowCanvas.gameInfo);
-    // useEffect(() => {
-    //     // if ((context.ShowCanvas.gameInfo['user1']['email'] === localStorage.getItem('email') || context.ShowCanvas.gameInfo['user2']['email'] === localStorage.getItem('email')))
-    //     socket.emit('ConnectServer', {
-    //         GameInfo: context.ShowCanvas.gameInfo,
-    //         idUser: localStorage.getItem('id')
-    //     });
+    useEffect(() => {
+        let socket = io('http://10.12.8.15:3080');
+        socket.on('ConnectClient', (res: any) => {
 
-    // }, []);
+            {
+                console.log("checked");
+                if (res['is_started'] === true && res['id'] === context.ShowCanvas.gameInfo['id']) {
+                    setIsWating(false);
+                    new Game(canvasRef.current as HTMLCanvasElement, data, socket);
+                }
+            }
+        });
+        // if ((context.ShowCanvas.gameInfo['user1']['email'] === localStorage.getItem('email') || context.ShowCanvas.gameInfo['user2']['email'] === localStorage.getItem('email')))
+        socket.emit('ConnectServer', {
+            GameInfo: context.ShowCanvas.gameInfo,
+            idUser: localStorage.getItem('id')
+        });
+
+    }, []);
 
     return (
-        // <div>
-        //     {/* {isWating && <Dialog />} !isWating && */}
-        //     {}
-        // </div>
-        < canvas id='canvas' ref={canvasRef}  {...props} width={400} height={200} />
+        <div>
+            {isWating && <Dialog />}
+            {!isWating && < canvas id='canvas' ref={canvasRef}  {...props} width={400} height={200} />}
+        </div>
+
     );
 };
 

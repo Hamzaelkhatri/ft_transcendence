@@ -13,7 +13,7 @@
                 actions={[<ArrowLeftOutlined key="previous" onClick={() => { setOneTime(0); }
                 } />,
                 <PlayCircleOutlined key="play" onClick={() => {
-                    axios.post("http://localhost:3000/game/invite",
+                    axios.post("http://10.12.8.15:3000/game/invite",
                         {
                             "username1": localStorage.getItem("usual_full_name"),
                             "username2": data['name']

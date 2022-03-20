@@ -90,4 +90,9 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
     this.server.emit('ConnectClient', this.game[game_id]);
   }
 
+
+  @SubscribeMessage('PauseServer')
+  pause(client: Socket, payload: any): void {
+    this.server.emit('PauseClient', payload);
+    }
 }
