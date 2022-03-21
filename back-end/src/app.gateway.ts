@@ -1,5 +1,6 @@
 import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
+import {GameService} from './game/game.service';
 import { Server, Socket } from 'socket.io';
 
 class Game
@@ -29,6 +30,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
   usersConnect = [];
   i : number = 0;
   game : Game[] = [];
+  gameService: GameService;
 
   @WebSocketServer() server: Server;
 
@@ -54,7 +56,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
   handleMessage(client: Socket, payload: any): void {
     this.server.emit('DataToClient', payload);
     
-    console.log(payload);
+    // console.log(payload);
   }
 
   @SubscribeMessage('DataToServer2')
@@ -73,26 +75,47 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
     // console.log(payload);
     let game_id = this.game.findIndex(game => game.id == payload.GameInfo.id);
     // console.log(this.game[game_id]);
+    // console.log(payload);
     if(game_id == -1)
     {
       this.game.push(new Game(payload.GameInfo.id, payload.GameInfo.userId1, payload.GameInfo.userId2, false, true, false));
     }
     else
     {
-      if(this.game[game_id].user1 == payload.idUser || this.game[game_id].user2 == payload.idUser)
+      if(this.game[game_id].user1 == payload.idUser || this.game[game_id].user2 == payload.idUser 
+        || this.game[game_id].user2 == 0)
       {
         this.game[game_id].is_started = true;
         this.game[game_id].user1_accepted = true;
         this.game[game_id].user2_accepted = true;
+        this.game[game_id].user2 = payload.idUser;
+        if(this.game[game_id].user2 == payload.idUser)
+        {
+          payload.GameInfo.is_started = true;
+          payload.GameInfo.user1_accepted = true;
+          payload.GameInfo.user2_accepted = true;
+        }
+
+          // ;
       }
     }
     game_id = this.game.findIndex(game => game.id == payload.GameInfo.id);
-    this.server.emit('ConnectClient', this.game[game_id]);
+
+    // if(
+
+    this.server.emit('ConnectClient', payload.GameInfo);
   }
 
 
   @SubscribeMessage('PauseServer')
   pause(client: Socket, payload: any): void {
     this.server.emit('PauseClient', payload);
+    }
+
+    @SubscribeMessage('GameOverServer')
+    gameOver(client: Socket, payload: any): void 
+    {
+      console.log(payload);
+      this.server.emit('GameOverClient', payload);
     }
 }
