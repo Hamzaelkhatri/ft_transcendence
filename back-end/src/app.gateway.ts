@@ -111,4 +111,10 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
   pause(client: Socket, payload: any): void {
     this.server.emit('PauseClient', payload);
     }
+
+    @SubscribeMessage('GameOverServer')
+    gameOver(client: Socket, payload: any): void 
+    {
+      this.server.emit('GameOverClient', payload);
+    }
 }

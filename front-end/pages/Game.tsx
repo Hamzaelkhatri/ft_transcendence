@@ -251,7 +251,7 @@ export class Game {
                     this.paddle_left.score = msg.score1;
                     this.paddle_right.score = msg.score2;
                     if ((this.paddle_left.score >= 10 || this.paddle_right.score >= 10)) {
-                        axios.get('http://localhost:3000/game/finish/' + this.gameid + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
+                        axios.get('http://10.12.7.14:3000/game/finish/' + this.gameid + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
                             .then(res => {
                                 // this.pause = true;
                             });
@@ -546,22 +546,33 @@ const Canvas = (props: any) => {
 
     // console.log(window);
     // console.log(context.ShowCanvas.gameInfo);
-    let socket = io('http://localhost:3080');
-    socket.on('ConnectClient', (res: any) => {
-
-        {
-            console.log('res',res);
-            // console.log('gameid',context.ShowCanvas.gameInfo);
-            // console.log("checked");
-            if (res['is_started'] === true && res['id'] === context.ShowCanvas.gameInfo['id']) {
-                setIsWating(false);
-                setData(res);
-                context.ShowCanvas.gameInfo = res;
-                new Game(canvasRef.current as HTMLCanvasElement, res, socket);
-            }
-        }
-    });
     useEffect(() => {
+        let socket = io('http://10.12.7.14:3080');
+        socket.on('ConnectClient', (res: any) => {
+    
+            {
+                console.log('res',res);
+                // console.log('gameid',context.ShowCanvas.gameInfo);
+                // console.log("checked");
+                if (res['is_started'] === true && res['id'] === context.ShowCanvas.gameInfo['id']) {
+                    setIsWating(false);
+                    setData(res);
+                    context.ShowCanvas.gameInfo = res;
+                    new Game(canvasRef.current as HTMLCanvasElement, res, socket);
+                }
+            }
+        });
+        socket.on('GameOverClient', (res: any) => 
+        {
+            if (res['gameid'] === context.ShowCanvas.gameInfo['id']) 
+            {
+                setIsWating(false);
+                context.ShowCanvas = {
+                    gameInfo: res,
+                    showCanvas: false,
+                };
+            }
+        });
         // if ((context.ShowCanvas.gameInfo['user1']['email'] === localStorage.getItem('email') || context.ShowCanvas.gameInfo['user2']['email'] === localStorage.getItem('email')))
         socket.emit('ConnectServer', {
             GameInfo: context.ShowCanvas.gameInfo,
