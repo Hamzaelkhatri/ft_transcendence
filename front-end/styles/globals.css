@@ -17,6 +17,23 @@ body {
   /* background-image: url("../images/bg0.png") no-repeat top center; */
 }
 
+#example {
+  margin: 20px;
+  margin-bottom: 20px;
+  padding: 30px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  background: rgba(255,255,255,0.08);
+
+}
+
+.ant-spin-dot
+{
+  left:135px;
+
+}
+
 /* overlay of background image */
 #cover {
   position: absolute;
@@ -103,6 +120,7 @@ body {
   height: auto;
   /* border: 10px solid transpare   */
 }
+
 
 
 /* #icons
