@@ -215,6 +215,7 @@ export class Game {
             if (this.email1 === localStorage.getItem('email') || this.email2 === localStorage.getItem('email')) {
                 document.addEventListener("keyup", this.keyUpHandler.bind(this), false);
                 document.addEventListener("keydown", this.keyDownHandler.bind(this), false);
+                document.addEventListener('click', this.homeClick.bind(this), false);
                 // document.addEventListener("onunload", this.onunload.bind(this), false);
                 // document.addEventListener("mousemove", this.mouseMoveHandler.bind(this), false);
             }
@@ -260,10 +261,10 @@ export class Game {
             });
 
             this.socket.on('PauseClient', (msg) => {
-                console.log('PauseClient', msg);
-                if (msg.gameid === this.gameid) {
-                    this.pause = !this.pause;
-                }
+                // console.log('PauseClient', msg);
+                // if (msg.gameid === this.gameid) {
+                //     this.pause = !this.pause;
+                // }
             });
             let img = new Image();
             img.src = this.data['user2']['image'];
@@ -282,27 +283,6 @@ export class Game {
                 this.start();
             }, 3000);
         }
-    }
-
-    draw_winner(name: string) {
-        this.ctx.font = "30px Arial";
-        this.ctx.fillStyle = "white";
-        this.ctx.fillText("WINNER " + name, this.canvas.width / 2 - this.ctx.measureText("WINNER " + name).width / 2, this.canvas.height / 2);
-
-        // create rectangle
-        this.ctx.beginPath();
-        this.ctx.rect(this.canvas.width / 2 - 100, this.canvas.height / 2 + 100, 200, 40);
-        this.ctx.fillStyle = "white";
-        // add text to rectangle
-        this.ctx.fill();
-        this.ctx.stroke();
-
-        this.ctx.closePath();
-        this.ctx.font = "20px Arial";
-        this.ctx.fillStyle = "black";
-        this.ctx.fillText("HOME", this.canvas.width / 2 - this.ctx.measureText("Play Again").width / 2, this.canvas.height / 2 + 130);
-
-        // 
     }
 
     onunload() {
@@ -352,7 +332,6 @@ export class Game {
                 });
         }
     }
-
 
     keyhook() {
 
@@ -481,11 +460,77 @@ export class Game {
         this.ctx.fillText(this.paddle_left.score, this.canvas.width / 2 + 100, 30);
     }
 
-    retryButton() {
+    //home click
+
+    // home(event: any) {
+    //     const circle = new Path2D();
+    //     // circle.arc(150, 75, 50, 0, 2 * Math.PI);
+    //     // this.ctx.beginPath();
+    //     // console.log("home");
+    //     circle.arc(this.canvas.width / 2, this.canvas.height / 2 + 100, 50, 0, Math.PI * 2);
+    //     this.ctx.fillStyle = "white";
+
+    //     this.ctx.fill(circle);
+    //     if (this.ctx.isPointInPath(circle, event.offsetX, event.offsetY)) {
+    //         // change color of cercles
+    //         this.ctx.fillStyle = "white";
+    //         this.ctx.fill(circle);
+    //         this.ctx.stroke(circle);
+    //         // console.log("here");
+    //     }
+    //     else {
+    //         this.ctx.fillStyle = 'red';
+    //     }
+    //     // this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    //     this.ctx.fill(circle);
+    //     this.ctx.fillStyle = "white";
+    //     this.ctx.fillText("Home", this.canvas.width / 2 - this.ctx.measureText("Home").width / 2, this.canvas.height / 2 + 112);
+    //     this.ctx.beginPath();
+    // }
+
+    draw_winner(name: string) {
+        this.ctx.font = "30px Arial";
+        this.ctx.fillStyle = "white";
+        this.ctx.fillText("The WINNER is " + name, this.canvas.width / 2 - this.ctx.measureText("The WINNER is " + name).width / 2, this.canvas.height / 2);
+        this.ctx.beginPath();
+        this.ctx.arc(this.canvas.width / 2, this.canvas.height / 2 + 100, 50, 0, Math.PI * 2);
+        this.ctx.fillStyle = "white";
+
+        this.ctx.fill();
+        this.ctx.fillStyle = "red";
+        this.ctx.fillText("Home", this.canvas.width / 2 - this.ctx.measureText("Home").width / 2, this.canvas.height / 2 + 112);
+        this.pause = true;
+        // document.addEventListener('mousemove', this.home.bind(this), false);
+
 
     }
 
 
+    homeClick(e: MouseEvent) {
+        const circle = new Path2D();
+        // circle.arc(150, 75, 50, 0, 2 * Math.PI);
+        // this.ctx.beginPath();
+        circle.arc(this.canvas.width / 2, this.canvas.height / 2 + 100, 50, 0, Math.PI * 2);
+        this.ctx.fillStyle = "Black";
+
+        this.ctx.fill(circle);
+        if (this.ctx.isPointInPath(circle, e.offsetX, e.offsetY)) {
+            console.log("Go to home");
+            // this.ctx.fillStyle = 'green';
+        }
+        // else {
+            // this.ctx.fillStyle = 'red';
+        // }
+        // this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // this.ctx.fill(circle);
+        // this.ctx.fillStyle = "white";
+        // this.ctx.fillText("Home", this.canvas.width / 2 - this.ctx.measureText("Home").width / 2, this.canvas.height / 2 + 112);
+        // this.ctx.beginPath();
+    }
+
+
+    req: any;
     start() {
 
         this.draw();
@@ -509,8 +554,8 @@ export class Game {
 
             }
         }
-        if (this.paddle_left.score === 10 || this.paddle_right.score === 10) {
-            if (this.paddle_left.score === 10)
+        if (this.paddle_left.score === 1 || this.paddle_right.score === 1) {
+            if (this.paddle_left.score === 1)
                 this.draw_winner(this.data['user2']['name']);
             else
                 this.draw_winner(this.data['user1']['name']);
@@ -518,12 +563,12 @@ export class Game {
                 {
                     gameid: this.gameid,
                 });
+            // clear requestAnimationFrame
+            cancelAnimationFrame(this.req);
             this.pause = true;
         }
-        if (this.email1 === localStorage.getItem('email') || this.email2 === localStorage.getItem('email')) 
-        {
-            if (!document.hasFocus() && !this.pause) 
-            {
+        if (this.email1 === localStorage.getItem('email') || this.email2 === localStorage.getItem('email')) {
+            if (!document.hasFocus() && !this.pause) {
                 this.socket.emit('PauseServer',
                     {
                         gameid: this.gameid,
@@ -532,9 +577,10 @@ export class Game {
 
         }
         this.draw_footer();
-        requestAnimationFrame(() => this.start());
+        this.req = requestAnimationFrame(() => this.start());
     }
 }
+
 
 const Canvas = (props: any) => {
     const [data, setData] = useState(props.data ? props.data : []);
@@ -546,22 +592,22 @@ const Canvas = (props: any) => {
 
     // console.log(window);
     // console.log(context.ShowCanvas.gameInfo);
-    let socket = io('http://localhost:3080');
-    socket.on('ConnectClient', (res: any) => {
-
-        {
-            console.log('res',res);
-            // console.log('gameid',context.ShowCanvas.gameInfo);
-            // console.log("checked");
-            if (res['is_started'] === true && res['id'] === context.ShowCanvas.gameInfo['id']) {
-                setIsWating(false);
-                setData(res);
-                context.ShowCanvas.gameInfo = res;
-                new Game(canvasRef.current as HTMLCanvasElement, res, socket);
-            }
-        }
-    });
     useEffect(() => {
+        let socket = io('http://localhost:3080');
+        socket.on('ConnectClient', (res: any) => {
+
+            {
+                console.log('res', res);
+                // console.log('gameid',context.ShowCanvas.gameInfo);
+                // console.log("checked");
+                if (res['is_started'] === true && res['id'] === context.ShowCanvas.gameInfo['id']) {
+                    setIsWating(false);
+                    setData(res);
+                    context.ShowCanvas.gameInfo = res;
+                    new Game(canvasRef.current as HTMLCanvasElement, res, socket);
+                }
+            }
+        });
         // if ((context.ShowCanvas.gameInfo['user1']['email'] === localStorage.getItem('email') || context.ShowCanvas.gameInfo['user2']['email'] === localStorage.getItem('email')))
         socket.emit('ConnectServer', {
             GameInfo: context.ShowCanvas.gameInfo,
