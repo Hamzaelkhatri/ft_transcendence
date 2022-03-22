@@ -24,7 +24,7 @@ const Choose = (props: any) => {
     };
     const data = [
         {
-            title: 'Map1',
+            title: '    Map1',
             render: (res) =>
             <Space>
             <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"/> 
@@ -32,7 +32,7 @@ const Choose = (props: any) => {
 
         },
         {
-            title: 'Map2',
+            title: '    Map2',
             render: (res) =>
             <Space>
             <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"/> 
@@ -40,7 +40,7 @@ const Choose = (props: any) => {
 
         },
         {
-            title: 'Map3',
+            title: '    Map3',
             render: (res) =>
             <Space>
             <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"/> 
@@ -48,7 +48,7 @@ const Choose = (props: any) => {
   
         },
         {
-            title: 'Map4',
+            title: '    Map4',
             render: (res) =>
             <Space>
             <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"/> 
@@ -62,9 +62,9 @@ return (
             footer={[
             ]}>
             <div style={{ padding: "24px", width: "100%", height: "100%" }}>
-                <Space  >
-                    <Spin size="large" id="example" />
-                </Space>
+                {/* <Space  >
+                    <Spin size="large" id="example" />-> RUUYUUUUUUUULES
+                </Space> */}
             </div>
             <div>
                 <List
@@ -73,6 +73,8 @@ return (
                     renderItem={item => (
                         <List.Item>
                             <Card title={
+                                <Space direction="vertical">
+                                {item.title}
                             <Button type="primary" onClick={() => 
                             {
                                 axios.get("http://localhost:3000/game/matchmaking/" + localStorage.getItem("id") +'/'+ item.title)
@@ -91,7 +93,10 @@ return (
 
                             }}>
                                 Play
-                            </Button>}>
+                            </Button>
+                            </Space>
+                            }
+                            >
                                 {item.render(item)}
                             </Card>
                         </List.Item>
