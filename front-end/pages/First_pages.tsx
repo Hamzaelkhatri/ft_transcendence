@@ -329,8 +329,8 @@ const Next_page = () => {
                 <Col span={1} offset={12} >
                     {!context.ShowCanvas.show && <Button type="primary" style={{ zIndex: "9999", top: "25%" }} onClick={() => {
                         setIsModalVisible(true);
-                        console.log(choosable);
-                        console.log(context.ShowCanvas.show);
+                        // console.log(choosable);
+                        // console.log(context.ShowCanvas.show);
                     }}>
                         Random Match
                     </Button>
@@ -368,6 +368,7 @@ const Next_page = () => {
                                                             }
                                                         )
                                                     }
+                                                    setIsModalVisible(false);
                                                 }
                                                 )
                                         }}>

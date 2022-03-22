@@ -535,9 +535,35 @@ export class Game {
 
 
     req: any;
+    miniball() {
+        this.ctx.beginPath();
+        // random color
+        let r:number = Math.floor(Math.random() * 255);
+        let g:number = Math.floor(Math.random() * 255);
+        let b:number = Math.floor(Math.random() * 255);
+        this.ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
+        // random x and y 
+        let x:number = Math.floor(Math.random() * this.canvas.width);
+        let y:number = Math.floor(Math.random() * this.canvas.height - 50);
+        // let r:numberadius = ;
+        this.ctx.arc(x, y, 1, 0, Math.PI * 2, true);
+        this.ctx.fill();
+        this.ctx.closePath();
+    }
+    
+    animate() {
+        let i:number = 0;
+        this.canvas.style.backgroundColor = "rgb(44, 44, 84)";
+        while (i < 10) 
+        {
+            this.miniball();
+            i++;
+        }
+    }
     start() {
 
         this.draw();
+        this.animate();
         if (!this.pause) {
             this.keyhook();
             this._ball.ball_x += this._ball._velocity_x;
