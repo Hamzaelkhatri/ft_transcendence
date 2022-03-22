@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import { Image , Button, Space, Modal } from 'antd';
 import { List, Card, Spin } from 'antd';
 import Item from 'antd/lib/list/Item';
+import { useMyContext } from './ContextProvider';
+import axios from 'axios';
 
 
 
 const Choose = (props: any) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
+    let context:any = useMyContext();
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -21,7 +24,7 @@ const Choose = (props: any) => {
     };
     const data = [
         {
-            title: 'Title 1',
+            title: 'Map1',
             render: (res) =>
             <Space>
             <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"/> 
@@ -29,7 +32,7 @@ const Choose = (props: any) => {
 
         },
         {
-            title: 'Title 2',
+            title: 'Map2',
             render: (res) =>
             <Space>
             <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"/> 
@@ -37,7 +40,7 @@ const Choose = (props: any) => {
 
         },
         {
-            title: 'Title 3',
+            title: 'Map3',
             render: (res) =>
             <Space>
             <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"/> 
@@ -45,7 +48,7 @@ const Choose = (props: any) => {
   
         },
         {
-            title: 'Title 4',
+            title: 'Map4',
             render: (res) =>
             <Space>
             <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"/> 
@@ -69,7 +72,24 @@ return (
                     dataSource={data}
                     renderItem={item => (
                         <List.Item>
-                            <Card title={<Button type="primary">
+                            <Card title={
+                            <Button type="primary" onClick={() => 
+                            {
+                                axios.get("http://localhost:3000/game/matchmaking/" + localStorage.getItem("id") +'/'+ item.title)
+                                .then(res => {
+                                    if (res.data.length !== 0) {
+                                        context.setShowCanvas(
+                                            {
+                                                show: true,
+                                                gameInfo: res.data
+                                            }
+                                        )
+                                    }
+                                }
+                                )
+                                
+
+                            }}>
                                 Play
                             </Button>}>
                                 {item.render(item)}
@@ -78,20 +98,6 @@ return (
                     )}
                 />
             </div>
-            {/* <Space>        
-                <div>
-                    <div className="wrapper">
-
-                        <div className="ping"> </div>
-                        <div className="ping"></div>
-                        <div className="ball "></div>
-                    </div>
-
-                    <div className="button" >
-
-                    </div>
-                </div>
-            </Space> */}
         </Modal>
     </>
 );

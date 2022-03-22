@@ -633,7 +633,7 @@ const Canvas = (props: any) => {
 
     return (
         <div>
-            {isWating && <Choose />}
+            {isWating && <Dialog />}
             {!isWating && < canvas id='canvas' ref={canvasRef}  {...props} width={400} height={200} />}
         </div>
 

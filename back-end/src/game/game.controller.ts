@@ -42,7 +42,7 @@ export class GameController implements CrudController<Game> {
 
     @Post('/invite')
     async Invite(@Req() req) {
-        return await this.service.Invite(req.body.username1, req.body.username2);
+        return await this.service.Invite(req.body.username1, req.body.username2, req.body.map);
     }
 
     @Get("/is_invited/:id")
@@ -84,8 +84,9 @@ export class GameController implements CrudController<Game> {
     }
 
     //matchmaking
-    @Get("/matchmaking/:id")
-    async matchmaking(@Param("id") id: number) {
-        return await this.service.matchmaking(id);
+    @Get("/matchmaking/:id/:map")
+    async matchmaking(@Param("id") id: number, @Param("map") map: string) {
+        return await this.service.matchmaking(id,map);
     }
+
 }

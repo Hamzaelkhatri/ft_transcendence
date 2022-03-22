@@ -14,6 +14,7 @@ import { MyProvider, useMyContext } from "./ContextProvider";
 const { Meta } = Card;
 
 import { Button, notification, Carousel } from 'antd';
+import Choose from "./choices";
 
 const contentStyle = {
     height: '30%',
@@ -33,8 +34,9 @@ const Next_page = () => {
     const [oneTime, setOneTime] = useState(0);
     const [oneTime1, setOneTime1] = useState(0);
     // const [GameInfo, setGameInfo] = useState([]);
+    const [choosable, setChoosable] = useState(false);
 
-    let context = useMyContext();
+    let context:any = useMyContext();
 
 
     const close = (key: string) => {
@@ -269,25 +271,14 @@ const Next_page = () => {
             <Row>
                 <Col span={1} offset={12} >
                     {!context.ShowCanvas.show && <Button type="primary" style={{ zIndex: "9999", top: "25%" }} onClick={() => {
-                        axios.get("http://localhost:3000/game/matchmaking/" + localStorage.getItem("id"))
-                            .then(res => {
-                                if (res.data.length !== 0) {
-                                    setData(res.data);
-                                    context.setShowCanvas(
-                                        {
-                                            show: true,
-                                            gameInfo: res.data
-                                        }
-                                    )
-                                }
-                            }
-                            )
+                        setChoosable(true);
                     }}>
                         Random Match
                     </Button>
                     }
                 </Col>
             </Row>
+            {choosable && !context.ShowCanvas.show && <Choose/>}
         </div >
     )
 }
