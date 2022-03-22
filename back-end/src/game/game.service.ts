@@ -20,8 +20,7 @@ export class GameService extends TypeOrmCrudService<Game>
         return await this.repository.find();
     }
 
-    async Invite(username1: string, username2: string,map:string): Promise<Game> 
-    {
+    async Invite(username1: string, username2: string, map: string): Promise<Game> {
         let game = new Game();
         game.userId1 = await this.userservice.getIdbyName(username1);
         game.userId2 = await this.userservice.getIdbyName(username2);
@@ -110,16 +109,19 @@ export class GameService extends TypeOrmCrudService<Game>
             .getMany();
 
         let games = [];
-        for (let i = 0; i < user.length; i++) {
-            let game = {
-                key: user[i].id,
-                User1: [user[i].user1.name, user[i].user1.image],
-                User2: [user[i].user2.name, user[i].user2.image],
-                Time: user[i].TimeBegin,
+        // console.log(user);
+        if (user.length > 0) {
+            for (let i = 0; i < user.length; i++) {
+                // console.log(user[i].user1.username);
+                let game = {
+                    key: user[i].id,
+                    User1: [user[i].user1.name, user[i].user1.image],
+                    User2: [user[i].user2.name, user[i].user2.image],
+                    Time: user[i].TimeBegin,
+                }
+                games.push(game);
             }
-            games.push(game);
         }
-
         return games;
     }
 
@@ -170,7 +172,7 @@ export class GameService extends TypeOrmCrudService<Game>
     }
 
     //matchmaking
-    async matchmaking(id: number,map:string): Promise<Game> {
+    async matchmaking(id: number, map: string): Promise<Game> {
         const user = await this.repository.
             createQueryBuilder('game')
             .leftJoinAndSelect('game.user1', 'user1')

@@ -98,6 +98,7 @@ export class ball {
     velocity_x: number;
     velocity_y: number;
     ctx: CanvasRenderingContext2D;
+    canvas: HTMLCanvasElement;
     color: string;
     constructor(
         ctx: CanvasRenderingContext2D,
@@ -106,7 +107,8 @@ export class ball {
         ball_radius: number,
         velocity_x: number,
         velocity_y: number,
-        color: string
+        color: string,
+        canvas: HTMLCanvasElement
     ) {
         this.ball_x = ball_x;
         this.ball_y = ball_y;
@@ -115,6 +117,7 @@ export class ball {
         this.velocity_y = velocity_y;
         this.ctx = ctx;
         this.color = color;
+        this.canvas = canvas;
     }
 
     draw_ball() {
@@ -125,6 +128,35 @@ export class ball {
         this.ctx.closePath();
     }
 
+    calculate_coordinates_of_ball_on_paddle(Player: player) {
+        var paddle_center = Player.paddle_y + Player.paddle_height / 2;
+        var ball_center = this.ball_y + this.ball_radius;
+        var distance = paddle_center - ball_center;
+        var y_coordinate_of_ball_on_paddle = distance / Player.paddle_height * (this.canvas.height - 41);
+        return y_coordinate_of_ball_on_paddle;
+    }
+
+
+    bar_collision(Bar: player) {
+        if (this._ball_x + this.velocity_x < Bar.paddle_x + Bar.paddle_width && this._ball_x + this.velocity_x > Bar.paddle_x && this.ball_y + this.velocity_y > Bar.paddle_y && this.ball_y + this.velocity_y < Bar.paddle_y + Bar.paddle_height) {
+            this.velocity_x = -this.velocity_x;
+            this.velocity_x += 0.5;
+        }
+    }
+
+    bot(p: player) {
+        var y_coordinate_of_ball_on_paddle = this.calculate_coordinates_of_ball_on_paddle(p);
+        if (y_coordinate_of_ball_on_paddle + 10 < this.ball_y + this.ball_radius) {
+            p.paddle_y += 8;
+        }
+        else if (y_coordinate_of_ball_on_paddle > this.ball_y + this.ball_radius) {
+            p.paddle_y -= 8;
+        }
+        if (p.paddle_y + p._paddle_height + 40 > this.canvas.height) {
+            p.paddle_y = this.canvas.height - p._paddle_height - 41;
+        }
+        this.bar_collision(p);
+    }
 
 
     public get _ball_x() {
@@ -170,7 +202,7 @@ export class ball {
 var finished = false;
 export class Game {
 
-    gameid: number;
+    gameid: number = 0;
     canvas: HTMLCanvasElement;
     ctx: any;
     paddle_right: player;
@@ -180,7 +212,7 @@ export class Game {
     center_rec: player;
     uppress1: boolean;
     downpress1: boolean;
-    _ball: ball;
+    _ball: ball = null;
     socket: Socket;
     sender: string;
     myId: string;
@@ -190,6 +222,7 @@ export class Game {
     data: any;
     pause: boolean;
     windos: any;
+    bar: player;
 
     constructor(canvas: HTMLCanvasElement, data: any, socket: Socket) {
 
@@ -212,7 +245,10 @@ export class Game {
             this.paddle_left = new player(0, 10, this.canvas.height / 2, 10, 80, 5, this.ctx, "white");
             this.paddle_right = new player(0, this.canvas.width - 20, (this.canvas.height) / 2, 10, 80, 5, this.ctx, "white");
             this.center_rec = new player(0, this.canvas.width / 2, 0, 1, this.canvas.height, 0, this.ctx, "white");
-            this._ball = new ball(this.ctx, this.canvas.width / 2, this.canvas.height / 2, 8, 6, -6, "red");
+
+            //this.Bar = new Player(this.width / 2 - 5, this.height / 2 - 80, 10, 80, "white", this.ctx, this.canvas, 0, "paddle.png");
+            this.bar = new player(0, this.canvas.width / 2, 0, 10, 120, 0, this.ctx, "red");
+            this._ball = new ball(this.ctx, this.canvas.width / 2, this.canvas.height / 2, 8, 6, -6, "red", canvas);
             if (this.email1 === localStorage.getItem('email') || this.email2 === localStorage.getItem('email')) {
                 document.addEventListener("keyup", this.keyUpHandler.bind(this), false);
                 document.addEventListener("keydown", this.keyDownHandler.bind(this), false);
@@ -283,6 +319,9 @@ export class Game {
             setTimeout(() => {
                 this.start();
             }, 3000);
+        }
+        else {
+            // alert("Can't find the canvas");
         }
     }
 
@@ -421,7 +460,8 @@ export class Game {
         if (
             this._ball.ball_x + this._ball._velocity_x - 5 <
             this._ball._ball_radius + this.paddle_left.paddle_width
-        ) {
+        ) 
+        {
             if (
                 this._ball.ball_y > this.paddle_left._paddle_y &&
                 this._ball.ball_y < this.paddle_left._paddle_y + this.paddle_left._paddle_height + 8
@@ -433,6 +473,15 @@ export class Game {
                 this._ball.ball_y = this.canvas.height - this.paddle_right._paddle_height;
                 this._ball._velocity_y = -4;
                 this._ball._velocity_x = -4;
+            }
+        }
+
+        //check if the ball in center of the screen
+        if (this._ball.ball_x + this._ball._velocity_x < this.canvas.width / 2) 
+        {
+            if (this._ball.ball_x + this._ball._velocity_x < this._ball._ball_radius) {
+                this._ball.ball_x = this._ball._ball_radius;
+                this._ball._velocity_x = -this._ball._velocity_x;
             }
         }
     }
@@ -452,6 +501,7 @@ export class Game {
         this.paddle_right.draw_padle();
         this._ball.draw_ball();
         this.center_rec.draw_padle();
+        this.bar.draw_padle();
     }
 
     show_score() {
@@ -519,11 +569,11 @@ export class Game {
             this.socket.emit('GameOverServer', {
                 idgame: this.data.idgame,
                 idUser: localStorage.getItem('id')
-                });
+            });
 
         }
         // else {
-            // this.ctx.fillStyle = 'red';
+        // this.ctx.fillStyle = 'red';
         // }
         // this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -538,32 +588,37 @@ export class Game {
     miniball() {
         this.ctx.beginPath();
         // random color
-        let r:number = Math.floor(Math.random() * 255);
-        let g:number = Math.floor(Math.random() * 255);
-        let b:number = Math.floor(Math.random() * 255);
+        let r: number = Math.floor(Math.random() * 255);
+        let g: number = Math.floor(Math.random() * 255);
+        let b: number = Math.floor(Math.random() * 255);
         this.ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
         // random x and y 
-        let x:number = Math.floor(Math.random() * this.canvas.width);
-        let y:number = Math.floor(Math.random() * this.canvas.height - 50);
+        let x: number = Math.floor(Math.random() * this.canvas.width);
+        let y: number = Math.floor(Math.random() * this.canvas.height - 50);
         // let r:numberadius = ;
         this.ctx.arc(x, y, 1, 0, Math.PI * 2, true);
         this.ctx.fill();
         this.ctx.closePath();
     }
-    
+
     animate() {
-        let i:number = 0;
+        let i: number = 0;
         this.canvas.style.backgroundColor = "rgb(44, 44, 84)";
-        while (i < 10) 
-        {
+        while (i < 10) {
             this.miniball();
             i++;
         }
+    }
+
+    random_bar() {
+        
     }
     start() {
 
         this.draw();
         this.animate();
+        // this.random_bar();
+        this._ball.bot(this.bar);
         if (!this.pause) {
             this.keyhook();
             this._ball.ball_x += this._ball._velocity_x;
@@ -584,8 +639,8 @@ export class Game {
 
             }
         }
-        if (this.paddle_left.score === 1 || this.paddle_right.score === 1) {
-            if (this.paddle_left.score === 1)
+        if (this.paddle_left.score === 10 || this.paddle_right.score === 10) {
+            if (this.paddle_left.score === 10)
                 this.draw_winner(this.data['user2']['name']);
             else
                 this.draw_winner(this.data['user1']['name']);
@@ -625,9 +680,9 @@ const Canvas = (props: any) => {
     useEffect(() => {
         let socket = io('http://localhost:3080');
         socket.on('ConnectClient', (res: any) => {
-    
+
             {
-                console.log('res',res);
+                console.log('res', res);
                 // console.log('gameid',context.ShowCanvas.gameInfo);
                 // console.log("checked");
                 if (res['is_started'] === true && res['id'] === context.ShowCanvas.gameInfo['id']) {
@@ -638,10 +693,8 @@ const Canvas = (props: any) => {
                 }
             }
         });
-        socket.on('GameOverClient', (res: any) => 
-        {
-            if (res['idUser'] === localStorage.getItem('id') ) 
-            {
+        socket.on('GameOverClient', (res: any) => {
+            if (res['idUser'] === localStorage.getItem('id')) {
                 setIsWating(false);
                 context.setShowCanvas({
                     show: false,
