@@ -4,7 +4,7 @@ import { useRef, useEffect } from "react";
 import { useState } from "react";
 import _Canvas from "./page1";
 import "antd/dist/antd.css";
-import { Card, Avatar, Badge, Result, Row, Col } from "antd";
+import { Card, Avatar, Badge, Result, Row, Col, Space, Modal, List } from "antd";
 import { ArrowLeftOutlined, PlayCircleOutlined, ArrowRightOutlined, DislikeOutlined, FlagOutlined, LikeOutlined, FieldNumberOutlined, EnvironmentOutlined, InfoCircleFilled } from "@ant-design/icons";
 import Canvas from "./Game";
 import axios from "axios";
@@ -13,7 +13,7 @@ import Leaderboard from "./leaderboard";
 import { MyProvider, useMyContext } from "./ContextProvider";
 const { Meta } = Card;
 
-import { Button, notification, Carousel } from 'antd';
+import { Button, notification, Image } from 'antd';
 import Choose from "./choices";
 
 const contentStyle = {
@@ -27,9 +27,45 @@ const contentStyle = {
     zIndex: '2',
 };
 
+const datas = [
+    {
+        title: '    Map1',
+        render: (res) =>
+            <Space>
+                <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+            </Space>,
+
+    },
+    {
+        title: '    Map2',
+        render: (res) =>
+            <Space>
+                <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+            </Space>,
+
+    },
+    {
+        title: '    Map3',
+        render: (res) =>
+            <Space>
+                <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+            </Space>,
+
+    },
+    {
+        title: '    Map4',
+        render: (res) =>
+            <Space>
+                <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+            </Space>,
+    },
+];
+
+
 
 const Next_page = () => {
 
+    const [isModalVisible, setIsModalVisible] = useState(false);
     const [data, setData] = useState([]);
     const [oneTime, setOneTime] = useState(0);
     const [oneTime1, setOneTime1] = useState(0);
@@ -38,6 +74,27 @@ const Next_page = () => {
 
     let context:any = useMyContext();
 
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+
+    const handleOk = () => {
+        setIsModalVisible(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+
+    };
+
+    // add event for button
+    const handleClick = (e: any) => {
+    };
+
+
+    //create close for component
+    const handleClose = (e: any) => {
+    };
 
     const close = (key: string) => {
         axios.get("http://localhost:3000/game/invited/reject/" + localStorage.getItem("id") + "/" + context.ShowCanvas.gameInfo['id']).then(res => {
@@ -271,14 +328,62 @@ const Next_page = () => {
             <Row>
                 <Col span={1} offset={12} >
                     {!context.ShowCanvas.show && <Button type="primary" style={{ zIndex: "9999", top: "25%" }} onClick={() => {
-                        setChoosable(true);
+                        setIsModalVisible(true);
+                        console.log(choosable);
+                        console.log(context.ShowCanvas.show);
                     }}>
                         Random Match
                     </Button>
                     }
                 </Col>
             </Row>
-            {choosable && !context.ShowCanvas.show && <Choose/>}
+            {/* {choosable && !context.ShowCanvas.show && <Choose isModalVisible={true} setIsModalVisible={setChoosable} onClose={() => {
+                console.log("close");
+            }} />} */}
+            {isModalVisible &&  <Modal title="Choose A Map to play " visible={true} onOk={handleOk} maskClosable={true} mask={true} onCancel={handleCancel}
+                footer={[
+                ]}>
+                <div style={{ padding: "24px", width: "100%", height: "100%" }}>
+                    {/* <Space  >
+                    <Spin size="large" id="example" />-> RUUYUUUUUUUULES
+                </Space> */}
+                </div>
+                <div>
+                    <List
+                        grid={{ gutter: 16, column: 4 }}
+                        dataSource={datas}
+                        renderItem={item => (
+                            <List.Item>
+                                <Card title={
+                                    <Space direction="vertical">
+                                        {item.title}
+                                        <Button type="primary" onClick={() => {
+                                            axios.get("http://localhost:3000/game/matchmaking/" + localStorage.getItem("id") + '/' + item.title)
+                                                .then(res => {
+                                                    if (res.data.length !== 0) {
+                                                        context.setShowCanvas(
+                                                            {
+                                                                show: true,
+                                                                gameInfo: res.data
+                                                            }
+                                                        )
+                                                    }
+                                                }
+                                                )
+                                        }}>
+                                            Play
+                                        </Button>
+                                    </Space>
+                                }
+                                >
+                                    {item.render(item)}
+                                </Card>
+                            </List.Item>
+                        )}
+                    />
+                </div>
+            </Modal>
+            }
         </div >
     )
 }
