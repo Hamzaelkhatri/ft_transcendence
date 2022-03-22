@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Image , Button, Space, Modal } from 'antd';
 import { List, Card, Spin } from 'antd';
+import Item from 'antd/lib/list/Item';
 
 
 
@@ -21,14 +22,26 @@ const Choose = (props: any) => {
     const data = [
         {
             title: 'Title 1',
+            render: (res) =>
+            <Space>
+            <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"/> 
+            </Space> ,
 
         },
         {
             title: 'Title 2',
+            render: (res) =>
+            <Space>
+            <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"/> 
+            </Space> ,
 
         },
         {
             title: 'Title 3',
+            render: (res) =>
+            <Space>
+            <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"/> 
+            </Space> ,
   
         },
         {
@@ -59,7 +72,7 @@ return (
                             <Card title={<Button type="primary">
                                 Play
                             </Button>}>
-                            {/* {Item} */}
+                                {item.render(item)}
                             </Card>
                         </List.Item>
                     )}
