@@ -695,7 +695,7 @@ const Canvas = (props: any) => {
     }, []);
 
     return (
-        <div>
+        <div suppressHydrationWarning={true}>
             {isWating && <Dialog />}
             {!isWating && < canvas id='canvas' ref={canvasRef}  {...props} width={400} height={200} />}
         </div>
