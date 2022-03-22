@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { Image , Button, Space, Modal } from 'antd';
+import { Image, Button, Space, Modal } from 'antd';
 import { List, Card, Spin } from 'antd';
 import Item from 'antd/lib/list/Item';
-
+import { useMyContext } from './ContextProvider';
+import axios from 'axios';
 
 
 const Choose = (props: any) => {
-    const [isModalVisible, setIsModalVisible] = useState(false);
-
+    let context: any = useMyContext();
+    
+    const [isModalVisible, setIsModalVisible] = useState(props.isModalVisible);
+    console.log("HERE");
     const showModal = () => {
         setIsModalVisible(true);
     };
@@ -18,83 +21,104 @@ const Choose = (props: any) => {
 
     const handleCancel = () => {
         setIsModalVisible(false);
+
     };
+
+    // add event for button
+    const handleClick = (e: any) => {
+        props.isModalVisible
+    };
+
+
+    //create close for component
+    const handleClose = (e: any) => {
+        props.onClose(e);
+    };
+
     const data = [
         {
-            title: 'Title 1',
+            title: '    Map1',
             render: (res) =>
-            <Space>
-            <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"/> 
-            </Space> ,
+                <Space>
+                    <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+                </Space>,
 
         },
         {
-            title: 'Title 2',
+            title: '    Map2',
             render: (res) =>
-            <Space>
-            <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"/> 
-            </Space> ,
+                <Space>
+                    <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+                </Space>,
 
         },
         {
-            title: 'Title 3',
+            title: '    Map3',
             render: (res) =>
-            <Space>
-            <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"/> 
-            </Space> ,
-  
+                <Space>
+                    <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+                </Space>,
+
         },
         {
-            title: 'Title 4',
+            title: '    Map4',
             render: (res) =>
-            <Space>
-            <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"/> 
-            </Space> ,
+                <Space>
+                    <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+                </Space>,
         },
     ];
 
-return (
-    <>
-        <Modal title="Choose A Map to play " visible={true} onOk={handleOk} maskClosable={false} mask={true} onCancel={handleCancel}
-            footer={[
-            ]}>
-            <div style={{ padding: "24px", width: "100%", height: "100%" }}>
-                <Space  >
-                    <Spin size="large" id="example" />
-                </Space>
-            </div>
-            <div>
-                <List
-                    grid={{ gutter: 16, column: 4 }}
-                    dataSource={data}
-                    renderItem={item => (
-                        <List.Item>
-                            <Card title={<Button type="primary">
-                                Play
-                            </Button>}>
-                                {item.render(item)}
-                            </Card>
-                        </List.Item>
-                    )}
-                />
-            </div>
-            {/* <Space>        
-                <div>
-                    <div className="wrapper">
-
-                        <div className="ping"> </div>
-                        <div className="ping"></div>
-                        <div className="ball "></div>
-                    </div>
-
-                    <div className="button" >
-
-                    </div>
+    return (
+        <>
+            {isModalVisible &&  <Modal title="Choose A Map to play " visible={true} onOk={handleOk} maskClosable={true} mask={true} onCancel={handleCancel}
+                footer={[
+                ]}>
+                <div style={{ padding: "24px", width: "100%", height: "100%" }}>
+                    {/* <Space  >
+                    <Spin size="large" id="example" />-> RUUYUUUUUUUULES
+                </Space> */}
                 </div>
-            </Space> */}
-        </Modal>
-    </>
-);
+                <div>
+                    <List
+                        grid={{ gutter: 16, column: 4 }}
+                        dataSource={data}
+                        renderItem={item => (
+                            <List.Item>
+                                <Card title={
+                                    <Space direction="vertical">
+                                        {item.title}
+                                        <Button type="primary" onClick={() => {
+                                            axios.get("http://localhost:3000/game/matchmaking/" + localStorage.getItem("id") + '/' + item.title)
+                                                .then(res => {
+                                                    if (res.data.length !== 0) {
+                                                        context.setShowCanvas(
+                                                            {
+                                                                show: true,
+                                                                gameInfo: res.data
+                                                            }
+                                                        )
+                                                    }
+                                                }
+                                                )
+
+
+                                        }}>
+                                            Play
+                                        </Button>
+                                    </Space>
+                                }
+                                >
+                                    {item.render(item)}
+                                </Card>
+                            </List.Item>
+                        )}
+                    />
+                </div>
+            </Modal>
+            }
+        </>
+    );
 };
 
 export default Choose;

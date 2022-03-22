@@ -67,4 +67,4 @@ GET http://localhost:3000/game/invited/confirm/10/245
 
 ###
 
-GET http://localhost:3000/game/matchmaking/10
+GET http://localhost:3000/game/matchmaking/9/map1

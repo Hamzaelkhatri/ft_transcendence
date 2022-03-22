@@ -55,4 +55,7 @@ export class Game
 
     @Column({default:false})
     is_accepted_by_user2: boolean;
+
+    @Column({default:'default'})
+    map: string;
 }

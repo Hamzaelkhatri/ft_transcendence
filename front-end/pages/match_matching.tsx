@@ -27,7 +27,6 @@ const Dialog = (props: any) => {
                     ]}>
                     <Space >
                         <Spin size="large"></Spin>
-                        Waiting for a match
                     </Space>
                     {/* <Space>        
                 <div>
