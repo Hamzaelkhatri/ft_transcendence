@@ -7,6 +7,7 @@ import Dialog from './match_matching';
 import axios from "axios";
 import { useMyContext } from './ContextProvider';
 import { Result } from 'antd';
+import Choose from './choices';
 
 export class player {
     score: number;
@@ -252,7 +253,7 @@ export class Game {
                     this.paddle_left.score = msg.score1;
                     this.paddle_right.score = msg.score2;
                     if ((this.paddle_left.score >= 10 || this.paddle_right.score >= 10)) {
-                        axios.get('http://10.12.7.14:3000/game/finish/' + this.gameid + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
+                        axios.get('http://localhost:3000/game/finish/' + this.gameid + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
                             .then(res => {
                                 // this.pause = true;
                             });
@@ -596,7 +597,7 @@ const Canvas = (props: any) => {
     // console.log(window);
     // console.log(context.ShowCanvas.gameInfo);
     useEffect(() => {
-        let socket = io('http://10.12.7.14:3080');
+        let socket = io('http://localhost:3080');
         socket.on('ConnectClient', (res: any) => {
     
             {
@@ -632,7 +633,7 @@ const Canvas = (props: any) => {
 
     return (
         <div>
-            {isWating && <Dialog />}
+            {isWating && <Choose />}
             {!isWating && < canvas id='canvas' ref={canvasRef}  {...props} width={400} height={200} />}
         </div>
 
