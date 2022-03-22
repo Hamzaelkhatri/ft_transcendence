@@ -140,7 +140,7 @@ export class GameService extends TypeOrmCrudService<Game>
     }
 
     async finishGame(id: number, winner: number): Promise<Game> {
-        const user = await this.repository
+        const game = await this.repository
             .createQueryBuilder('game')
             .leftJoinAndSelect('game.user1', 'user1')
             .leftJoinAndSelect('game.user2', 'user2')
@@ -155,7 +155,10 @@ export class GameService extends TypeOrmCrudService<Game>
                 price: 100,
             })
             .execute();
-        return await user;
+        const user = await this.userservice.repository.findOne({ id: winner });
+        user.wins++;
+        await this.userservice.repository.save(user);
+        return await game;
     }
 
     async watch(id: number): Promise<Game> {

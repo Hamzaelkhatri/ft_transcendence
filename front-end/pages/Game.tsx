@@ -253,12 +253,9 @@ export class Game {
                 document.addEventListener("keyup", this.keyUpHandler.bind(this), false);
                 document.addEventListener("keydown", this.keyDownHandler.bind(this), false);
                 document.addEventListener('click', this.homeClick.bind(this), false);
-                // document.addEventListener("onunload", this.onunload.bind(this), false);
-                // document.addEventListener("mousemove", this.mouseMoveHandler.bind(this), false);
             }
             this.socket = socket;
             this.player = 0;
-
             this.paddle_left.score = 0;
             this.paddle_right.score = 0;
 
@@ -271,7 +268,6 @@ export class Game {
 
             this.socket.on('DataToClient2', (msg) => {
                 if (msg.gameid === this.gameid) {
-                    // console.log("[" + this.gameid + "]" + "DataToClient2");
                     this.paddle_left.paddle_x = msg.paddle.paddle_x;
                     this.paddle_left.paddle_y = msg.paddle.paddle_y;
 
@@ -475,15 +471,6 @@ export class Game {
                 this._ball._velocity_x = -4;
             }
         }
-
-        //check if the ball in center of the screen
-        if (this._ball.ball_x + this._ball._velocity_x < this.canvas.width / 2) 
-        {
-            if (this._ball.ball_x + this._ball._velocity_x < this._ball._ball_radius) {
-                this._ball.ball_x = this._ball._ball_radius;
-                this._ball._velocity_x = -this._ball._velocity_x;
-            }
-        }
     }
 
     draw_footer() {
@@ -551,9 +538,6 @@ export class Game {
         this.ctx.fillStyle = "red";
         this.ctx.fillText("Home", this.canvas.width / 2 - this.ctx.measureText("Home").width / 2, this.canvas.height / 2 + 112);
         this.pause = true;
-        // document.addEventListener('mousemove', this.home.bind(this), false);
-
-
     }
 
 
