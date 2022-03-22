@@ -157,6 +157,19 @@ export class GameService extends TypeOrmCrudService<Game>
             .execute();
         const user = await this.userservice.repository.findOne({ id: winner });
         user.wins++;
+        if (game.user1.id !== winner) {
+            const user = await this.userservice.repository.findOne({ id: game.user1.id });
+            user.loses++;
+            await this.userservice.repository.save(user);
+
+        }
+        else {
+            const user = await this.userservice.repository.findOne({ id: game.user2.id });
+            user.loses++;
+            await this.userservice.repository.save(user);
+
+        }
+
         await this.userservice.repository.save(user);
         return await game;
     }
