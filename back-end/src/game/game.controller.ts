@@ -89,4 +89,10 @@ export class GameController implements CrudController<Game> {
         return await this.service.matchmaking(id,map);
     }
 
+    //history games
+    @Get("/history/:id")
+    async history(@Param("id") id: number) 
+    {
+        return await this.service.history(id);
+    }
 }

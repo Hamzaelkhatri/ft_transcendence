@@ -62,8 +62,6 @@ const datas = [
     },
 ];
 
-
-
 const Next_page = () => {
 
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -328,7 +326,7 @@ const Next_page = () => {
 
             <Row>
                 <Col span={1} offset={12} >
-                    {!context.ShowCanvas.show && <Button type="primary" style={{ zIndex: "9999", top: "50%", left: "5%" }} onClick={() => {
+                    {!context.ShowCanvas.show && <Button type="primary" style={{ zIndex: "2", top: "50%", left: "5%" }} onClick={() => {
                         setIsModalVisible(true);
                         // console.log(choosable);
                         // console.log(context.ShowCanvas.show);

@@ -162,18 +162,18 @@ export class GameService extends TypeOrmCrudService<Game>
             .where('game.id = :id', { id: id })
             .getOne();
         const users = await this.userservice.repository.findOne({ id: winner });
-        users.wins++;
+        users.wins = users.wins + 1;
         await this.userservice.repository.save(users);
         // console.log(game);
         if (game.user1.id !== winner) {
             let user:any = await this.userservice.repository.findOne({ id: game.user1.id });
-            user.loses++;
+            user.loses = user.loses + 1;
             await this.userservice.repository.save(user);
 
         }
         else {
             let user:any = await this.userservice.repository.findOne({ id: game.user2.id });
-            user.loses++;
+            user.loses = user.loses + 1;
             await this.userservice.repository.save(user);
 
         }
@@ -247,6 +247,18 @@ export class GameService extends TypeOrmCrudService<Game>
             game.map = map;
             return await this.repository.save(game);
         }
+    }
+
+    async history(id: number): Promise<Game[]> {
+        const user = await this.repository.
+            createQueryBuilder('game')
+            .leftJoinAndSelect('game.user1', 'user1')
+            .leftJoinAndSelect('game.user2', 'user2')
+            .where('game.user1.id = :id', { id: id })
+            .orWhere('game.user2.id = :id', { id: id })
+            .orderBy('game.created_at', 'DESC')
+            .getMany();
+        return user;
     }
 
 }
