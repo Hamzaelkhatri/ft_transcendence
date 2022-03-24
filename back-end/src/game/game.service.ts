@@ -249,4 +249,16 @@ export class GameService extends TypeOrmCrudService<Game>
         }
     }
 
+    async history(id: number): Promise<Game[]> {
+        const user = await this.repository.
+            createQueryBuilder('game')
+            .leftJoinAndSelect('game.user1', 'user1')
+            .leftJoinAndSelect('game.user2', 'user2')
+            .where('game.user1.id = :id', { id: id })
+            .orWhere('game.user2.id = :id', { id: id })
+            .orderBy('game.created_at', 'DESC')
+            .getMany();
+        return user;
+    }
+
 }
