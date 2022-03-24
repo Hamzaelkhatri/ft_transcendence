@@ -30,34 +30,34 @@ const contentStyle = {
 
 const datas = [
     {
-        title: '    Map1',
+        title: 'Map1',
         render: (res) =>
             <Space>
-                <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+                <Image src="/default.png" />
             </Space>,
 
     },
     {
-        title: '    Map2',
+        title: 'Map2',
         render: (res) =>
             <Space>
-                <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+                <Image src="/map1.png" />
             </Space>,
 
     },
     {
-        title: '    Map3',
+        title: 'Map3',
         render: (res) =>
             <Space>
-                <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+                <Image src="map3.png" />
             </Space>,
 
     },
     {
-        title: '    Map4',
+        title: 'Map4',
         render: (res) =>
             <Space>
-                <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+                <Image src="map4.png" />
             </Space>,
     },
 ];

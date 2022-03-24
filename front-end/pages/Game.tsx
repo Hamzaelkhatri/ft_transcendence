@@ -247,7 +247,9 @@ export class Game {
             this.center_rec = new player(0, this.canvas.width / 2, 0, 1, this.canvas.height, 0, this.ctx, "white");
 
             //this.Bar = new Player(this.width / 2 - 5, this.height / 2 - 80, 10, 80, "white", this.ctx, this.canvas, 0, "paddle.png");
-            this.bar = new player(0, this.canvas.width / 2, 0, 10, 120, 0, this.ctx, "red");
+            if (this.data.map == "map3") {
+                this.bar = new player(0, this.canvas.width / 2, 0, 10, 120, 0, this.ctx, "red");
+            }
             this._ball = new ball(this.ctx, this.canvas.width / 2, this.canvas.height / 2, 8, 6, -6, "red", canvas);
             if (this.email1 === localStorage.getItem('email') || this.email2 === localStorage.getItem('email')) {
                 document.addEventListener("keyup", this.keyUpHandler.bind(this), false);
@@ -456,8 +458,7 @@ export class Game {
         if (
             this._ball.ball_x + this._ball._velocity_x - 5 <
             this._ball._ball_radius + this.paddle_left.paddle_width
-        ) 
-        {
+        ) {
             if (
                 this._ball.ball_y > this.paddle_left._paddle_y &&
                 this._ball.ball_y < this.paddle_left._paddle_y + this.paddle_left._paddle_height + 8
@@ -488,7 +489,10 @@ export class Game {
         this.paddle_right.draw_padle();
         this._ball.draw_ball();
         this.center_rec.draw_padle();
-        this.bar.draw_padle();
+        if (this.data.map == "map3") 
+        {
+            this.bar.draw_padle();
+        }
     }
 
     show_score() {
@@ -594,15 +598,33 @@ export class Game {
         }
     }
 
-    random_bar() {
-        
+    Map4() {
+        this.canvas.style.backgroundColor = "#00BCCA";
+        // draw a empty cercle
+        this.ctx.beginPath();
+        this.ctx.arc(this.canvas.width / 2, this.canvas.height / 2, 30, 0, Math.PI * 2);
+        this.ctx.strokeStyle = "white";
+        this.ctx.stroke();
+        this.ctx.closePath();
     }
+
+
+
     start() {
 
         this.draw();
-        this.animate();
-        // this.random_bar();
-        this._ball.bot(this.bar);
+        if (this.data.map == "map2") 
+        {
+            this.animate();
+        }
+        if (this.data.map == "map3") {
+            this._ball.bot(this.bar);
+        }
+        // if (this.data.map == "map4") 
+        {
+            this.Map4();
+        }
+        // this.Map4()
         if (!this.pause) {
             this.keyhook();
             this._ball.ball_x += this._ball._velocity_x;
@@ -695,7 +717,7 @@ const Canvas = (props: any) => {
     }, []);
 
     return (
-        <div>
+        <div suppressHydrationWarning={true}>
             {isWating && <Dialog />}
             {!isWating && < canvas id='canvas' ref={canvasRef}  {...props} width={400} height={200} />}
         </div>

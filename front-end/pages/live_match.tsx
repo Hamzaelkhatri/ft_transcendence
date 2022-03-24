@@ -65,24 +65,18 @@ export default function MatchLive() {
             ),
         },
     ];
-    const ISSERVER = typeof window === "undefined";
+    // const ISSERVER = typeof window === "undefined";
 
     // const [Datasource, setDatasource] = useState([]);
-    const fet = async () => {
-        await axios.get("http://localhost:3000/game/current/")
+    axios.get("http://localhost:3000/game/current/")
             .then(res => {
                 if (datas['id'] === undefined) {
                     setData(res.data);
                 }
             });
-    }
-
-    useEffect(() => {
-        if (datas.length === 0 && !ISSERVER)
-            fet();
-    }, [datas]);
     return (
-        <div>
+        // delete hydrate from here
+        <div suppressHydrationWarning={true}>
             {
                 <Table loading={!datas.length} columns={columns} dataSource={datas} pagination={{ pageSize: 7 }} />
             }
