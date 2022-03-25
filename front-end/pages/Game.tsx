@@ -190,6 +190,8 @@ export class Game {
     data: any;
     pause: boolean;
     windos: any;
+    gamePlay : GPEXPORT;
+    time : number;
 
     constructor(canvas: HTMLCanvasElement, data: any, socket: Socket) {
 
@@ -278,8 +280,9 @@ export class Game {
             img1.onload = () => {
                 this.ctx.drawImage(img1, 50, this.canvas.height - 38, 34, 34);
             }
-            let time: number = 3;
-
+            this.time = 0;
+            this. gamePlay = new GPEXPORT(this._ball,this.paddle_left,this.paddle_right,this.time);
+            this.gamePlay.SaveAsJSON();
             setTimeout(() => {
                 this.start();
             }, 3000);
@@ -519,11 +522,11 @@ export class Game {
             this.socket.emit('GameOverServer', {
                 idgame: this.data.idgame,
                 idUser: localStorage.getItem('id')
-                });
+            });
 
         }
         // else {
-            // this.ctx.fillStyle = 'red';
+        // this.ctx.fillStyle = 'red';
         // }
         // this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -586,6 +589,25 @@ export class Game {
 }
 
 
+
+class GPEXPORT {
+    ball: ball;
+    paddle_left: player;
+    paddle_right: player;
+    time: number;
+
+    constructor(ball: ball, paddle_left: player, paddle_right: player, time: number) {
+        this.ball = ball;
+        this.paddle_left = paddle_left;
+        this.paddle_right = paddle_right;
+        this.time = time;
+    }
+
+    SaveAsJSON() {
+        return JSON.stringify(this);
+    }
+}
+
 const Canvas = (props: any) => {
     const [data, setData] = useState(props.data ? props.data : []);
     const canvasRef = useRef(null);
@@ -599,9 +621,9 @@ const Canvas = (props: any) => {
     useEffect(() => {
         let socket = io('http://localhost:3080');
         socket.on('ConnectClient', (res: any) => {
-    
+
             {
-                console.log('res',res);
+                console.log('res', res);
                 // console.log('gameid',context.ShowCanvas.gameInfo);
                 // console.log("checked");
                 if (res['is_started'] === true && res['id'] === context.ShowCanvas.gameInfo['id']) {
@@ -612,10 +634,8 @@ const Canvas = (props: any) => {
                 }
             }
         });
-        socket.on('GameOverClient', (res: any) => 
-        {
-            if (res['idUser'] === localStorage.getItem('id') ) 
-            {
+        socket.on('GameOverClient', (res: any) => {
+            if (res['idUser'] === localStorage.getItem('id')) {
                 setIsWating(false);
                 context.setShowCanvas({
                     show: false,
