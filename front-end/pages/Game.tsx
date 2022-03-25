@@ -77,6 +77,10 @@ export class player {
         return this.score;
     }
 
+    Tojson() {
+        return (JSON.stringify(this));
+    }
+
     ToJson() {
         return (
             {
@@ -98,6 +102,7 @@ export class ball {
     velocity_x: number;
     velocity_y: number;
     ctx: CanvasRenderingContext2D;
+    canvas: HTMLCanvasElement;
     color: string;
     constructor(
         ctx: CanvasRenderingContext2D,
@@ -106,7 +111,8 @@ export class ball {
         ball_radius: number,
         velocity_x: number,
         velocity_y: number,
-        color: string
+        color: string,
+        canvas: HTMLCanvasElement
     ) {
         this.ball_x = ball_x;
         this.ball_y = ball_y;
@@ -115,6 +121,7 @@ export class ball {
         this.velocity_y = velocity_y;
         this.ctx = ctx;
         this.color = color;
+        this.canvas = canvas;
     }
 
     draw_ball() {
@@ -125,6 +132,35 @@ export class ball {
         this.ctx.closePath();
     }
 
+    calculate_coordinates_of_ball_on_paddle(Player: player) {
+        var paddle_center = Player.paddle_y + Player.paddle_height / 2;
+        var ball_center = this.ball_y + this.ball_radius;
+        var distance = paddle_center - ball_center;
+        var y_coordinate_of_ball_on_paddle = distance / Player.paddle_height * (this.canvas.height - 41);
+        return y_coordinate_of_ball_on_paddle;
+    }
+
+
+    bar_collision(Bar: player) {
+        if (this._ball_x + this.velocity_x < Bar.paddle_x + Bar.paddle_width && this._ball_x + this.velocity_x > Bar.paddle_x && this.ball_y + this.velocity_y > Bar.paddle_y && this.ball_y + this.velocity_y < Bar.paddle_y + Bar.paddle_height) {
+            this.velocity_x = -this.velocity_x;
+            this.velocity_x += 0.5;
+        }
+    }
+
+    bot(p: player) {
+        var y_coordinate_of_ball_on_paddle = this.calculate_coordinates_of_ball_on_paddle(p);
+        if (y_coordinate_of_ball_on_paddle + 10 < this.ball_y + this.ball_radius) {
+            p.paddle_y += 8;
+        }
+        else if (y_coordinate_of_ball_on_paddle > this.ball_y + this.ball_radius) {
+            p.paddle_y -= 8;
+        }
+        if (p.paddle_y + p._paddle_height + 40 > this.canvas.height) {
+            p.paddle_y = this.canvas.height - p._paddle_height - 41;
+        }
+        this.bar_collision(p);
+    }
 
 
     public get _ball_x() {
@@ -162,15 +198,25 @@ export class ball {
     public get _ball_radius() {
         return this.ball_radius;
     }
+    json: string = "";
 
-
-
+    Json() {
+        this.json = '{';
+        this.json += '"x": ' + this.ball_x + ',';
+        this.json += '"y": ' + this.ball_y + ',';
+        this.json += '"radius": ' + this.ball_radius + ',';
+        this.json += '"color": "' + this.color + '",';
+        this.json += '"dx": ' + this.velocity_x + ',';
+        this.json += '"dy": ' + this.velocity_y + '';
+        this.json += '}';
+        return this.json;
+    }
 }
 // const context = useMyContext();
 var finished = false;
 export class Game {
 
-    gameid: number;
+    gameid: number = 0;
     canvas: HTMLCanvasElement;
     ctx: any;
     paddle_right: player;
@@ -180,7 +226,7 @@ export class Game {
     center_rec: player;
     uppress1: boolean;
     downpress1: boolean;
-    _ball: ball;
+    _ball: ball = null;
     socket: Socket;
     sender: string;
     myId: string;
@@ -190,8 +236,9 @@ export class Game {
     data: any;
     pause: boolean;
     windos: any;
-    gamePlay : GPEXPORT;
-    time : number;
+    gamePlay: GPEXPORT;
+    time: number;
+    bar: player;
 
     constructor(canvas: HTMLCanvasElement, data: any, socket: Socket) {
 
@@ -214,17 +261,18 @@ export class Game {
             this.paddle_left = new player(0, 10, this.canvas.height / 2, 10, 80, 5, this.ctx, "white");
             this.paddle_right = new player(0, this.canvas.width - 20, (this.canvas.height) / 2, 10, 80, 5, this.ctx, "white");
             this.center_rec = new player(0, this.canvas.width / 2, 0, 1, this.canvas.height, 0, this.ctx, "white");
-            this._ball = new ball(this.ctx, this.canvas.width / 2, this.canvas.height / 2, 8, 6, -6, "red");
+
+            if (this.data.map == "map3") {
+                this.bar = new player(0, this.canvas.width / 2, 0, 10, 120, 0, this.ctx, "red");
+            }
+            this._ball = new ball(this.ctx, this.canvas.width / 2, this.canvas.height / 2, 8, 6, -6, "red", canvas);
             if (this.email1 === localStorage.getItem('email') || this.email2 === localStorage.getItem('email')) {
                 document.addEventListener("keyup", this.keyUpHandler.bind(this), false);
                 document.addEventListener("keydown", this.keyDownHandler.bind(this), false);
                 document.addEventListener('click', this.homeClick.bind(this), false);
-                // document.addEventListener("onunload", this.onunload.bind(this), false);
-                // document.addEventListener("mousemove", this.mouseMoveHandler.bind(this), false);
             }
             this.socket = socket;
             this.player = 0;
-
             this.paddle_left.score = 0;
             this.paddle_right.score = 0;
 
@@ -237,7 +285,6 @@ export class Game {
 
             this.socket.on('DataToClient2', (msg) => {
                 if (msg.gameid === this.gameid) {
-                    // console.log("[" + this.gameid + "]" + "DataToClient2");
                     this.paddle_left.paddle_x = msg.paddle.paddle_x;
                     this.paddle_left.paddle_y = msg.paddle.paddle_y;
 
@@ -255,9 +302,11 @@ export class Game {
                     this.paddle_left.score = msg.score1;
                     this.paddle_right.score = msg.score2;
                     if ((this.paddle_left.score >= 10 || this.paddle_right.score >= 10)) {
-                        axios.get('http://localhost:3000/game/finish/' + this.gameid + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
+                        axios.post('http://localhost:3000/game/finish/' + this.gameid + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']),
+                            {
+                                map: this.gamePlay.finish(),
+                            })
                             .then(res => {
-                                // this.pause = true;
                             });
                     }
                 }
@@ -281,12 +330,28 @@ export class Game {
                 this.ctx.drawImage(img1, 50, this.canvas.height - 38, 34, 34);
             }
             this.time = 0;
-            this. gamePlay = new GPEXPORT(this._ball,this.paddle_left,this.paddle_right,this.time);
-            this.gamePlay.SaveAsJSON();
+            this.gamePlay = new GPEXPORT(this._ball, this.paddle_left, this.paddle_right, this.time);
+            this.timer();
+            // console.log("GAMEPLAY",JSON.parse());
             setTimeout(() => {
                 this.start();
             }, 3000);
         }
+        else {
+            // alert("Can't find the canvas");
+        }
+    }
+
+    timer() {
+        this.gamePlay.CreateJson(this.time);
+        this.time++;
+        if (this.paddle_left.score < 10 && this.paddle_right.score < 10) {
+            setTimeout(() => {
+                this.timer();
+            }, 100);
+        }
+        // else
+        //     document.body.innerHTML = 
     }
 
     onunload() {
@@ -349,7 +414,6 @@ export class Game {
                     {
                         paddle: this.paddle_left.ToJson(),
                         gameid: this.gameid,
-
                     }); // push a mesage to the array
             }
             if (this.downpress) {
@@ -455,6 +519,9 @@ export class Game {
         this.paddle_right.draw_padle();
         this._ball.draw_ball();
         this.center_rec.draw_padle();
+        if (this.data.map == "map3") {
+            this.bar.draw_padle();
+        }
     }
 
     show_score() {
@@ -499,14 +566,10 @@ export class Game {
         this.ctx.beginPath();
         this.ctx.arc(this.canvas.width / 2, this.canvas.height / 2 + 100, 50, 0, Math.PI * 2);
         this.ctx.fillStyle = "white";
-
         this.ctx.fill();
         this.ctx.fillStyle = "red";
         this.ctx.fillText("Home", this.canvas.width / 2 - this.ctx.measureText("Home").width / 2, this.canvas.height / 2 + 112);
         this.pause = true;
-        // document.addEventListener('mousemove', this.home.bind(this), false);
-
-
     }
 
 
@@ -538,9 +601,56 @@ export class Game {
 
 
     req: any;
+    miniball() {
+        this.ctx.beginPath();
+        // random color
+        let r: number = Math.floor(Math.random() * 255);
+        let g: number = Math.floor(Math.random() * 255);
+        let b: number = Math.floor(Math.random() * 255);
+        this.ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
+        // random x and y 
+        let x: number = Math.floor(Math.random() * this.canvas.width);
+        let y: number = Math.floor(Math.random() * this.canvas.height - 50);
+        // let r:numberadius = ;
+        this.ctx.arc(x, y, 1, 0, Math.PI * 2, true);
+        this.ctx.fill();
+        this.ctx.closePath();
+    }
+
+    animate() {
+        let i: number = 0;
+        this.canvas.style.backgroundColor = "rgb(44, 44, 84)";
+        while (i < 10) {
+            this.miniball();
+            i++;
+        }
+    }
+
+    Map4() {
+        this.canvas.style.backgroundColor = "#00BCCA";
+        this.ctx.beginPath();
+        this.ctx.arc(this.canvas.width / 2, this.canvas.height / 2, 30, 0, Math.PI * 2);
+        this.ctx.strokeStyle = "white";
+        this.ctx.stroke();
+        this.ctx.closePath();
+    }
+
+
+
     start() {
 
         this.draw();
+        // if (this.data.map == "map2") {
+        //     this.animate();
+        // }
+        // if (this.data.map == "map3") {
+        //     this._ball.bot(this.bar);
+        // }
+        // if (this.data.map == "map4") 
+        {
+            // this.Map4();
+        }
+        // this.Map4()
         if (!this.pause) {
             this.keyhook();
             this._ball.ball_x += this._ball._velocity_x;
@@ -561,8 +671,8 @@ export class Game {
 
             }
         }
-        if (this.paddle_left.score === 1 || this.paddle_right.score === 1) {
-            if (this.paddle_left.score === 1)
+        if (this.paddle_left.score === 10 || this.paddle_right.score === 10) {
+            if (this.paddle_left.score === 10)
                 this.draw_winner(this.data['user2']['name']);
             else
                 this.draw_winner(this.data['user1']['name']);
@@ -595,16 +705,34 @@ class GPEXPORT {
     paddle_left: player;
     paddle_right: player;
     time: number;
+    json: string;
 
     constructor(ball: ball, paddle_left: player, paddle_right: player, time: number) {
         this.ball = ball;
         this.paddle_left = paddle_left;
         this.paddle_right = paddle_right;
         this.time = time;
+        this.json = "[";
     }
 
-    SaveAsJSON() {
-        return JSON.stringify(this);
+    CreateJson(time: number) {
+        this.json += "{";
+        this.json += '"Time":' + time + ',';
+        this.json += '"Player1":';
+        this.json += this.paddle_left.Tojson();
+        this.json += ',';
+        this.json += '"Player2":';
+        this.json += this.paddle_right.Tojson();
+        this.json += ',';
+        this.json += '"Ball":';
+        this.json += this.ball.Json();
+        this.json += '},\n';
+    }
+
+    finish() {
+        this.json = this.json.substring(0, this.json.length - 2);
+        this.json += "]";
+        return this.json;
     }
 }
 
@@ -623,14 +751,11 @@ const Canvas = (props: any) => {
         socket.on('ConnectClient', (res: any) => {
 
             {
-                console.log('res', res);
-                // console.log('gameid',context.ShowCanvas.gameInfo);
-                // console.log("checked");
                 if (res['is_started'] === true && res['id'] === context.ShowCanvas.gameInfo['id']) {
                     setIsWating(false);
                     setData(res);
                     context.ShowCanvas.gameInfo = res;
-                    new Game(canvasRef.current as HTMLCanvasElement, res, socket);
+                    new Game(canvasRef.current as unknown as HTMLCanvasElement, res, socket);
                 }
             }
         });
@@ -652,7 +777,7 @@ const Canvas = (props: any) => {
     }, []);
 
     return (
-        <div>
+        <div suppressHydrationWarning={true}>
             {isWating && <Dialog />}
             {!isWating && < canvas id='canvas' ref={canvasRef}  {...props} width={400} height={200} />}
         </div>

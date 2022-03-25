@@ -20,8 +20,7 @@ export class GameService extends TypeOrmCrudService<Game>
         return await this.repository.find();
     }
 
-    async Invite(username1: string, username2: string,map:string): Promise<Game> 
-    {
+    async Invite(username1: string, username2: string, map: string): Promise<Game> {
         let game = new Game();
         game.userId1 = await this.userservice.getIdbyName(username1);
         game.userId2 = await this.userservice.getIdbyName(username2);
@@ -110,16 +109,19 @@ export class GameService extends TypeOrmCrudService<Game>
             .getMany();
 
         let games = [];
-        for (let i = 0; i < user.length; i++) {
-            let game = {
-                key: user[i].id,
-                User1: [user[i].user1.name, user[i].user1.image],
-                User2: [user[i].user2.name, user[i].user2.image],
-                Time: user[i].TimeBegin,
+        // console.log(user);
+        if (user.length > 0) {
+            for (let i = 0; i < user.length; i++) {
+                // console.log(user[i].user1.username);
+                let game = {
+                    key: user[i].id,
+                    User1: [user[i].user1.name, user[i].user1.image],
+                    User2: [user[i].user2.name, user[i].user2.image],
+                    Time: user[i].TimeBegin,
+                }
+                games.push(game);
             }
-            games.push(game);
         }
-
         return games;
     }
 
@@ -137,8 +139,9 @@ export class GameService extends TypeOrmCrudService<Game>
         return user;
     }
 
-    async finishGame(id: number, winner: number): Promise<Game> {
-        const user = await this.repository
+    async finishGame(id: number, winner: number,json:string): Promise<Game> {
+
+        this.repository
             .createQueryBuilder('game')
             .leftJoinAndSelect('game.user1', 'user1')
             .leftJoinAndSelect('game.user2', 'user2')
@@ -151,9 +154,33 @@ export class GameService extends TypeOrmCrudService<Game>
                 TimeEnd: new Date(),
                 winner: winner,
                 price: 100,
+                json_map: json,
             })
             .execute();
-        return await user;
+        const game = await this.repository.
+        createQueryBuilder('game')
+            .leftJoinAndSelect('game.user1', 'user1')
+            .leftJoinAndSelect('game.user2', 'user2')
+            .where('game.id = :id', { id: id })
+            .getOne();
+        const users = await this.userservice.repository.findOne({ id: winner });
+        users.wins = users.wins + 1;
+        await this.userservice.repository.save(users);
+        // console.log(game);
+        if (game.user1.id !== winner) {
+            let user:any = await this.userservice.repository.findOne({ id: game.user1.id });
+            user.loses = user.loses + 1;
+            await this.userservice.repository.save(user);
+
+        }
+        else {
+            let user:any = await this.userservice.repository.findOne({ id: game.user2.id });
+            user.loses = user.loses + 1;
+            await this.userservice.repository.save(user);
+
+        }
+
+        return await game;
     }
 
     async watch(id: number): Promise<Game> {
@@ -170,7 +197,7 @@ export class GameService extends TypeOrmCrudService<Game>
     }
 
     //matchmaking
-    async matchmaking(id: number,map:string): Promise<Game> {
+    async matchmaking(id: number, map: string): Promise<Game> {
         const user = await this.repository.
             createQueryBuilder('game')
             .leftJoinAndSelect('game.user1', 'user1')
@@ -222,6 +249,18 @@ export class GameService extends TypeOrmCrudService<Game>
             game.map = map;
             return await this.repository.save(game);
         }
+    }
+
+    async history(id: number): Promise<Game[]> {
+        const user = await this.repository.
+            createQueryBuilder('game')
+            .leftJoinAndSelect('game.user1', 'user1')
+            .leftJoinAndSelect('game.user2', 'user2')
+            .where('game.user1.id = :id', { id: id })
+            .orWhere('game.user2.id = :id', { id: id })
+            .orderBy('game.created_at', 'DESC')
+            .getMany();
+        return user;
     }
 
 }

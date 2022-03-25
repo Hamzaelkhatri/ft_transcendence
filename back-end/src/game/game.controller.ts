@@ -72,9 +72,9 @@ export class GameController implements CrudController<Game> {
         return await this.service.is_waiting(id);
     }
 
-    @Get("/finish/:id/:winner")
-    async finishGame(@Param("id") id: number, @Param("winner") winner: number) {
-        return await this.service.finishGame(id, winner);
+    @Post("/finish/:id/:winner")
+    async finishGame(@Param("id") id: number, @Param("winner") winner: number, @Req() req) {
+        return await this.service.finishGame(id, winner, req.body.map);
     }
 
     // whach game
@@ -87,6 +87,13 @@ export class GameController implements CrudController<Game> {
     @Get("/matchmaking/:id/:map")
     async matchmaking(@Param("id") id: number, @Param("map") map: string) {
         return await this.service.matchmaking(id,map);
+    }
+
+    //history games
+    @Get("/history/:id")
+    async history(@Param("id") id: number) 
+    {
+        return await this.service.history(id);
     }
 
 }
