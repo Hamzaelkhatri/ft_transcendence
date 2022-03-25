@@ -77,6 +77,10 @@ export class player {
         return this.score;
     }
 
+    Tojson() {
+        return (JSON.stringify(this));
+    }
+
     ToJson() {
         return (
             {
@@ -194,9 +198,19 @@ export class ball {
     public get _ball_radius() {
         return this.ball_radius;
     }
+    json: string = "";
 
-
-
+    Json() {
+        this.json = '{';
+        this.json += '"x": ' + this.ball_x + ',';
+        this.json += '"y": ' + this.ball_y + ',';
+        this.json += '"radius": ' + this.ball_radius + ',';
+        this.json += '"color": "' + this.color + '",';
+        this.json += '"dx": ' + this.velocity_x + ',';
+        this.json += '"dy": ' + this.velocity_y + '';
+        this.json += '}';
+        return this.json;
+    }
 }
 // const context = useMyContext();
 var finished = false;
@@ -222,6 +236,8 @@ export class Game {
     data: any;
     pause: boolean;
     windos: any;
+    gamePlay: GPEXPORT;
+    time: number;
     bar: player;
 
     constructor(canvas: HTMLCanvasElement, data: any, socket: Socket) {
@@ -246,7 +262,6 @@ export class Game {
             this.paddle_right = new player(0, this.canvas.width - 20, (this.canvas.height) / 2, 10, 80, 5, this.ctx, "white");
             this.center_rec = new player(0, this.canvas.width / 2, 0, 1, this.canvas.height, 0, this.ctx, "white");
 
-            //this.Bar = new Player(this.width / 2 - 5, this.height / 2 - 80, 10, 80, "white", this.ctx, this.canvas, 0, "paddle.png");
             if (this.data.map == "map3") {
                 this.bar = new player(0, this.canvas.width / 2, 0, 10, 120, 0, this.ctx, "red");
             }
@@ -287,9 +302,11 @@ export class Game {
                     this.paddle_left.score = msg.score1;
                     this.paddle_right.score = msg.score2;
                     if ((this.paddle_left.score >= 10 || this.paddle_right.score >= 10)) {
-                        axios.get('http://localhost:3000/game/finish/' + this.gameid + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']))
+                        axios.post('http://localhost:3000/game/finish/' + this.gameid + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']),
+                            {
+                                map: this.gamePlay.finish(),
+                            })
                             .then(res => {
-                                // this.pause = true;
                             });
                     }
                 }
@@ -312,8 +329,10 @@ export class Game {
             img1.onload = () => {
                 this.ctx.drawImage(img1, 50, this.canvas.height - 38, 34, 34);
             }
-            let time: number = 3;
-
+            this.time = 0;
+            this.gamePlay = new GPEXPORT(this._ball, this.paddle_left, this.paddle_right, this.time);
+            this.timer();
+            // console.log("GAMEPLAY",JSON.parse());
             setTimeout(() => {
                 this.start();
             }, 3000);
@@ -321,6 +340,18 @@ export class Game {
         else {
             // alert("Can't find the canvas");
         }
+    }
+
+    timer() {
+        this.gamePlay.CreateJson(this.time);
+        this.time++;
+        if (this.paddle_left.score < 10 && this.paddle_right.score < 10) {
+            setTimeout(() => {
+                this.timer();
+            }, 100);
+        }
+        // else
+        //     document.body.innerHTML = 
     }
 
     onunload() {
@@ -383,7 +414,6 @@ export class Game {
                     {
                         paddle: this.paddle_left.ToJson(),
                         gameid: this.gameid,
-
                     }); // push a mesage to the array
             }
             if (this.downpress) {
@@ -489,8 +519,7 @@ export class Game {
         this.paddle_right.draw_padle();
         this._ball.draw_ball();
         this.center_rec.draw_padle();
-        if (this.data.map == "map3") 
-        {
+        if (this.data.map == "map3") {
             this.bar.draw_padle();
         }
     }
@@ -537,7 +566,6 @@ export class Game {
         this.ctx.beginPath();
         this.ctx.arc(this.canvas.width / 2, this.canvas.height / 2 + 100, 50, 0, Math.PI * 2);
         this.ctx.fillStyle = "white";
-
         this.ctx.fill();
         this.ctx.fillStyle = "red";
         this.ctx.fillText("Home", this.canvas.width / 2 - this.ctx.measureText("Home").width / 2, this.canvas.height / 2 + 112);
@@ -600,7 +628,6 @@ export class Game {
 
     Map4() {
         this.canvas.style.backgroundColor = "#00BCCA";
-        // draw a empty cercle
         this.ctx.beginPath();
         this.ctx.arc(this.canvas.width / 2, this.canvas.height / 2, 30, 0, Math.PI * 2);
         this.ctx.strokeStyle = "white";
@@ -613,16 +640,15 @@ export class Game {
     start() {
 
         this.draw();
-        if (this.data.map == "map2") 
-        {
-            this.animate();
-        }
-        if (this.data.map == "map3") {
-            this._ball.bot(this.bar);
-        }
+        // if (this.data.map == "map2") {
+        //     this.animate();
+        // }
+        // if (this.data.map == "map3") {
+        //     this._ball.bot(this.bar);
+        // }
         // if (this.data.map == "map4") 
         {
-            this.Map4();
+            // this.Map4();
         }
         // this.Map4()
         if (!this.pause) {
@@ -673,6 +699,43 @@ export class Game {
 }
 
 
+
+class GPEXPORT {
+    ball: ball;
+    paddle_left: player;
+    paddle_right: player;
+    time: number;
+    json: string;
+
+    constructor(ball: ball, paddle_left: player, paddle_right: player, time: number) {
+        this.ball = ball;
+        this.paddle_left = paddle_left;
+        this.paddle_right = paddle_right;
+        this.time = time;
+        this.json = "[";
+    }
+
+    CreateJson(time: number) {
+        this.json += "{";
+        this.json += '"Time":' + time + ',';
+        this.json += '"Player1":';
+        this.json += this.paddle_left.Tojson();
+        this.json += ',';
+        this.json += '"Player2":';
+        this.json += this.paddle_right.Tojson();
+        this.json += ',';
+        this.json += '"Ball":';
+        this.json += this.ball.Json();
+        this.json += '},\n';
+    }
+
+    finish() {
+        this.json = this.json.substring(0, this.json.length - 2);
+        this.json += "]";
+        return this.json;
+    }
+}
+
 const Canvas = (props: any) => {
     const [data, setData] = useState(props.data ? props.data : []);
     const canvasRef = useRef(null);
@@ -688,14 +751,11 @@ const Canvas = (props: any) => {
         socket.on('ConnectClient', (res: any) => {
 
             {
-                console.log('res', res);
-                // console.log('gameid',context.ShowCanvas.gameInfo);
-                // console.log("checked");
                 if (res['is_started'] === true && res['id'] === context.ShowCanvas.gameInfo['id']) {
                     setIsWating(false);
                     setData(res);
                     context.ShowCanvas.gameInfo = res;
-                    new Game(canvasRef.current as HTMLCanvasElement, res, socket);
+                    new Game(canvasRef.current as unknown as HTMLCanvasElement, res, socket);
                 }
             }
         });

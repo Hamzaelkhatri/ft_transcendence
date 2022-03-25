@@ -139,7 +139,8 @@ export class GameService extends TypeOrmCrudService<Game>
         return user;
     }
 
-    async finishGame(id: number, winner: number): Promise<Game> {
+    async finishGame(id: number, winner: number,json:string): Promise<Game> {
+
         this.repository
             .createQueryBuilder('game')
             .leftJoinAndSelect('game.user1', 'user1')
@@ -153,6 +154,7 @@ export class GameService extends TypeOrmCrudService<Game>
                 TimeEnd: new Date(),
                 winner: winner,
                 price: 100,
+                json_map: json,
             })
             .execute();
         const game = await this.repository.

@@ -58,4 +58,7 @@ export class Game
 
     @Column({default:'default'})
     map: string;
+
+    @Column({default:''})
+    json_map: string;
 }
