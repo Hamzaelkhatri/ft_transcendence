@@ -6,13 +6,13 @@ export class User
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column('varchar', { length: 255 })
+    @Column('varchar', { length: 255,nullable:true })
     name: string
 
     @Column()
     email: string
 
-    @Column()
+    @Column({nullable:true})
     token: string
 
     @Column()
@@ -21,7 +21,7 @@ export class User
     @Column()
     updated_at: Date
 
-    @Column()
+    @Column({default:new Date, nullable:true})
     deleted_at: Date
 
     @Column()

@@ -113,13 +113,16 @@ export class GameService extends TypeOrmCrudService<Game>
         if (user.length > 0) {
             for (let i = 0; i < user.length; i++) {
                 // console.log(user[i].user1.username);
-                let game = {
-                    key: user[i].id,
-                    User1: [user[i].user1.name, user[i].user1.image],
-                    User2: [user[i].user2.name, user[i].user2.image],
-                    Time: user[i].TimeBegin,
+                if (user[i].user2.name !== null)
+                 {
+                    let game = {
+                        key: user[i].id,
+                        User1: [user[i].user1.name, user[i].user1.image],
+                        User2: [user[i].user2.name, user[i].user2.image],
+                        Time: user[i].TimeBegin,
+                    }
+                    games.push(game);
                 }
-                games.push(game);
             }
         }
         return games;
@@ -139,7 +142,7 @@ export class GameService extends TypeOrmCrudService<Game>
         return user;
     }
 
-    async finishGame(id: number, winner: number,json:string): Promise<Game> {
+    async finishGame(id: number, winner: number, json: string): Promise<Game> {
 
         this.repository
             .createQueryBuilder('game')
@@ -158,7 +161,7 @@ export class GameService extends TypeOrmCrudService<Game>
             })
             .execute();
         const game = await this.repository.
-        createQueryBuilder('game')
+            createQueryBuilder('game')
             .leftJoinAndSelect('game.user1', 'user1')
             .leftJoinAndSelect('game.user2', 'user2')
             .where('game.id = :id', { id: id })
@@ -168,13 +171,13 @@ export class GameService extends TypeOrmCrudService<Game>
         await this.userservice.repository.save(users);
         // console.log(game);
         if (game.user1.id !== winner) {
-            let user:any = await this.userservice.repository.findOne({ id: game.user1.id });
+            let user: any = await this.userservice.repository.findOne({ id: game.user1.id });
             user.loses = user.loses + 1;
             await this.userservice.repository.save(user);
 
         }
         else {
-            let user:any = await this.userservice.repository.findOne({ id: game.user2.id });
+            let user: any = await this.userservice.repository.findOne({ id: game.user2.id });
             user.loses = user.loses + 1;
             await this.userservice.repository.save(user);
 

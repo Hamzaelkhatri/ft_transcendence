@@ -8,7 +8,6 @@ import { MyProvider, useMyContext } from "./ContextProvider";
 export default function MatchLive() {
     const [datas, setData] = useState([]);
     let context: any = useMyContext();
-
     const columns = [
         {
             title: 'Player One',
@@ -55,8 +54,6 @@ export default function MatchLive() {
                                 }
                             );
                         });
-                        // contexts.setShowCanvas(true);
-                        // console.log(res);
                     }
                     }>
                         Watch
@@ -65,18 +62,20 @@ export default function MatchLive() {
             ),
         },
     ];
+
     // const ISSERVER = typeof window === "undefined";
 
     // const [Datasource, setDatasource] = useState([]);
+    useEffect(() => {
     axios.get("http://localhost:3000/game/current/")
             .then(res => {
                 if (datas['id'] === undefined) {
                     setData(res.data);
                 }
             });
+    }, []);
     return (
-        // delete hydrate from here
-        <div suppressHydrationWarning={true}>
+        <div suppressHydrationWarning={false}>
             {
                 <Table loading={!datas.length} columns={columns} dataSource={datas} pagination={{ pageSize: 7 }} />
             }

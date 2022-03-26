@@ -58,7 +58,6 @@ export default class UserService extends TypeOrmCrudService<User>
 
     getIdbyName(name: string): number {
         return this.repository.findOne({ name: name }).then(user => {
-            // console.log(user);
             return user.id;
         }
         );
@@ -95,11 +94,10 @@ export default class UserService extends TypeOrmCrudService<User>
         let winners = [];
         for (let i = 0; i < user.length; i++) {
             let winner = {
-                image: user[i].image,
-                name: user[i].name,
-                wins: user[i].wins + i,
-                contry: user.contry,
-                key: user[i].id,
+                Name: [user[i].name,user[i].image],
+                Rank: user[i].wins ,
+                Contry: user.contry,
+                key: i,
             }
             winners.push(winner);
         }

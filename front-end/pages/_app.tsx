@@ -10,7 +10,10 @@ import ResponsiveAppBar from "./Navbar"
 // import TextCanvas from './canvas_text'
 import HomePage from './home'
 import Next_page from './First_pages'
-import {MyProvider} from './ContextProvider'
+import { MyProvider } from './ContextProvider'
+import { Header } from 'antd/lib/layout/layout'
+import { Layout, Menu, Breadcrumb } from 'antd';
+
 
 // import leaderboard from './leaderboard'
 
@@ -82,6 +85,8 @@ function MyApp(props: AppProps) {
       if (popups !== undefined) {
         if (popups.closed) {
           if (!ISSERVER) {
+            document.body.style.width='auto';
+        document.body.style.height='auto';
             setReactData(
               {
                 email: localStorage.getItem("email") === undefined ? "" : localStorage.getItem("email"),
@@ -112,18 +117,20 @@ function MyApp(props: AppProps) {
     }, [])
 
     return (
-      <div>
-      <MyProvider>
-        {singIn === "Sign In" &&
-          <HomePage />
-        }
+      <Layout style={{ minHeight: '100vh'  , background: 'transparent'}}>
+        <MyProvider>
+          <Header style={{ backgroundColor: "transparent" }}>
+            {!popup && <ResponsiveAppBar data={reactData} usecase={singIn} login={login} />}
+          </Header>
+          {singIn === "Sign In" &&
+            <HomePage />
+          }
 
-        {!popup && <ResponsiveAppBar data={reactData} usecase={singIn} login={login} />}
-        {singIn === "Sign Out" &&
-          <Next_page />
-        }
-      </MyProvider>
-      </div>
+          {singIn === "Sign Out" &&
+            <Next_page />
+          }
+        </MyProvider>
+      </Layout>
     );
   }
 }
