@@ -3,13 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { User } from './user.entity';
 import { CrudRequest } from '@nestjsx/crud';
+import { Connection } from 'typeorm';
 
 @Injectable()
 export default class UserService extends TypeOrmCrudService<User>
 {
 
     repository: any;
-    constructor(@InjectRepository(User) repository) {
+    constructor(@InjectRepository(User) repository, private connection: Connection) {
         super(repository);
         this.repository = repository;
     }
@@ -84,6 +85,7 @@ export default class UserService extends TypeOrmCrudService<User>
         );
 
         let random = Math.floor(Math.random() * ids.length);
+        // await this.connection.getRepository(User).findOne()
         return await this.repository.findOne({ id: ids[random] });
     }
     async leaderboard() {
