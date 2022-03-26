@@ -278,7 +278,7 @@ export class Game {
             this.paddle_left.score = 0;
             this.paddle_right.score = 0;
 
-            if (this.data['watch'] === true) {
+            if (this.data['watch'] === undefined) {
                 this.socket.on('DataToClient', (msg) => {
                     if (msg.gameid === this.gameid) {
                         this.paddle_right.paddle_x = msg.paddle.paddle_x;
@@ -321,7 +321,6 @@ export class Game {
                 });
             }
             else {
-                // this.importFromJSON(data['json_map']);
                     this.json = data['json_map'];
             }
             this.time = 0;
@@ -354,7 +353,7 @@ export class Game {
 
     }
     timer() {
-        if (this.data['watch'] === false) {
+        if (this.data['watch'] === undefined) {
             this.gamePlay.CreateJson(this.time);
         }
         else

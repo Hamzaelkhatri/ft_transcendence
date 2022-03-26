@@ -28,4 +28,4 @@ import { Game } from './game/game.entity';
   providers: [AppService,AuthModuleOptions,AppGateway],
   exports: [AppGateway],
 })
-export class AppModule {}
+export class AppModule {}``
