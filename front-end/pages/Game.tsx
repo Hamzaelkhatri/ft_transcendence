@@ -239,6 +239,7 @@ export class Game {
     gamePlay: GPEXPORT;
     time: number;
     bar: player;
+    json: string;
 
     constructor(canvas: HTMLCanvasElement, data: any, socket: Socket) {
 
@@ -258,6 +259,7 @@ export class Game {
             this.email2 = this.data['user2']['email'];
             this.gameid = this.data['id'];
             this.downpress1 = false;
+            this.json = "";
             this.paddle_left = new player(0, 10, this.canvas.height / 2, 10, 80, 5, this.ctx, "white");
             this.paddle_right = new player(0, this.canvas.width - 20, (this.canvas.height) / 2, 10, 80, 5, this.ctx, "white");
             this.center_rec = new player(0, this.canvas.width / 2, 0, 1, this.canvas.height, 0, this.ctx, "white");
@@ -276,48 +278,53 @@ export class Game {
             this.paddle_left.score = 0;
             this.paddle_right.score = 0;
 
-            this.socket.on('DataToClient', (msg) => {
-                if (msg.gameid === this.gameid) {
-                    this.paddle_right.paddle_x = msg.paddle.paddle_x;
-                    this.paddle_right.paddle_y = msg.paddle.paddle_y;
-                }
-            });
-
-            this.socket.on('DataToClient2', (msg) => {
-                if (msg.gameid === this.gameid) {
-                    this.paddle_left.paddle_x = msg.paddle.paddle_x;
-                    this.paddle_left.paddle_y = msg.paddle.paddle_y;
-
-                }
-            });
-
-            // this.canvas
-
-            this.socket.on('BallClient', (msg) => {
-                if (msg.gameid === this.gameid) {
-                    this._ball.ball_x = msg.ball_x;
-                    this._ball.ball_y = msg.ball_y;
-                    this._ball.velocity_x = msg.velocity_x;
-                    this._ball.velocity_y = msg.velocity_y;
-                    this.paddle_left.score = msg.score1;
-                    this.paddle_right.score = msg.score2;
-                    if ((this.paddle_left.score >= 10 || this.paddle_right.score >= 10)) {
-                        axios.post('http://localhost:3000/game/finish/' + this.gameid + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']),
-                            {
-                                map: this.gamePlay.finish(),
-                            })
-                            .then(res => {
-                            });
+            if (this.data['watch'] === undefined) {
+                this.socket.on('DataToClient', (msg) => {
+                    if (msg.gameid === this.gameid) {
+                        this.paddle_right.paddle_x = msg.paddle.paddle_x;
+                        this.paddle_right.paddle_y = msg.paddle.paddle_y;
                     }
-                }
-            });
+                });
 
-            this.socket.on('PauseClient', (msg) => {
-                // console.log('PauseClient', msg);
-                // if (msg.gameid === this.gameid) {
-                //     this.pause = !this.pause;
-                // }
-            });
+                this.socket.on('DataToClient2', (msg) => {
+                    if (msg.gameid === this.gameid) {
+                        this.paddle_left.paddle_x = msg.paddle.paddle_x;
+                        this.paddle_left.paddle_y = msg.paddle.paddle_y;
+
+                    }
+                });
+
+                this.socket.on('BallClient', (msg) => {
+                    if (msg.gameid === this.gameid) {
+                        this._ball.ball_x = msg.ball_x;
+                        this._ball.ball_y = msg.ball_y;
+                        this._ball.velocity_x = msg.velocity_x;
+                        this._ball.velocity_y = msg.velocity_y;
+                        this.paddle_left.score = msg.score1;
+                        this.paddle_right.score = msg.score2;
+                        if ((this.paddle_left.score >= 10 || this.paddle_right.score >= 10)) {
+                            axios.post('http://localhost:3000/game/finish/' + this.gameid + '/' + (msg.score1 > msg.score2 ? this.data['user1']['id'] : this.data['user2']['id']),
+                                {
+                                    map: this.gamePlay.finish(),
+                                })
+                                .then(res => {
+                                });
+                        }
+                    }
+                });
+
+                this.socket.on('PauseClient', (msg) => {
+                    // console.log('PauseClient', msg);
+                    // if (msg.gameid === this.gameid) {
+                    //     this.pause = !this.pause;
+                    // }
+                });
+            }
+            else {
+                    this.json = data['json_map'];
+            }
+            this.time = 0;
+
             let img = new Image();
             img.src = this.data['user2']['image'];
             img.onload = () => {
@@ -329,27 +336,38 @@ export class Game {
             img1.onload = () => {
                 this.ctx.drawImage(img1, 50, this.canvas.height - 38, 34, 34);
             }
-            this.time = 0;
+
+
             this.gamePlay = new GPEXPORT(this._ball, this.paddle_left, this.paddle_right, this.time);
             this.timer();
-            // console.log("GAMEPLAY",JSON.parse());
+
             setTimeout(() => {
                 this.start();
             }, 3000);
         }
         else {
-            // alert("Can't find the canvas");
         }
     }
 
+    importFromJSON(json: string) {
+
+    }
     timer() {
-        this.gamePlay.CreateJson(this.time);
-        this.time++;
-        if (this.paddle_left.score < 10 && this.paddle_right.score < 10) {
-            setTimeout(() => {
-                this.timer();
-            }, 100);
+        if (this.data['watch'] === undefined) {
+            this.gamePlay.CreateJson(this.time);
         }
+        else
+        {
+            this._ball.fromJson(this.json[this.time].Ball)
+            this.paddle_left.fromJson(this.json[this.time].Player1)
+            this.paddle_right.fromJson(this.json[this.time].Player2)
+        }
+            this.time++;
+            if (this.paddle_left.score < 10 && this.paddle_right.score < 10) {
+                setTimeout(() => {
+                    this.timer();
+                }, 100);
+            }
         // else
         //     document.body.innerHTML = 
     }
