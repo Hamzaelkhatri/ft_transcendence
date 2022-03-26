@@ -6,6 +6,7 @@ import { width } from '@mui/system';
 
 
 
+
 export default function Leaderboard() {
     // console.log("leaderboard");
     const [state, setstate] = useState([]);
@@ -17,59 +18,50 @@ export default function Leaderboard() {
         await axios.get("http://localhost:3000/user/leaderboard")
             .then(res => {
                 setloading(false);
-                setstate(res.data.map(row => ({
-                    Name: [row.name, row.image],
-                    Rank: row.wins,
-                    Contry: "Morocco",
-                })));
+                setstate(res.data);
             });
         // console.log(datas);
     }
     const columns = [
-
-
         {
-
+            key: '1',
             title: 'Name',
             dataIndex: 'Name',
-            key: '1',
-            width: '10%',
+            width: '7.5%',
             render: (res) =>
                 <Space>
                     <Avatar src={res[1]} />
                     <span>{res[0]}</span>
                 </Space>,
         },
-
         {
+            key: '2',
             title: 'Rank',
             dataIndex: 'Rank',
-            key: '2',
             width: '7.5%',
             sorter: {
                 compare: (a, b) => a.Rank - b.Rank,
             },
         },
         {
-            title: 'Contry',
-            dataIndex: 'Contry',
             key: '3',
+            title: 'Country',
+            dataIndex: 'Contry',
             width: '7.5%',
-        },
+        }
     ];
     useEffect(() => {
         getData();
     }, []);
     return (
         <div>
-            <div style={{ textAlign: 'center', width: '100%', position: 'absolute' }}>
+            <div>
                 <Table loading={!state.length} columns={columns}
                     dataSource={state} pagination={{ pageSize: 7 }}
                     scroll={{ y: 500 }}
-                    style={{ width: '50%', }}
+                    style={{ width: 'auto', }}
                 />
             </div>
         </div>
     );
 }
-

@@ -8,6 +8,8 @@ import axios from "axios";
 import { useMyContext } from './ContextProvider';
 import { Result } from 'antd';
 import Choose from './choices';
+import   Cookies  from 'cookie';
+
 
 export class player {
     score: number;
@@ -789,7 +791,7 @@ const Canvas = (props: any) => {
         // if ((context.ShowCanvas.gameInfo['user1']['email'] === localStorage.getItem('email') || context.ShowCanvas.gameInfo['user2']['email'] === localStorage.getItem('email')))
         socket.emit('ConnectServer', {
             GameInfo: context.ShowCanvas.gameInfo,
-            idUser: localStorage.getItem('id')
+            idUser: localStorage.getItem('id'),
         });
 
     }, []);

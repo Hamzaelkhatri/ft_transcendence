@@ -14,8 +14,11 @@ import { MyProvider, useMyContext } from "./ContextProvider";
 const { Meta } = Card;
 
 import { Button, notification, Image, Comment } from 'antd';
+import { Content } from "antd/lib/layout/layout";
 import Choose from "./choices";
 import moment from "moment";
+// const DemoBox = props => <p className={`height-${props.value}`} >{props.children}</p>;
+
 
 const contentStyle = {
     height: '30%',
@@ -176,54 +179,60 @@ const Next_page = () => {
             }
         });
     return (
-        <div>
-            <div className="ant-row">
-                <div className="ant-col ant-col-xs-28 ant-col-xl-24" style={{ top: "150px" }}>
-                    {!context.ShowCanvas.show &&
+        <Content style={{ padding: '3%' }}>
+            <div>
+                {context.ShowCanvas.show && <Canvas data={context.ShowCanvas['gameInfo']} />}
+            </div>
+            {!context.ShowCanvas.show &&
+                <Row justify="center" align="top" gutter={[48, 32]}>
+                    <Col span={18} push={6} style={{ background: 'white' }} >
+                        {/* <div className="ant-col { xs: 10, sm: 16, md: 24, lg: 32 }"> */}
+                        {!context.ShowCanvas.show &&
+                            <div style={{ width: "auto", height: "auto" }}>
+                                <MatchLive />
+                            </div>
+                        }
+                        {/* </div> */}
+                    </Col>
+                    <Col span={6} pull={18} style={{ background: 'transparent' }}>
                         <Card
-                            style={{ padding: "1%", width: "20%", height: "auto", left: "20%", top: "15%", position: "absolute", zIndex: "2", borderRadius: "3%", background: "white" }}
+                            style={{ width: "auto", height: "auto" }}
                             cover={
-
                                 <center>
-                                    <Badge.Ribbon text="online" style={{ backgroundColor: '#87d068' }} placement='start' />
-                                    <Avatar shape="square" size={200} src="https://joeschmoe.io/api/v1/random" />
+                                    <Badge.Ribbon text="online" style={{ backgroundColor: '#87d068', width: "auto", height: "auto" }} placement='start' />
+                                    <Avatar shape="square" style={{ width: "auto", height: "auto", borderRadius: "20px" }} src="https://joeschmoe.io/api/v1/random" />
                                 </center>
                             }
-                            actions={[<ArrowLeftOutlined key="previous" onClick={() => { setOneTime(0); }
-                            } />,
-                            <PlayCircleOutlined key="play" onClick={() => {
-                                axios.post("http://localhost:3000/game/invite",
-                                    {
-                                        "username1": localStorage.getItem("usual_full_name"),
-                                        "username2": data['name']
-                                    })
-                                    .then(res => {
-                                        // if (oneTime === 0) {
-                                        if (res.data.length !== 0) {
-                                            setData(res.data);
-                                            context.setShowCanvas(
+                            actions={
+                                [
+                                    <ArrowLeftOutlined key="previous" onClick={() => { setOneTime(0); }} />,
+                                    <PlayCircleOutlined
+                                        key="play" onClick={() => {
+                                            axios.post("http://localhost:3000/game/invite",
                                                 {
-                                                    show: true,
-                                                    gameInfo: res.data
-                                                }
-                                            )
-                                            setOneTime(1);
-                                        }
-                                    });
-                            }} />,
-                            <ArrowRightOutlined key="next" onClick={() => {
-                                setOneTime(0);
-                            }} />
-                            ]}
+                                                    "username1": localStorage.getItem("usual_full_name"),
+                                                    "username2": data['name']
+                                                })
+                                                .then(res => {
+                                                    if (res.data.length !== 0) {
+                                                        setData(res.data);
+                                                        context.setShowCanvas(
+                                                            {
+                                                                show: true,
+                                                                gameInfo: res.data
+                                                            }
+                                                        )
+                                                        setOneTime(1);
+                                                    }
+                                                });
+                                        }} />,
+                                    <ArrowRightOutlined key="next" onClick={() => { setOneTime(0) }} />]}
                         >
                             <Meta
                                 title={data['name']}
                                 description={
                                     <ul>
-                                        <i id="icons">
-                                            <li>
-                                                <EnvironmentOutlined /> :  {data['country']}
-                                            </li>
+                                        <i id="icons" style={{ width: "auto", height: "auto", margin: "auto", borderRadius: "20px" }}>
                                             <li>
                                                 <FieldNumberOutlined /> : Level {data['level']}
                                             </li>
@@ -245,106 +254,42 @@ const Next_page = () => {
                                 }
                             />
                         </Card>
-                    }
-                </div>
-                <div className="ant-col ant-col-xs-28 ant-col-xl-24" style={{ top: "150px" }}>
-                    {!context.ShowCanvas.show &&
-                        <div style={{ position: "absolute", top: "15%", left: "50%", zIndex: "2", width: "40%", height: "auto" }}>
-                            <MatchLive />
+                    </Col>
+
+                </Row>
+            }
+            {!context.ShowCanvas.show &&
+                <Row justify="center" align="top" gutter={[48, 32]}>
+
+                    <Col span={18} push={6} style={{ background: 'transparent' }}>
+
+                        <div style={{ background: 'white' }}>
+                            {!context.ShowCanvas.show &&
+                                <div style={{ width: "auto", height: "auto" }}>
+                                    <Leaderboard />
+                                </div>
+                            }
                         </div>
-                    }
-                </div>
-                <div className="ant-col ant-col-xs-28 ant-col-xl-24" style={{ top: "1000px", width: "100%", left: "25%", zIndex: "2" }} >
-                    {!context.ShowCanvas.show &&
-                        <div >
-                            {/* <Leaderboard /> */}
-                        </div>
-                    }
-                </div>
+                    </Col>
+                    <Col span={6} pull={18} style={{ background: 'transparent' }} >
+                        {!context.ShowCanvas.show && <Button size="large" type="primary"
+                            style={{ width: "100%", height: "auto", zIndex: "999" }}
+                            onClick={() => {
+                                setIsModalVisible(true);
+                            }}>
+                            Random Match
+                        </Button>
+                        }
 
-
-                {/* {ShowCanvas && <Carousel
-                beforeChange={(current) => {
-                    if (current === 3) {
-                        setShowCanvas(true);
-                    }
-                }}
-                autoplay={false} >
-                <div>
-                    <h3 style={contentStyle}> Welcome to an online Ping Pong Match   </h3>
-
-                </div>
-                <div>
-                    <h3 style={contentStyle}>Rules:
-                        <li>
-                            When the game starts you can  PAUSE  it by clicking the Space key .
-                        </li>
-                        <li>
-                            The game PAUSES 10 seconds if You did not start The Game 10 seconds You Lose.
-                        </li>
-                        <li>
-                            If Quit the Game , we will wait for ypu ti joinn in 10 seconds otherwise You Lose.
-                        </li>
-                    </h3>
-                </div>
-                <div>
-                    <h3 style={contentStyle}>To Play  You gonna use 2 keys :
-                        <li>
-                            You Press  < ArrowUpOutlined /> key to Move Up.
-                        </li>
-                        <li>
-                            You Press  <ArrowDownOutlined /> key to Move Up.
-                        </li>
-                        <li> You Press  The Space Key to PAUSE or TO Continue the Game <PauseCircleOutlined /> </li>
-                    </h3>
-                </div>
-                <div>
-                    <h3 style={contentStyle}>Good Luck !<HeartOutlined />  </h3>
-                </div>
-            </Carousel >} */}
-                {
-                    //make Canvas in center of the screen
-                    <div className="ant-col ant-col-xs-28 ant-col-xl-24" style={{ top: "20%", position: "absolute", zIndex: "2", left: "50%", transform: "translate(-50%,0)" }}>
-                        {context.ShowCanvas.show && <Canvas data={context.ShowCanvas['gameInfo']} />}
-                    </div>
-                }
-
-                {
-                    //       <Result style={{ top: "20%", position: "absolute", zIndex: "2", left: "50%", transform: "translate(-50%,0)" }}
-                    //       status="success"
-                    //       title="Successfully Purchased Cloud Server ECS!"
-                    //       subTitle="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait."
-                    //       extra={[
-                    //           <Button type="primary" key="console">
-                    //               Go Console
-                    //           </Button>,
-                    //           <Button key="buy">Buy Again</Button>,
-                    //       ]}
-                    //   />
-                }
-            </div>
-
-            <Row>
-                <Col span={1} offset={12} >
-                    {!context.ShowCanvas.show && <Button type="primary" style={{ zIndex: "2", top: "50%", left: "5%" }} onClick={() => {
-                        setIsModalVisible(true);
-                        // console.log(choosable);
-                        // console.log(context.ShowCanvas.show);
-                    }}>
-                        Random Match
-                    </Button>
-                    }
-                </Col>
-            </Row>
-            {/* {choosable && !context.ShowCanvas.show && <Choose isModalVisible={true} setIsModalVisible={setChoosable} onClose={() => {
-                console.log("close");
-            }} />} */}
+                    </Col>
+                </Row>
+            }
             {isModalVisible && <Modal title="Choose A Map To Play" visible={true} onOk={handleOk} maskClosable={true} mask={true} onCancel={handleCancel} style={{ top: "10%", width: "100%", height: "100%" }}
                 footer={[
                 ]}>
                 <div style={{ padding: "24px", width: "100%", height: "100%" }}>
                     <Space>
-                        <Comment  content={
+                        <Comment content={
                             <div style={{ textAlign: "center", fontSize: "25px", fontFamily: "Ro" }} >
                                 <h3 >
                                     Rules:
@@ -397,7 +342,8 @@ const Next_page = () => {
                 </div>
             </Modal>
             }
-        </div >
+
+        </Content >
     )
 }
 

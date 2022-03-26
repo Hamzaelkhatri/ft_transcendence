@@ -76,6 +76,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
     let game_id = this.game.findIndex(game => game.id == payload.GameInfo.id);
     // console.log(this.game[game_id]);
     // console.log(payload);
+    // console.log(payload);
     if(game_id == -1)
     {
       this.game.push(new Game(payload.GameInfo.id, payload.GameInfo.userId1, payload.GameInfo.userId2, false, true, false));
