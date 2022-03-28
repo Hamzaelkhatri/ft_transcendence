@@ -37,6 +37,9 @@ export class UserController implements CrudController<User>
 
     @Post("me")
     async getMyData(@Req() req, @Res() res) {
+        // console.log(req)
+        // console.log(res);
+        console.log('Cookies: ', req.cookies)
         let user = await this.service.getUserByToken(req.body.token).then(user => {
             if (user)
                 return user;
@@ -53,7 +56,8 @@ export class UserController implements CrudController<User>
     }
 
     @Get("/next/")
-    async getNextUser() {
+    async getNextUser(@Req() req) {
+        console.log(req)
         return await this.service.getNextUser();
     }
 

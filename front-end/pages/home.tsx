@@ -1,11 +1,14 @@
 import * as React from 'react';
 import TextCanvas from './canvas_text'
 import Typewriter from 'typewriter-effect';
+import cookieCutter from 'cookie-cutter'
+import axios from 'axios';
 
 
 
 const HomePage = (prps: any) => {
   const ISSERVER = typeof window === "undefined";
+
   function wri_ter() {
     return (
       <div id="text">

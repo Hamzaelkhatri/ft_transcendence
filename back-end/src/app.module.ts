@@ -17,9 +17,9 @@ import { Game } from './game/game.entity';
       type: 'postgres',
       host: 'localhost',
       port: 5432,
-      username: 'postgres',
-      password: 'postgres',
-      database: 'postgres',
+      username: 'helkhatr',
+      password: '',
+      database: 'helkhatr',
       entities:[User,Game],
       synchronize: true,
     }
