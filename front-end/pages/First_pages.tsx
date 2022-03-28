@@ -99,7 +99,8 @@ const Next_page = () => {
     };
 
     const close = (key: string) => {
-        axios.get("http://localhost:3000/game/invited/reject/" + localStorage.getItem("id") + "/" + context.ShowCanvas.gameInfo['id']).then(res => {
+        axios.get("http://localhost:3000/game/invited/reject/" + localStorage.getItem("id") + "/" + context.ShowCanvas.gameInfo['id'],
+        ).then(res => {
             notification.close(key);
         });
     };
@@ -148,7 +149,9 @@ const Next_page = () => {
         const inter = setInterval(() => {
             if (oneTime1 == 0) {
 
-                axios.get("http://localhost:3000/game/is_invited/" + localStorage.getItem("id"))
+                axios.get("http://localhost:3000/game/is_invited/" + localStorage.getItem("id")
+
+                )
                     .then(res => {
                         if (res.data['id'] !== undefined) {
                             setOneTime1(1);
