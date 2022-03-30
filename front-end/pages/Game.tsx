@@ -317,9 +317,10 @@ export class Game {
 
                 this.socket.on('PauseClient', (msg) => {
                     // console.log('PauseClient', msg);
-                    // if (msg.gameid === this.gameid) {
-                    //     this.pause = !this.pause;
-                    // }
+                    if (msg.gameid === this.gameid)
+                    {
+                        this.pause = !this.pause;
+                    }
                 });
             }
             else {
