@@ -211,23 +211,7 @@ const Next_page = () => {
                                     <ArrowLeftOutlined key="previous" onClick={() => { setOneTime(0); }} />,
                                     <PlayCircleOutlined
                                         key="play" onClick={() => {
-                                            axios.post("http://localhost:3000/game/invite",
-                                                {
-                                                    "username1": localStorage.getItem("usual_full_name"),
-                                                    "username2": data['name']
-                                                })
-                                                .then(res => {
-                                                    if (res.data.length !== 0) {
-                                                        setData(res.data);
-                                                        context.setShowCanvas(
-                                                            {
-                                                                show: true,
-                                                                gameInfo: res.data
-                                                            }
-                                                        )
-                                                        setOneTime(1);
-                                                    }
-                                                });
+                                            
                                         }} />,
                                     <ArrowRightOutlined key="next" onClick={() => { setOneTime(0) }} />]}
                         >
