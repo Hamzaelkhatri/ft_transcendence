@@ -16,7 +16,7 @@ export class LoginController {
   redirect(@Req() req, @Res() res) {
     try {
       const token = this.dataService.login(req.user);
-      return res.redirect(`http://localhost:3000/loginSuccess?token=${token}`);
+      return res.redirect(`http://backdend:3000/loginSuccess?token=${token}`);
     } catch (err) {
       return err;
     }

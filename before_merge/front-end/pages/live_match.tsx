@@ -44,7 +44,7 @@ export default function MatchLive() {
                 <Space>
                     <Button type="primary" onClick={() => {
                         // console.log(rese.key);
-                        axios.get("http://localhost:3000/game/watch/" + rese.key).then(res => {
+                        axios.get("http://backdend:3000/game/watch/" + rese.key).then(res => {
                             console.log(res.data);
                             context.setShowCanvas
                             (
@@ -67,7 +67,7 @@ export default function MatchLive() {
 
     // const [Datasource, setDatasource] = useState([]);
     useEffect(() => {
-    axios.get("http://localhost:3000/game/current/")
+    axios.get("http://backdend:3000/game/current/")
             .then(res => {
                 if (datas['id'] === undefined) {
                     setData(res.data);
