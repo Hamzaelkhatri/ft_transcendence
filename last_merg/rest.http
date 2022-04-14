@@ -1,2 +1,2 @@
 ### GET HISTORICAL DATA ###
-GET http://backdend:3001/game/history/all
+GET http://192.168.63.100:3001/game/history/all

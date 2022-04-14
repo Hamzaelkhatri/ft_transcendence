@@ -15,7 +15,7 @@ import { Game } from './game/game.entity';
   imports: [AuthModule,AuthModuleOptions,ConfigModule.forRoot(),TypeOrmModule.forRoot(
     {
       type: 'postgres',
-      host: 'backdend',
+      host: '192.168.63.100',
       port: 5432,
       username: 'helkhatr',
       password: '',

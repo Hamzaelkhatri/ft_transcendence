@@ -26,8 +26,11 @@ services:
     networks:
       - web
   frontdend:
-    build: ./front-end/
+    build: 
+         context: ./front-end/
     container_name: front_end
+    environment:
+      DB_UPSTREAM: http://${DOCKER_GATEWAY_HOST:-host.docker.internal}:host-gateway
     image: front_end
     depends_on:
       - backdend
@@ -37,7 +40,8 @@ services:
     networks:
       - web
   backdend:
-    build: ./server/
+    build:
+         context: ./server/
     container_name: back_end
     image: back_end
     restart: always
@@ -49,6 +53,5 @@ services:
     networks:
       - web
 networks:
-    web:
-      driver: bridge
-        
+  web:
+    driver: bridge

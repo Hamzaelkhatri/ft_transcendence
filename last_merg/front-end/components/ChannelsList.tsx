@@ -25,7 +25,7 @@ const ChannlesList = (props) => {
     e.preventDefault();
     axios
       .post(
-        "http://backdend:3001/channels/create/private/users/me",
+        "http://192.168.63.100:3001/channels/create/private/users/me",
         {
           name: selectedname,
           password: selectedpassword,
@@ -47,7 +47,7 @@ const ChannlesList = (props) => {
     formData.append("password", selectedpasswordjoin);
     axios
       .post(
-        `http://backdend:3001/channels/join/${id}/private/users/me`,
+        `http://192.168.63.100:3001/channels/join/${id}/private/users/me`,
         {
           password: selectedpasswordjoin,
         },
@@ -66,7 +66,7 @@ const ChannlesList = (props) => {
     e.preventDefault();
     axios
       .post(
-        "http://backdend:3001/channels/create/public/users/me",
+        "http://192.168.63.100:3001/channels/create/public/users/me",
         {
           name: selectedname,
         },
@@ -85,7 +85,7 @@ const ChannlesList = (props) => {
     e.preventDefault();
     axios
       .post(
-        `http://backdend:3001/channels/join/${id}/public/users/me`,
+        `http://192.168.63.100:3001/channels/join/${id}/public/users/me`,
         {},
         {
           headers: {

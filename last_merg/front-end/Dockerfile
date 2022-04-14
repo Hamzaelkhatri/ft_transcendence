@@ -8,4 +8,5 @@ COPY . /frontend
 WORKDIR /frontend
 RUN npm install 
 EXPOSE 3000
+CMD export IP_LOCAL="192.168.63.100"
 ENTRYPOINT npm run dev

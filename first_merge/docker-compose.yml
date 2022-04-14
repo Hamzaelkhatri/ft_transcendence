@@ -21,14 +21,14 @@ services:
       - db
     ports:
       - "5050:80"
-  # frontdend:
+  # 192.168.63.100:
   #   build: ./front-end/
   #   container_name: front_end
   #   image: front_end
   #   restart: always
   #   ports:
   #       - "3000:3000"
-  # backdend:
+  # 192.168.63.100:
   #   build: ./back-end/
   #   container_name: back_end
   #   image: back_end

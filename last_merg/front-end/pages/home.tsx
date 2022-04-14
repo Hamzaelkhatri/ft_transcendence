@@ -11,7 +11,7 @@ const Home = () => {
   const [data, setData] = useState({});
 
   const fetchData = async () => {
-    const response = await axios.get("http://backdend:3001/users/me", {
+    const response = await axios.get("http://192.168.63.100:3001/users/me", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return response;
@@ -28,7 +28,7 @@ const Home = () => {
   const [channel, setChannel] = useState([]);
 
   const fetchChannel = async () => {
-    const response = await axios.get("http://backdend:3001/channels/home", {
+    const response = await axios.get("http://192.168.63.100:3001/channels/home", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return response;
@@ -45,7 +45,7 @@ const Home = () => {
   const [stats, setStats] = useState([]);
   const fetchStats = async () => {
     const response = await axios.get(
-      "http://backdend:3001/users/leaderboard",
+      "http://192.168.63.100:3001/users/leaderboard",
       { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
     );
     return response;
@@ -64,7 +64,7 @@ const Home = () => {
   const [history, setHistory] = useState([]);
   const fetchhistory = async () => {
     const response = await axios.get(
-      "http://backdend:3001/game/history/home",
+      "http://192.168.63.100:3001/game/history/home",
       { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
     );
     return response;

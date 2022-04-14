@@ -99,7 +99,7 @@ const Next_page = () => {
     };
 
     const close = (key: string) => {
-        axios.get("http://backdend:3000/game/invited/reject/" + localStorage.getItem("id") + "/" + context.ShowCanvas.gameInfo['id'],
+        axios.get("http://192.168.63.100:3000/game/invited/reject/" + localStorage.getItem("id") + "/" + context.ShowCanvas.gameInfo['id'],
         ).then(res => {
             notification.close(key);
         });
@@ -108,7 +108,7 @@ const Next_page = () => {
     const onclick = (key: string) => {
         console.log(context.ShowCanvas.gameInfo);
 
-        axios.get("http://backdend:3000/game/invited/confirm/" + localStorage.getItem("id") + '/' + context.ShowCanvas.gameInfo['id']).then(res => {
+        axios.get("http://192.168.63.100:3000/game/invited/confirm/" + localStorage.getItem("id") + '/' + context.ShowCanvas.gameInfo['id']).then(res => {
             console.log(res.data);
             context.setShowCanvas(
                 {
@@ -149,7 +149,7 @@ const Next_page = () => {
         const inter = setInterval(() => {
             if (oneTime1 == 0) {
 
-                axios.get("http://backdend:3000/game/is_invited/" + localStorage.getItem("id")
+                axios.get("http://192.168.63.100:3000/game/is_invited/" + localStorage.getItem("id")
 
                 )
                     .then(res => {
@@ -173,7 +173,7 @@ const Next_page = () => {
             }
         }, 1000);
     }, [context.ShowCanvas.gameInfo]);
-    axios.get("http://backdend:3000/user/random")
+    axios.get("http://192.168.63.100:3000/user/random")
         .then(res => {
             if (oneTime === 0) {
                 setData(res.data);
@@ -302,7 +302,7 @@ const Next_page = () => {
                                     <Space direction="vertical">
                                         {item.title}
                                         <Button type="primary" onClick={() => {
-                                            axios.get("http://backdend:3000/game/matchmaking/" + localStorage.getItem("id") + '/' + item.title)
+                                            axios.get("http://192.168.63.100:3000/game/matchmaking/" + localStorage.getItem("id") + '/' + item.title)
                                                 .then(res => {
                                                     if (res.data.length !== 0) {
                                                         context.setShowCanvas(

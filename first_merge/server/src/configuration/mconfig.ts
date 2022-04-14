@@ -7,7 +7,7 @@ import { User } from "src/core/entities/user.entity";
 export const config:TypeOrmModuleOptions = 
 {
     type: 'postgres',
-    host: 'backdend',
+    host: '192.168.63.100',
     port: 5432,
     username: 'postgres',
     password: 'postgres',

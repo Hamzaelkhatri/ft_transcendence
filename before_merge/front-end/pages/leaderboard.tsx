@@ -15,7 +15,7 @@ export default function Leaderboard() {
 
 
     const getData = async () => {
-        await axios.get("http://backdend:3000/user/leaderboard")
+        await axios.get("http://192.168.63.100:3000/user/leaderboard")
             .then(res => {
                 setloading(false);
                 setstate(res.data);

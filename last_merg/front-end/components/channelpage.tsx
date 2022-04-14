@@ -11,7 +11,7 @@ const ChannelPage = (props) => {
 
   const fetchmychannel = async () => {
     const response = await axios.get(
-      `http://backdend:3001/channels/${props.id}`,
+      `http://192.168.63.100:3001/channels/${props.id}`,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }
@@ -33,7 +33,7 @@ const ChannelPage = (props) => {
 
   const fetchmychannelusers = async () => {
     const response = await axios.get(
-      `http://backdend:3001/channels/${props.id}/users/all`,
+      `http://192.168.63.100:3001/channels/${props.id}/users/all`,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }
@@ -58,7 +58,8 @@ const ChannelPage = (props) => {
         {
           mychannel && mychannelusers && props.allmychannels  && props.mydata  && <ChannelBar mydata={props.mydata} mychannel={mychannel} mychannelusers={mychannelusers} allmychannel={props.allmychannels}></ChannelBar>
         }
-        {mychannel.conversation && <ChannelChat mychannel={mychannel} />}
+        {/* {mychannel.conversatio
+          n && <ChannelChat mychannel={mychannel} />} */}
       </div>
     </div>
   );

@@ -18,6 +18,6 @@ export class LoginController {
   @UseGuards(FortyTwoStrategyAuthGuard)
   redirect(@Req() req, @Res() res) {
     const token = this.dataService.login(req.user);
-    return res.redirect(`http://backdend:3000/loginSuccess?token=${token}`);
+    return res.redirect(`http://192.168.63.100:3000/loginSuccess?token=${token}`);
   }
 }

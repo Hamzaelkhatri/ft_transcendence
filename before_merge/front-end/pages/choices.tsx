@@ -89,7 +89,7 @@ const Choose = (props: any) => {
                                     <Space direction="vertical">
                                         {item.title}
                                         <Button type="primary" onClick={() => {
-                                            axios.get("http://backdend:3000/game/matchmaking/" + localStorage.getItem("id") + '/' + item.title)
+                                            axios.get("http://192.168.63.100:3000/game/matchmaking/" + localStorage.getItem("id") + '/' + item.title)
                                                 .then(res => {
                                                     if (res.data.length !== 0) {
                                                         context.setShowCanvas(

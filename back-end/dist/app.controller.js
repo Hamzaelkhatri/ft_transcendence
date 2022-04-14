@@ -17,7 +17,7 @@ const common_1 = require("@nestjs/common");
 const passport_1 = require("@nestjs/passport");
 let AppController = class AppController {
     async login(res, req) {
-        res.redirect('http://backdend:3001/?token=' + req.user);
+        res.redirect('http://192.168.63.100:3001/?token=' + req.user);
     }
     async wlcome() {
         return "welcome";

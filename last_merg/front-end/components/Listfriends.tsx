@@ -7,7 +7,7 @@ const Listfriends = (props) => {
   const router = useRouter();
   const hundelClick = async (e, id) => {
     e.preventDefault();
-    axios.delete(`http://backdend:3001/friends/users/me/${id}`, {
+    axios.delete(`http://192.168.63.100:3001/friends/users/me/${id}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
