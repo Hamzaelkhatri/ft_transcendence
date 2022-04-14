@@ -85,7 +85,7 @@ export class AppGateway
       // this.connect_users
       // console.log("Currents Games",this.game[i]);
       if (this.game[i].socket1 == client.id ) {
-        let url = 'http://192.168.63.100:3001/game/quit/' + this.game[i].id + '/'+this.game[i].user2;
+        let url = 'http://192.168.99.103:3001/game/quit/' + this.game[i].id + '/'+this.game[i].user2;
         this.axios.post(url,
           {
             user1_score: this.game[i].score1,
@@ -96,7 +96,7 @@ export class AppGateway
         this.server.emit('QuitgameClient', { gameid: this.game[i].id, userId: this.game[i].user2 });
       }
       if(this.game[i].socket2 == client.id){
-        let url = 'http://192.168.63.100:3001/game/quit/' + this.game[i].id + '/'+this.game[i].user1;
+        let url = 'http://192.168.99.103:3001/game/quit/' + this.game[i].id + '/'+this.game[i].user1;
         this.axios.post(url,
           {
             user1_score: this.game[i].score1,

@@ -415,7 +415,7 @@ export class Game {
             this.socket.on('QuitgameClient', (msg) => {
                 console.log("QUIT MSG",msg);
                 if (msg.gameid === this.gameid && (msg.userId === this.MyData['id'] || msg.userId === this.MyData['id'])) {
-                    // axios.post('http://192.168.63.100:3001/game/quit/' + this.gameid + '/' + msg.userId,
+                    // axios.post('http://192.168.99.103:3001/game/quit/' + this.gameid + '/' + msg.userId,
                     //     {
                     //         map: "none",
                     //     })
@@ -479,7 +479,7 @@ export class Game {
                         newId = this.data['user1']['id'];
                     }
 
-                    axios.post('http://192.168.63.100:3001/game/quit/' + this.gameid + '/' + newId,
+                    axios.post('http://192.168.99.103:3001/game/quit/' + this.gameid + '/' + newId,
                         {
                             map: "none",
                         })
@@ -896,7 +896,7 @@ export class Game {
             let newId: number = 0;
             if (this.paddle_left.score === 10) {
                 newId = this.data['user2']['id'];
-                axios.post('http://192.168.63.100:3001/game/finish/' + this.gameid + '/' + this.data['user2']['id'],
+                axios.post('http://192.168.99.103:3001/game/finish/' + this.gameid + '/' + this.data['user2']['id'],
                     {
                         map: "none",
                         user1_score: this.paddle_right._score + ' ',
@@ -908,7 +908,7 @@ export class Game {
             }
             else {
                 newId = this.data['user2']['id'];
-                axios.post('http://192.168.63.100:3001/game/finish/' + this.gameid + '/' + this.data['user1']['id'],
+                axios.post('http://192.168.99.103:3001/game/finish/' + this.gameid + '/' + this.data['user1']['id'],
                     {
                         map: "none",
                         user1_score: this.paddle_right._score + ' ',

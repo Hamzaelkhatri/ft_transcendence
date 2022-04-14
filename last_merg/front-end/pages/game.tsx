@@ -79,7 +79,7 @@ const Game = () => {
     const [choosable, setChoosable] = useState(false);
     let context: any = useMyContext();
     const fetchData = async () => {
-        const response = await axios.get('http://192.168.63.100:3001/users/me', {
+        const response = await axios.get('http://192.168.99.103:3001/users/me', {
             headers:
                 { Authorization: `Bearer ${localStorage.getItem('token')}` }
         }).then(res => {
@@ -120,7 +120,7 @@ const Game = () => {
     };
 
     const close = (key: string, data: string) => {
-        axios.get("http://192.168.63.100:3001/game/invited/reject/" + MyData['id'] + "/" + data['id']).then(res => {
+        axios.get("http://192.168.99.103:3001/game/invited/reject/" + MyData['id'] + "/" + data['id']).then(res => {
 
             socket.emit('ConnectServer', {
                 GameInfo: res.data,
@@ -132,7 +132,7 @@ const Game = () => {
     // const [ShowCanvas, setShowCanvas] = useState(false);
     const onclick = (key: string, data: any) => {
         // console.log(data);
-        axios.get("http://192.168.63.100:3001/game/invited/confirm/" + MyData['id'] + '/' + data['id']).then(res => {
+        axios.get("http://192.168.99.103:3001/game/invited/confirm/" + MyData['id'] + '/' + data['id']).then(res => {
             // console.log('data',res.data);
             context.setShowCanvas(
                 {
@@ -173,7 +173,7 @@ const Game = () => {
     let socket: Socket;
 
     const fetradom = async () => {
-        axios.get("http://192.168.63.100:3001/users/random/" + MyData['id'])
+        axios.get("http://192.168.99.103:3001/users/random/" + MyData['id'])
             .then(res => {
                 setData(res.data);
                 setOneTime(1);
@@ -191,7 +191,7 @@ const Game = () => {
         });
         // const inter = setInterval(() => {
         if (MyData.length !== 0 && oneTime1 === 0) {
-            // axios.get("http://192.168.63.100:3001/game/is_invited/" + MyData['id'])
+            // axios.get("http://192.168.99.103:3001/game/is_invited/" + MyData['id'])
             //     .then(res => {
             //         if (res.data['id'] !== undefined && oneTime1 === 0) {
             //             context.setShowCanvas(
@@ -347,7 +347,7 @@ const Game = () => {
                                             {item.title}
                                             <Button type="primary" onClick={() => {
                                                 if (isRandom === 1) {
-                                                    axios.get("http://192.168.63.100:3001/game/matchmaking/" + MyData["id"] + '/' + item.title)
+                                                    axios.get("http://192.168.99.103:3001/game/matchmaking/" + MyData["id"] + '/' + item.title)
                                                         .then(res => {
                                                             if (res.data.length !== 0) {
                                                                 context.setShowCanvas(
@@ -363,7 +363,7 @@ const Game = () => {
                                                         )
                                                 }
                                                 else if (isRandom === 0) {
-                                                    axios.post("http://192.168.63.100:3001/game/invite",
+                                                    axios.post("http://192.168.99.103:3001/game/invite",
                                                         {
                                                             "username1": MyData['username'],
                                                             "username2": data['username'],

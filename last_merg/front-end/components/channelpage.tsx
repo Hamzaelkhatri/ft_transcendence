@@ -11,7 +11,7 @@ const ChannelPage = (props) => {
 
   const fetchmychannel = async () => {
     const response = await axios.get(
-      `http://192.168.63.100:3001/channels/${props.id}`,
+      `http://192.168.99.103:3001/channels/${props.id}`,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }
@@ -33,7 +33,7 @@ const ChannelPage = (props) => {
 
   const fetchmychannelusers = async () => {
     const response = await axios.get(
-      `http://192.168.63.100:3001/channels/${props.id}/users/all`,
+      `http://192.168.99.103:3001/channels/${props.id}/users/all`,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }
