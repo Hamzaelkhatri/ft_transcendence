@@ -10,7 +10,7 @@ const Home = () => {
     const [data, setData] = useState({})
     
     const fetchData = async () => {
-        const response = await axios.get('http://localhost:3001/users/me', {headers: 
+        const response = await axios.get('http://backdend:3001/users/me', {headers: 
         { Authorization: `Bearer ${localStorage.getItem('token')}` }});
         return response;
     };
@@ -26,7 +26,7 @@ const Home = () => {
     }, [])
     const [stats, setStats] = useState([])
     const fetchStats = async () => {
-        const response = await axios.get('http://localhost:3001/stats/top/3', {headers: 
+        const response = await axios.get('http://backdend:3001/stats/top/3', {headers: 
         { Authorization: `Bearer ${localStorage.getItem('token')}` }});
         return response;
     };
@@ -44,7 +44,7 @@ const Home = () => {
     }, [])
     const [history, setHistory] = useState([])
     const fetchhistory = async () => {
-        const response = await axios.get('http://localhost:3001/history', {headers: 
+        const response = await axios.get('http://backdend:3001/history', {headers: 
         { Authorization: `Bearer ${localStorage.getItem('token')}` }});
         return response;
     };

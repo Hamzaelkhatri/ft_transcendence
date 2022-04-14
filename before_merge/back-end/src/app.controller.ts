@@ -12,7 +12,7 @@ export class AppController {
   @Get('/auth/42/callback')
   async login(@Res() res, @Request() req) 
   {
-    res.redirect('http://localhost:3001/?token='+req.user);
+    res.redirect('http://backdend:3001/?token='+req.user);
   }
   
   @Get('/')

@@ -7,7 +7,7 @@ const Myprofile = () => {
   const [myprofile, setMyprofile] = useState({});
   const [hasResult, setHasResult] = useState(false);
   const fetchmyprofile = async () => {
-    const response = await axios.get("http://localhost:3001/profile/users/me", {
+    const response = await axios.get("http://backdend:3001/profile/users/me", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return response;
@@ -27,7 +27,7 @@ const Myprofile = () => {
   const [myhistory, setMyhistory] = useState({});
 
   const fetchmyhistory = async () => {
-    const response = await axios.get("http://localhost:3001/history/users/me", {
+    const response = await axios.get("http://backdend:3001/history/users/me", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return response;

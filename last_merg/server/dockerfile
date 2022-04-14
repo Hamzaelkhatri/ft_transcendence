@@ -1,0 +1,15 @@
+FROM alpine:latest
+RUN apk update && apk upgrade 
+RUN apk add --no-cache curl
+RUN apk add --no-cache git
+RUN apk add --no-cache nodejs
+RUN apk add --no-cache npm
+COPY . /server
+WORKDIR /server
+RUN npm install 
+
+EXPOSE 3001
+EXPOSE 3080
+
+# mode detached
+ENTRYPOINT npm run start

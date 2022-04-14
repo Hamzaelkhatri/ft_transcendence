@@ -50,7 +50,7 @@ function MyApp(props: AppProps) {
       }
     }
     if (singIn === "Sign In" && router.query.token !== undefined) {
-      const res = fetch("http://localhost:3000/user/me",
+      const res = fetch("http://backdend:3000/user/me",
         {
           method: "POST",
           headers: {
