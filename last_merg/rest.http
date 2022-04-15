@@ -1,2 +1,2 @@
 ### GET HISTORICAL DATA ###
-GET http://192.168.99.103:3001/game/history/all
+GET http://localhost:3001/game/history/all

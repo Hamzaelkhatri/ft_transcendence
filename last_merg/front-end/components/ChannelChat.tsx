@@ -8,7 +8,7 @@ const ChannelChat = (props) => {
   const [conversation, setConversation] = useState();
   const fetchconsversation = async () => {
     const response = await axios.get(
-      `http://192.168.99.103:3001/conversations/${props.mychannel.conversation?.id}/messages`,
+      `http://localhost:3001/conversations/${props.mychannel.conversation?.id}/messages`,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }
@@ -31,7 +31,7 @@ const ChannelChat = (props) => {
     e.preventDefault();
     await axios
       .post(
-        `http://192.168.99.103:3001/messages/conversations/${props.mychannel.conversation?.id}/users/me`,
+        `http://localhost:3001/messages/conversations/${props.mychannel.conversation?.id}/users/me`,
         {
           message: msg,
         },

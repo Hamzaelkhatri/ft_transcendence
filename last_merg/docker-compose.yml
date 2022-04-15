@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.3'
 services:
   db:
     container_name: pg_container
@@ -25,33 +25,21 @@ services:
       - "5050:80"
     networks:
       - web
-  frontdend:
-    build: 
-         context: ./front-end/
-    container_name: front_end
-    environment:
-      DB_UPSTREAM: http://${DOCKER_GATEWAY_HOST:-host.docker.internal}:host-gateway
-    image: front_end
-    depends_on:
-      - backdend
-    restart: always
-    ports:
-        - "3000:3000"
-    networks:
-      - web
-  backdend:
-    build:
-         context: ./server/
-    container_name: back_end
-    image: back_end
+  app:
+    build: ./
+    container_name: app
+    image: app
     restart: always
     depends_on:
       - db
     ports:
-        - "3001:3001"
-        - "3080:3080"
+     - "80:80"
+     - "3001:3001"
+     - "3080:3080"
     networks:
       - web
+    env_file:
+      - .env  
 networks:
   web:
     driver: bridge
