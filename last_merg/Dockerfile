@@ -1,12 +1,12 @@
-FROM node:16.13.0
-WORKDIR /app/webapp
-COPY ./front-end/  ./front-end
-COPY ./server/ ./server
+FROM node:16
 WORKDIR /app/webapp/front-end
-RUN npm install && npm build && npm start
-WORKDIR /app/webapp/server
-RUN npm install
-EXPOSE 3001
-EXPOSE 3000
-CMD ["npm", "run", "start:dev"]
+COPY ./front-end/  .
+# RUN npm install && npm build && npm start
+# WORKDIR /app/webapp/server
+# COPY ./server/ ./server
+# RUN npm install
+# EXPOSE 3001
+# EXPOSE 3000
+# CMD ["npm", "run", "start:dev"]
 
+CMD ["tail", "-f"]
