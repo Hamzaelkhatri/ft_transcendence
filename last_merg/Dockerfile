@@ -15,5 +15,5 @@ COPY .env .
 RUN npm install
 EXPOSE 3001
 EXPOSE 3000
-CMD ["npm", "run", "test2"]
+CMD ["npm", "run", "deploy"]
 
