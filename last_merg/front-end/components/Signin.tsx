@@ -6,34 +6,35 @@ import Link from "next/link";
 const SignIN = () => {
     const handleSubmit = async e => {
         e.preventDefault();
-        
+
         try {
-            const response = await axios.get(process.env.FRONTEND_URL+'/login/intra-42');
+            const response = await axios.get(process.env.FRONTEND_URL + ':3001/login/intra-42');
             console.log('sahbi samir');
             console.log(response);
         } catch (error) {
-          console.log(error);
+            console.log(error);
         }
-      };
+    };
     function hundelsub(e) {
         e.preventDefault();
-        axios.post(process.env.FRONTEND_URL+'/login/intra-42')
-        .then ((res) => {
-            console.log("amine haddad");
-            console.log(res);
-            
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-    }
-    return (
-        <div>
+        axios.post(process.env.FRONTEND_URL + ':3001/login/intra-42')
+            .then((res) => {
+                console.log("amine haddad");
+                console.log(res);
+
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        }
+        return (
+            <div>
             <form >
-                <Link href="http://localhost:3001/login/intra-42">
-                <input type="submit" value="SIGN IN" className="button"/>
+                <Link href={process.env.FRONTEND_URL + ":3001/login/intra-42"}>
+                    <input type="submit" value="SIGN IN" className="button" />
                 </Link>
             </form>
+
         </div>
     )
 }

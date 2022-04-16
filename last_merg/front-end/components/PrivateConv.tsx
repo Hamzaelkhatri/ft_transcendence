@@ -8,7 +8,7 @@ const PrivateConv = (props) => {
   const [conversation, setConversation] = useState();
   const fetchconsversation = async () => {
     const response = await axios.get(
-      `http://localhost:3001/conversations/${props.convid}/messages`,
+      process.env.FRONTEND_URL + `:3001/conversations/${props.convid}/messages`,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }
@@ -31,7 +31,7 @@ const PrivateConv = (props) => {
     e.preventDefault();
     await axios
       .post(
-        `http://localhost:3001/messages/conversations/${props.convid}/users/me`,
+        process.env.FRONTEND_URL + `:3001/messages/conversations/${props.convid}/users/me`,
         {
           message: msg,
         },

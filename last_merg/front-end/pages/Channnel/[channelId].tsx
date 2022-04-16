@@ -15,7 +15,7 @@ const Channel = () => {
   const router = useRouter();
   const fetchAllmychannel = async () => {
     const response = await axios.get(
-      `http://localhost:3001/channels/users/me`,
+      process.env.FRONTEND_URL + `:3001/channels/users/me`,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }
@@ -37,7 +37,7 @@ const Channel = () => {
   const [data, setData] = useState({});
 
   const fetchData = async () => {
-    const response = await axios.get("http://localhost:3001/users/me", {
+    const response = await axios.get(process.env.FRONTEND_URL + ":3001/users/me", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return response;

@@ -52,7 +52,7 @@ const ChannelBar = (props) => {
   const hundelkickuser = async (e) => {
     e.preventDefault();
     axios.delete(
-      `http://localhost:3001/channels/kick/${props.mychannel.id}/users/${userid}`,
+      process.env.FRONTEND_URL + `:3001/channels/kick/${props.mychannel.id}/users/${userid}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -63,7 +63,7 @@ const ChannelBar = (props) => {
   const hundelsetasadmin = async (e) => {
     e.preventDefault();
     axios.put(
-      `http://localhost:3001/channels/admin/${props.mychannel.id}/users/${userid}`,
+      process.env.FRONTEND_URL + `:3001/channels/admin/${props.mychannel.id}/users/${userid}`,
       {},
       {
         headers: {
@@ -75,7 +75,7 @@ const ChannelBar = (props) => {
   const hundelfireadmin = async (e) => {
     e.preventDefault();
     axios.put(
-      ` http://localhost:3001/channels/user/${props.mychannel.id}/users/${userid}`,
+      process.env.FRONTEND_URL + `:3001/channels/user/${props.mychannel.id}/users/${userid}`,
       {},
       {
         headers: {
@@ -91,7 +91,7 @@ const ChannelBar = (props) => {
     formData.append("time", selectedtime);
     axios
       .put(
-        `http://localhost:3001/channels/ban/${props.mychannel.id}/users/${userid}`,
+        process.env.FRONTEND_URL + `:3001/channels/ban/${props.mychannel.id}/users/${userid}`,
         {
           time: selectedtime,
         },
@@ -115,7 +115,7 @@ const ChannelBar = (props) => {
     formData.append("time", selectedtime);
     axios
       .put(
-        `http://localhost:3001/channels/mute/${props.mychannel.id}/users/${userid}`,
+        process.env.FRONTEND_URL + `:3001/channels/mute/${props.mychannel.id}/users/${userid}`,
         {
           time: selectedtime,
         },

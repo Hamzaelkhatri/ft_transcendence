@@ -992,7 +992,7 @@ const Canvas = (props: any) => {
     const [MyData, setMyData] = useState(props.mydata ? props.mydata : []);
     // console.log(props.data);
     const [isWating, setIsWating] = useState(true);
-    var socket = io('http://localhost:3080');
+    var socket = io(process.env.FRONTEND_URL + ':3080');
     //  console.log(context.GameInfo);
 
     // console.log(window);

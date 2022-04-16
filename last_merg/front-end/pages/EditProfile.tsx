@@ -25,7 +25,6 @@ const EditProfile = () => {
         var formData = new FormData();
         formData.append("file", selectedfile);
         formData.append("username", selectedusername);
-        // http://localhost:3001/profile/update/users/me
         axios.post(process.env.FRONTEND_URL+'/users/me/updateProfile', formData, 
         { headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
