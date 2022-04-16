@@ -6,13 +6,14 @@ RUN apk add git
 RUN apk add npm
 WORKDIR /app/webapp/front-end
 COPY ./front-end/  .
-RUN npm install 
-RUN npm run build 
-RUN npm run  dev
+# RUN pm2 start "npm run dev"
+# RUN npm run build 
+# RUN 
 WORKDIR /app/webapp/server
 COPY ./server/ .
+COPY .env .
 RUN npm install
 EXPOSE 3001
 EXPOSE 3000
-CMD ["npm", "run", "start:dev"]
+CMD ["npm", "run", "test2"]
 
