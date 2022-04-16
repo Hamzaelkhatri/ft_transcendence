@@ -182,7 +182,7 @@ const Game = () => {
     useEffect(() => {
         let i: number = 0;
         // openNotification("Hello");
-        socket = io('http://192.168.63.100:3080');
+        socket = io('http://localhost:3080');
         socket.on("notificationClient", (msg) => {
             if (msg.idUser == MyData['id']) {
 
@@ -380,7 +380,7 @@ const Game = () => {
                                                                 )
                                                                 setOneTime(1);
                                                                 setIsModalVisible(false);
-                                                                socket = io('http://192.168.63.100:3080');
+                                                                socket = io('http://localhost:3080');
                                                                 socket.emit("notificationServer",
                                                                     {
                                                                         data: res.data,
