@@ -16,7 +16,7 @@ const loginSuccess = () => {
   const { query } = useRouter();
   const Router = useRouter();
   const fetchData = async () => {
-    const response = await axios.get(process.env.FRONTEND_URL + ":3001/users/me", {
+    const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/users/me", {
       headers: { Authorization: `Bearer ${query.token}` },
     });
     return response;
@@ -45,7 +45,7 @@ const loginSuccess = () => {
     formData.append("file", selectedfile);
     formData.append("username", selectedusername);
     axios
-      .post(process.env.FRONTEND_URL + ":3001/profile/update/users/me", formData, {
+      .post(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/profile/update/users/me", formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

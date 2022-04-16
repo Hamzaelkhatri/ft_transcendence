@@ -11,7 +11,7 @@ const ChannelPage = (props) => {
 
   const fetchmychannel = async () => {
     const response = await axios.get(
-      process.env.FRONTEND_URL + `:3001/channels/${props.id}`,
+      process.env.NEXT_PUBLIC_FRONTEND_URL + `:3001/channels/${props.id}`,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }
@@ -33,7 +33,7 @@ const ChannelPage = (props) => {
 
   const fetchmychannelusers = async () => {
     const response = await axios.get(
-      process.env.FRONTEND_URL + `:3001/channels/${props.id}/users/all`,
+      process.env.NEXT_PUBLIC_FRONTEND_URL + `:3001/channels/${props.id}/users/all`,
       {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       }

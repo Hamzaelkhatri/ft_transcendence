@@ -6,7 +6,7 @@ import HomeNavbar from "./HomeNavbar";
 const ListUseres = (props) => {
   const hundelClick1 = async (e, id) => {
     e.preventDefault();
-    axios.post(process.env.FRONTEND_URL + `:3001/requests/users/me/friends/${id}`, {},{
+    axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL + `:3001/requests/users/me/friends/${id}`, {},{
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -14,7 +14,7 @@ const ListUseres = (props) => {
   };
   const hundelClick2 = async (e, req_id) => {
     e.preventDefault();
-    axios.delete(process.env.FRONTEND_URL + `:3001/requests/${req_id}`,{
+    axios.delete(process.env.NEXT_PUBLIC_FRONTEND_URL + `:3001/requests/${req_id}`,{
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -22,7 +22,7 @@ const ListUseres = (props) => {
   };
   const hundelClick3 = async (e, req_id,id) => {
     // e.preventDefault();
-    axios.post(process.env.FRONTEND_URL + `:3001/requests/${req_id}/users/me/friends/${id}/accept`,{} ,{
+    axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL + `:3001/requests/${req_id}/users/me/friends/${id}/accept`,{} ,{
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -30,7 +30,7 @@ const ListUseres = (props) => {
   };
   const hundelClick4 = async (e, id) => {
     e.preventDefault();
-    axios.post(process.env.FRONTEND_URL + `:3001/requests/users/me/friends/${id}`,{}, {
+    axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL + `:3001/requests/users/me/friends/${id}`,{}, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },

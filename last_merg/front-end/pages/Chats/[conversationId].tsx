@@ -9,7 +9,7 @@ const Conversation = () => {
   const [data, setData] = useState({});
 
   const fetchData = async () => {
-    const response = await axios.get(process.env.FRONTEND_URL + ":3001/users/me", {
+    const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/users/me", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return response;
@@ -26,7 +26,7 @@ const Conversation = () => {
   const [Conversations, setConversations] = useState();
 
   const fetchConversations = async () => {
-    const response = await axios.get(process.env.FRONTEND_URL + ":3001/conversations/private/users/me", {
+    const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/conversations/private/users/me", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return response;

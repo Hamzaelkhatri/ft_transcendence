@@ -7,7 +7,7 @@ const Listfriends = (props) => {
   const router = useRouter();
   const hundelClick = async (e, id) => {
     e.preventDefault();
-    axios.delete(process.env.FRONTEND_URL + `:3001/friends/users/me/${id}`, {
+    axios.delete(process.env.NEXT_PUBLIC_FRONTEND_URL + `:3001/friends/users/me/${id}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },

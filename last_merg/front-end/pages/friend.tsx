@@ -7,7 +7,7 @@ const Friend = (props) => {
   const [data, setData] = useState();
 
   const fetchData = async () => {
-    const response = await axios.get(process.env.FRONTEND_URL + ":3001/friends/users/me", {
+    const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/friends/users/me", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return response;
@@ -24,7 +24,7 @@ const Friend = (props) => {
   const [mydata, setmyData] = useState({});
 
   const fetchmyData = async () => {
-    const response = await axios.get(process.env.FRONTEND_URL + ":3001/users/me", {
+    const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/users/me", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     return response;

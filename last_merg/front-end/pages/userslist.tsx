@@ -8,7 +8,7 @@ const UsersList = () => {
     const [data, setData] = useState()
     
     const fetchData = async () => {
-        const response = await axios.get(process.env.FRONTEND_URL+'/users/me/all', {headers: 
+        const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL+'/users/me/all', {headers: 
         { Authorization: `Bearer ${localStorage.getItem('token')}` }});
         return response;
     };
@@ -25,7 +25,7 @@ const UsersList = () => {
     const [mydata, setmyData] = useState({})
     
     const fetchmyData = async () => {
-        const response = await axios.get(process.env.FRONTEND_URL+'/users/me', {headers: 
+        const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL+'/users/me', {headers: 
         { Authorization: `Bearer ${localStorage.getItem('token')}` }});
         return response;
     };

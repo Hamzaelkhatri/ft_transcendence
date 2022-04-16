@@ -9,7 +9,7 @@ const Profile = (props) => {
   const handlerclickleave = async (e, id) => {
     e.preventDefault();
     axios
-      .delete(process.env.FRONTEND_URL + `:3001/channels/leave/${id}/users/me`, {
+      .delete(process.env.NEXT_PUBLIC_FRONTEND_URL + `:3001/channels/leave/${id}/users/me`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
       .then((res) => {

@@ -415,7 +415,7 @@ export class Game {
             this.socket.on('QuitgameClient', (msg) => {
                 console.log("QUIT MSG",msg);
                 if (msg.gameid === this.gameid && (msg.userId === this.MyData['id'] || msg.userId === this.MyData['id'])) {
-                    // axios.post(process.env.FRONTEND_URL+'/game/quit/' + this.gameid + '/' + msg.userId,
+                    // axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL+'/game/quit/' + this.gameid + '/' + msg.userId,
                     //     {
                     //         map: "none",
                     //     })
@@ -479,7 +479,7 @@ export class Game {
                         newId = this.data['user1']['id'];
                     }
 
-                    axios.post(process.env.FRONTEND_URL+'/game/quit/' + this.gameid + '/' + newId,
+                    axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL+'/game/quit/' + this.gameid + '/' + newId,
                         {
                             map: "none",
                         })
@@ -896,7 +896,7 @@ export class Game {
             let newId: number = 0;
             if (this.paddle_left.score === 10) {
                 newId = this.data['user2']['id'];
-                axios.post(process.env.FRONTEND_URL+'/game/finish/' + this.gameid + '/' + this.data['user2']['id'],
+                axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL+'/game/finish/' + this.gameid + '/' + this.data['user2']['id'],
                     {
                         map: "none",
                         user1_score: this.paddle_right._score + ' ',
@@ -908,7 +908,7 @@ export class Game {
             }
             else {
                 newId = this.data['user2']['id'];
-                axios.post(process.env.FRONTEND_URL+'/game/finish/' + this.gameid + '/' + this.data['user1']['id'],
+                axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL+'/game/finish/' + this.gameid + '/' + this.data['user1']['id'],
                     {
                         map: "none",
                         user1_score: this.paddle_right._score + ' ',
@@ -992,7 +992,7 @@ const Canvas = (props: any) => {
     const [MyData, setMyData] = useState(props.mydata ? props.mydata : []);
     // console.log(props.data);
     const [isWating, setIsWating] = useState(true);
-    var socket = io(process.env.FRONTEND_URL + ':3080');
+    var socket = io(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3080');
     //  console.log(context.GameInfo);
 
     // console.log(window);

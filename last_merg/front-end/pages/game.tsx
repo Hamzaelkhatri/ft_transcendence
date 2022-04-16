@@ -79,7 +79,7 @@ const Game = () => {
     const [choosable, setChoosable] = useState(false);
     let context: any = useMyContext();
     const fetchData = async () => {
-        const response = await axios.get(process.env.FRONTEND_URL+'/users/me', {
+        const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL+'/users/me', {
             headers:
                 { Authorization: `Bearer ${localStorage.getItem('token')}` }
         }).then(res => {
@@ -120,7 +120,7 @@ const Game = () => {
     };
 
     const close = (key: string, data: string) => {
-        axios.get(process.env.FRONTEND_URL + ":3001/game/invited/reject/" + MyData['id'] + "/" + data['id']).then(res => {
+        axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/game/invited/reject/" + MyData['id'] + "/" + data['id']).then(res => {
 
             socket.emit('ConnectServer', {
                 GameInfo: res.data,
@@ -132,7 +132,7 @@ const Game = () => {
     // const [ShowCanvas, setShowCanvas] = useState(false);
     const onclick = (key: string, data: any) => {
         // console.log(data);
-        axios.get(process.env.FRONTEND_URL + ":3001/game/invited/confirm/" + MyData['id'] + '/' + data['id']).then(res => {
+        axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/game/invited/confirm/" + MyData['id'] + '/' + data['id']).then(res => {
             // console.log('data',res.data);
             context.setShowCanvas(
                 {
@@ -173,7 +173,7 @@ const Game = () => {
     let socket: Socket;
 
     const fetradom = async () => {
-        axios.get(process.env.FRONTEND_URL + ":3001/users/random/" + MyData['id'])
+        axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/users/random/" + MyData['id'])
             .then(res => {
                 setData(res.data);
                 setOneTime(1);
@@ -182,7 +182,7 @@ const Game = () => {
     useEffect(() => {
         let i: number = 0;
         // openNotification("Hello");
-        socket = io(process.env.FRONTEND_URL + ':3080');
+        socket = io(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3080');
         socket.on("notificationClient", (msg) => {
             if (msg.idUser == MyData['id']) {
 
@@ -191,7 +191,7 @@ const Game = () => {
         });
         // const inter = setInterval(() => {
         if (MyData.length !== 0 && oneTime1 === 0) {
-            // axios.get(process.env.FRONTEND_URL + ":3001/game/is_invited/" + MyData['id'])
+            // axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/game/is_invited/" + MyData['id'])
             //     .then(res => {
             //         if (res.data['id'] !== undefined && oneTime1 === 0) {
             //             context.setShowCanvas(
@@ -347,7 +347,7 @@ const Game = () => {
                                             {item.title}
                                             <Button type="primary" onClick={() => {
                                                 if (isRandom === 1) {
-                                                    axios.get(process.env.FRONTEND_URL + ":3001/game/matchmaking/" + MyData["id"] + '/' + item.title)
+                                                    axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/game/matchmaking/" + MyData["id"] + '/' + item.title)
                                                         .then(res => {
                                                             if (res.data.length !== 0) {
                                                                 context.setShowCanvas(
@@ -363,7 +363,7 @@ const Game = () => {
                                                         )
                                                 }
                                                 else if (isRandom === 0) {
-                                                    axios.post(process.env.FRONTEND_URL + ":3001/game/invite",
+                                                    axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/game/invite",
                                                         {
                                                             "username1": MyData['username'],
                                                             "username2": data['username'],
@@ -380,7 +380,7 @@ const Game = () => {
                                                                 )
                                                                 setOneTime(1);
                                                                 setIsModalVisible(false);
-                                                                socket = io(process.env.FRONTEND_URL + ':3080');
+                                                                socket = io(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3080');
                                                                 socket.emit("notificationServer",
                                                                     {
                                                                         data: res.data,
