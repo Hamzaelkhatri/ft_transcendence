@@ -369,7 +369,7 @@ export class Game {
                 });
                 this.intervalId = null;
                 this.socket.on('BallClient', (msg) => {
-                    if (msg.gameid === this.gameid && this.email1 === msg.idUser) {
+                    if (msg.gameid === this.gameid  && this.email1 === msg.idUser) {
 
                         if (msg.width > this.canvas.width) {
                             let delta = msg.width / this.canvas.width;
