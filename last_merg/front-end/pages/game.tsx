@@ -79,7 +79,7 @@ const Game = () => {
     const [choosable, setChoosable] = useState(false);
     let context: any = useMyContext();
     const fetchData = async () => {
-        const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL+'/users/me', {
+        const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL+':3001/users/me', {
             headers:
                 { Authorization: `Bearer ${localStorage.getItem('token')}` }
         }).then(res => {
