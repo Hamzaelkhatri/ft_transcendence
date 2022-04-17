@@ -896,7 +896,7 @@ export class Game {
             let newId: number = 0;
             if (this.paddle_left.score === 10) {
                 newId = this.data['user2']['id'];
-                axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL+'/game/finish/' + this.gameid + '/' + this.data['user2']['id'],
+                axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL+':3001/game/finish/' + this.gameid + '/' + this.data['user2']['id'],
                     {
                         map: "none",
                         user1_score: this.paddle_right._score + ' ',
@@ -908,7 +908,7 @@ export class Game {
             }
             else {
                 newId = this.data['user2']['id'];
-                axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL+'/game/finish/' + this.gameid + '/' + this.data['user1']['id'],
+                axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL+':3001/game/finish/' + this.gameid + '/' + this.data['user1']['id'],
                     {
                         map: "none",
                         user1_score: this.paddle_right._score + ' ',
