@@ -479,7 +479,7 @@ export class Game {
                         newId = this.data['user1']['id'];
                     }
 
-                    axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL+'/game/quit/' + this.gameid + '/' + newId,
+                    axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL+':3001/game/quit/' + this.gameid + '/' + newId,
                         {
                             map: "none",
                         })
