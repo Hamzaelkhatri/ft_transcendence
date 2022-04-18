@@ -79,7 +79,7 @@ const Game = () => {
     const [choosable, setChoosable] = useState(false);
     let context: any = useMyContext();
     const fetchData = async () => {
-        const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL+':3001/users/me', {
+        const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3001/users/me', {
             headers:
                 { Authorization: `Bearer ${localStorage.getItem('token')}` }
         }).then(res => {
@@ -119,14 +119,9 @@ const Game = () => {
     const handleClose = (e: any) => {
     };
     const [socket, setSocket] = useState(context.socket);
-    useEffect(()=>{
-        socket.on("notificationClient", (msg) => {
-            if (msg.idUser == MyData['id']) {
+    // useEffect(()=>{
 
-                openNotification(msg.data);
-            }
-        });
-    },[socket])
+    // },[socket])
     const close = (key: string, data: string) => {
         axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/game/invited/reject/" + MyData['id'] + "/" + data['id']).then(res => {
 
@@ -188,37 +183,47 @@ const Game = () => {
             });
     };
     useEffect(() => {
+        if (MyData.length !== 0 && oneTime1 === 0) {
+            axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/game/is_invited/" + MyData['id'])
+                .then(res => {
+                    if (res.data['id'] !== undefined && oneTime1 === 0) {
+                        context.setShowCanvas(
+                            {
+                                show: false,
+                                gameInfo: res.data
+                            }
+                        );
+                        setOneTime1(1);
+                        openNotification(res.data)
+                    }
+                });
+        }
+
+    }, [MyData])
+    useEffect(() => {
         let i: number = 0;
         // openNotification("Hello");
         // socket = io(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3080');
-       
+
         // const inter = setInterval(() => {
         if (MyData.length !== 0 && oneTime1 === 0) {
-            // axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/game/is_invited/" + MyData['id'])
-            //     .then(res => {
-            //         if (res.data['id'] !== undefined && oneTime1 === 0) {
-            //             context.setShowCanvas(
-            //                 {
-            //                     show: false,
-            //                     gameInfo: res.data
-            //                 }
-            //             );
-            //             setOneTime1(1);
-            //             openNotification(res.data)
-            //         }
-            //     });
         }
         fetradom();
 
+        socket.on("notificationClient", (msg) => {
+            if (msg.idUser == MyData['id']) {
 
-    }, [MyData, context.ShowCanvas]);
+                openNotification(msg.data);
+            }
+        });
+    }, [MyData, context.ShowCanvas, socket]);
     return (
         <div>
             <HomeNavbar data={MyData} />
             <link
                 rel="stylesheet"
                 href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css"
-            />  
+            />
             <link
                 rel="stylesheet"
                 href="https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css"
