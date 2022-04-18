@@ -443,16 +443,37 @@ export class Game {
             }
             // this.gamePlay = new GPEXPORT(this._ball, this.paddle_left, this.paddle_right, this.time);
             this.time = 10;
-
+            this.countDown();
             setTimeout(() => {
                 this.start();
-            }, 1000);
+            }, 5000);
         }
 
 
         else {
         }
     }
+
+    countDown() {
+        this.ctx.font = "50px Arial";
+        this.ctx.textAlign = "center";
+        this.ctx.fillStyle = "white";
+        var counter = 5;
+        var refreshIntervalId = setInterval(  () => {
+            this.ctx.clearRect(0,0, this.canvas.width, this.canvas.height);
+            if (counter > 0) {
+                this.ctx.fillText(counter, this.canvas.width / 2 - 10, this.canvas.height / 2 - 10);
+                --counter;
+            }
+            else if (counter == 0) {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.ctx.fillText("start", this.canvas.width / 2 - 10, this.canvas.height / 2 - 10);
+                clearInterval(refreshIntervalId);
+            }
+        }, 1000);
+        
+    }
+
 
     beforeUnload(event) {
         // alert('Are you sure you want to leave?');
