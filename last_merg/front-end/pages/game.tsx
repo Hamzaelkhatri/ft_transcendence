@@ -118,7 +118,15 @@ const Game = () => {
     //create close for component
     const handleClose = (e: any) => {
     };
+    const [socket, setSocket] = useState(context.socket);
+    useEffect(()=>{
+        socket.on("notificationClient", (msg) => {
+            if (msg.idUser == MyData['id']) {
 
+                openNotification(msg.data);
+            }
+        });
+    },[socket])
     const close = (key: string, data: string) => {
         axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/game/invited/reject/" + MyData['id'] + "/" + data['id']).then(res => {
 
@@ -170,7 +178,7 @@ const Game = () => {
             // onClose: close,
         });
     };
-    let socket: Socket;
+    // let socket: Socket;
 
     const fetradom = async () => {
         axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/users/random/" + MyData['id'])
@@ -182,13 +190,8 @@ const Game = () => {
     useEffect(() => {
         let i: number = 0;
         // openNotification("Hello");
-        socket = io(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3080');
-        socket.on("notificationClient", (msg) => {
-            if (msg.idUser == MyData['id']) {
-
-                openNotification(msg.data);
-            }
-        });
+        // socket = io(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3080');
+       
         // const inter = setInterval(() => {
         if (MyData.length !== 0 && oneTime1 === 0) {
             // axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/game/is_invited/" + MyData['id'])
@@ -380,7 +383,7 @@ const Game = () => {
                                                                 )
                                                                 setOneTime(1);
                                                                 setIsModalVisible(false);
-                                                                socket = io(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3080');
+                                                                // socket = io(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3080');
                                                                 socket.emit("notificationServer",
                                                                     {
                                                                         data: res.data,

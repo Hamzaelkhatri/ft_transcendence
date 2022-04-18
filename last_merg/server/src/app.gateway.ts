@@ -84,12 +84,12 @@ export class AppGateway
 
     for (let i = 0; i < this.game.length; i++) {
       // this.connect_users
-      // console.log("Currents Games",this.game[i]);
+      // console.log("Currents Games",t his.game[i]);
       if (this.game[i].socket1 == client.id ) {
         let url = process.env.FRONTEND_URL+':3001/game/quit/' + this.game[i].id + '/'+this.game[i].user2;
         this.axios.post(url,
           {
-            user1_score: this.game[i].score1,
+            user1_score: this.game[i].score1, 
             user2_score: this.game[i].score2,
             map:"none"
           }).then(response => {
