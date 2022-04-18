@@ -337,7 +337,7 @@ const Game = () => {
                                     <li>You Press [<ArrowDownOutlined />  or S] key to Move Down </li>
                                     <li>You Press [P]  or Space key to Pause the Game</li>
                                     <li>You can join back to play befor 10s(click [P] or Space) or you lose </li>
-                                    <li>If you Quit the Game , You will lose the game </li>
+                                    <li>If you Quit the Game , You will lose </li>
                                     <li>Good Luck <HeartOutlined /> </li>
                                 </div>
                             }
