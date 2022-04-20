@@ -12,16 +12,15 @@ export function useMyContext() {
 }
 
 export function MyProvider({ children }) {
-    const [socket, setSocket] = useState(null);
+    const [socket, setSocket] = useState(io(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3083'));
     const [myData, setMydata] = useState(null);
     const isBrowser = typeof window !== "undefined";
     // const [MyData, setMyData] = useState(null);
 
-    if(!isBrowser)
-        console.log(socket);
     if (!socket && isBrowser) 
     {
         setSocket(io(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3083'));
+        // socket = 
     }
 
     const [ShowCanvas, setShowCanvas] = useState(

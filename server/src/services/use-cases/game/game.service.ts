@@ -3,7 +3,7 @@ import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserService } from '../user/user.service';
 import { Game } from 'src/core/entities/game.entity';
-import { User } from 'src/core/entities/user.entity';
+import { StatusType, User } from 'src/core/entities/user.entity';
 import { Connection } from 'typeorm';
 // export * from './game.module';
 
@@ -83,6 +83,17 @@ export class GameService extends TypeOrmCrudService<Game> {
       .leftJoinAndSelect('game.user2', 'user2')
       .where('game.id = :id', { id: idgame })
       .getOne();
+      this.userservice.userRepositor
+      .update(user.user1.id,
+        {status:StatusType.INGAME}
+      )
+      this.userservice.userRepositor.update
+      (
+        user.user2.id,
+        {
+          status:StatusType.INGAME
+        }
+      )
     return user;
   }
 
@@ -158,7 +169,6 @@ export class GameService extends TypeOrmCrudService<Game> {
 
   async quitMatch(id: number, winner: number, json: string) {
 
-    console.log("idof Match", id);
     const res = await this.repository
       .createQueryBuilder('game')
       .leftJoinAndSelect('game.user1', 'user1')
@@ -184,7 +194,6 @@ export class GameService extends TypeOrmCrudService<Game> {
       })
     if (res.affected !== 1)
       return null;
-    // console.log(res.affected);
     if (res.affected === 1) {
       const game = await this.repository
         .createQueryBuilder('game')
@@ -194,22 +203,26 @@ export class GameService extends TypeOrmCrudService<Game> {
         .getOne();
       const users = await this.userservice.userRepositor.findOne({ id: winner });
       users.wins = users.wins + 1;
+      users.status = StatusType.ONLINE;
       if (users.wins % 5 == 0)
         users.level = users.level + 1;
       // console.log(game);
       await this.userservice.userRepositor.save(users);
       if (game.user1.id !== game.winner) {
-        let user: any = await this.userservice.userRepositor.findOne({
+        let user1: any = await this.userservice.userRepositor.findOne({
           id: game.user1.id,
         });
-        user.quit = user.quit + 1;
-        await this.userservice.userRepositor.save(user);
+        user1.quit = user1.quit + 1;
+        user1.status = StatusType.ONLINE;
+
+        await this.userservice.userRepositor.save(user1);
       }
       else if (game.user2.id !== game.winner) {
         let user: any = await this.userservice.userRepositor.findOne({
           id: game.user2.id,
         });
         user.quit = user.quit + 1;
+        user.status = StatusType.ONLINE;
         await this.userservice.userRepositor.save(user);
       }
       return await game;
@@ -222,7 +235,6 @@ export class GameService extends TypeOrmCrudService<Game> {
   // connection : Connection;
 
   public getConnection() {
-    console.log(this.connection);
     // return this.connection.getRepository(Game);
   }
 
@@ -263,6 +275,7 @@ export class GameService extends TypeOrmCrudService<Game> {
         .getOne();
       const users = await this.userservice.userRepositor.findOne({ id: winner });
       users.wins = users.wins + 1;
+      users.status = StatusType.ONLINE;
       if (users.wins % 5 == 0)
         users.level = users.level + 1;
       await this.userservice.userRepositor.save(users);
@@ -272,15 +285,16 @@ export class GameService extends TypeOrmCrudService<Game> {
           id: game.user1.id,
         });
         user.loses = user.loses + 1;
+        user.status = StatusType.ONLINE;
         await this.userservice.userRepositor.save(user);
       } else if(game.user2.id !== users.id) {
         let user2: any = await this.userservice.userRepositor.findOne({
           id: game.user2.id,
         });
         user2.loses = user2.loses + 1;
+        user2.status = StatusType.ONLINE;
         await this.userservice.userRepositor.save(user2);
       }
-
       return await game;
     }
   }
@@ -302,7 +316,6 @@ export class GameService extends TypeOrmCrudService<Game> {
 
   //matchmaking
   async matchmaking(id: number, map: string): Promise<Game> {
-    console.log("hello guys");
     const user = await this.repository
       .createQueryBuilder('game')
       .leftJoinAndSelect('game.user1', 'user1')
@@ -421,16 +434,25 @@ export class GameService extends TypeOrmCrudService<Game> {
 
   async CurrentMatch(id:number)
   {
-      const game = await this.repository
+      let game = await this.repository
       .createQueryBuilder('game')
       .leftJoinAndSelect('game.user1','user1')
       .leftJoinAndSelect('game.user2','user2')
       .andWhere('game.is_finished = false')
       .andWhere('game.is_started = true')
       .andWhere('game.user1=:id',{id:id})
-      .orWhere('game.user2=:id',{id:id})
       .getOne();
-      
+      if(!game)
+      {
+        game = await this.repository
+        .createQueryBuilder('game')
+        .leftJoinAndSelect('game.user1','user1')
+        .leftJoinAndSelect('game.user2','user2')
+        .andWhere('game.is_finished = false')
+        .andWhere('game.is_started = true')
+        .andWhere('game.user2=:id',{id:id})
+        .getOne();
+      }
       return game;
   } 
 }

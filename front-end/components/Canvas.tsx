@@ -255,10 +255,8 @@ export class Game {
     constructor(canvas: HTMLCanvasElement, data: any, socket: Socket, MyData: any) {
 
         this.canvas = canvas;
-        // console.log("This freacking data",data['user2']['email']);
         if (canvas != null && data != undefined) {
             this.MyData = MyData;
-            console.log("MyData", this.MyData);
             this.canvas.style.backgroundColor = "black";
             this.canvas.width = (window.innerWidth * 0.5) | 0;
             this.canvas.height = (window.innerHeight * 0.5) | 0;
@@ -280,10 +278,6 @@ export class Game {
             this.p_height = (this.canvas.height * 0.02) | 0;
             this.p_start = this.canvas.width - (this.p_width) - this.p_width;
             this.p_speed = (this.canvas.height * 0.02) | 0;
-            {
-                // console.log("p_width: " + this.p_width);
-                // console.log("p_height: " + this.p_height);
-            }
             this.paddle_left = new player(0, this.canvas.width * 0.01, this.canvas.height / 2, this.p_width, this.p_height, this.p_speed, this.ctx, "white");
             this.paddle_right = new player(0, this.p_start, (this.canvas.height) / 2, this.p_width, this.p_height, this.p_speed, this.ctx, "white");
             this.center_rec = new player(0, this.canvas.width / 2, 0, 1, this.canvas.height, 0, this.ctx, "white");
@@ -298,12 +292,7 @@ export class Game {
                 document.addEventListener("keydown", this.keyDownHandler.bind(this), false);
             }
             document.addEventListener('click', this.homeClick.bind(this), false);
-            document.addEventListener('beforeunload', this.beforeUnload.bind(this), false);
-            document.addEventListener('unload', this.unloaded.bind(this), false);
 
-            window.onbeforeunload = function () {
-                alert('Are you sure you want to leave?');
-            };
             this.socket = socket;
             this.player = 0;
             this.paddle_left.score = 0;
@@ -416,20 +405,12 @@ export class Game {
                 });
             }
 
-            // this.socket.on('QuitgameClient', (msg) => {
-            //     console.log("QUIT MSG", msg);
-            //     if (msg.gameid === this.gameid && (msg.userId === this.MyData['id'] || msg.userId === this.MyData['id'])) {
-            //         // axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL+'/game/quit/' + this.gameid + '/' + msg.userId,
-            //         //     {
-            //         //         map: "none",
-            //         //     })
-            //         //     .then(res => {
-            //         //     });
-            //         this.pause = true;
-            //         this.time = 0;
-            //     }
-
-            // });
+            this.socket.on('QuitgameClient', (msg) => {
+                if (msg.gameid === this.gameid && (msg.userId === this.MyData['id'] || msg.userId === this.MyData['id'])) {
+                    this.pause = true;
+                    this.time = 0;
+                }
+            });
 
             this.timer();
             let img = new Image();
@@ -469,7 +450,7 @@ export class Game {
             }
             else if (counter == 0) {
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                this.ctx.fillText("start", this.canvas.width / 2 - 10, this.canvas.height / 2 - 10);
+                // this.ctx.fillText("start", this.canvas.width / 2 - 10, this.canvas.height / 2 - 10);
                 clearInterval(refreshIntervalId);
             }
         }, 1000);
@@ -866,7 +847,6 @@ export class Game {
 
 
     start() {
-
         this.canvas.width = (window.innerWidth * 0.5) | 0;
         this.canvas.height = (window.innerHeight * 0.5) | 0;
         if (window.innerWidth < 500 && window.innerHeight > window.innerWidth) {
@@ -1019,16 +999,10 @@ const Canvas = (props: any) => {
     let context: any = useMyContext();
     const [socket, setSocket] = useState(context.socket);
     const [MyData, setMyData] = useState(props.mydata ? props.mydata : []);
-    // console.log(props.data);
     const [isWating, setIsWating] = useState(true);
  
     // console.log(" context.myData", );
-    // console.log(" props.myData", props.mydata);
-    useEffect(() => {
-        // if(MyData === null) 
-        // {
-        // }
-    }, []);
+
     //  console.log(context.GameInfo);
 
     // console.log(window);
@@ -1044,8 +1018,6 @@ const Canvas = (props: any) => {
                 if(MyData.length === 0)
                 {
                     setMyData(context.myData);
-                    console.log("game.data",context.myData);
-                    console.log("MyData", MyData);
                 }
              
                 if (isWating === true) {
@@ -1055,7 +1027,6 @@ const Canvas = (props: any) => {
                             setIsWating(false);
                             setData(res.data);
                             context.ShowCanvas.gameInfo = res.data;
-                            console.log("data", res.data);
                             new Game(canvasRef.current as unknown as HTMLCanvasElement, res.data, socket, context.myData);
                         }
                         if (res.data['is_rejected_by_user2'] === true && res.data['id'] === context.ShowCanvas.gameInfo['id']) {
@@ -1079,6 +1050,7 @@ const Canvas = (props: any) => {
         socket.on('GameOverClient', (res: any) => {
             if (res['idUser'] === MyData['id'] || context.myData['id'] === res['idUser']) {
                 setIsWating(false);
+                // document.clearListeners();
                 context.setShowCanvas({
                     show: false,
                     gameInfo: {},

@@ -12,6 +12,7 @@ import { socketchannelcontext } from "../pages/home";
 import { useMychannelContext } from "./mychannelprovider";
 
 const ChannelBar = (props) => {
+  
   let mychanneltmp: any = useMychannelContext();
   let socket = useContext(socketchannelcontext);
   const [userid, setUserid] = useState(-1);
@@ -49,14 +50,17 @@ const ChannelBar = (props) => {
         .fetchmychannelusers()
         .then((res) => {
           if (res.data) {
+            
             props.setMychannelusers(res.data);
           }
         })
         .catch((err) => {
-          console.log(err);
           router.push("/myprofile");
         });
     });
+    return(() => {
+      socket.off('newEventChannel')
+    })
   }, []);
   useEffect(() => {
     if (props.mychannelusers.owner?.username === data1.data.username) {
@@ -74,11 +78,13 @@ const ChannelBar = (props) => {
     } else if (props.mychannel.myRole === "admin") {
       setImadmin(true);
     }
-    if (props.mychannel?.id) {
-      socket.emit("joinChannel", props.mychannel?.id);
-    } else {
-      setImadmin(false);
-      setImowner(false);
+   else {
+    setImadmin(false);
+    setImowner(false);
+    }
+    if (router.query.channelId) {
+      const channelId = router.query.channelId
+      socket.emit("joinChannel", router.query.channelId);
     }
   }, []);
   const hundelkickuser = async (e) => {
@@ -96,6 +102,8 @@ const ChannelBar = (props) => {
         socket.emit("eventChannel", {
           id: props.mychannel?.id,
         });
+      }).catch((err)=>{
+        router.push('/home')
       });
   };
   const hundelsetasadmin = async (e) => {
@@ -114,7 +122,10 @@ const ChannelBar = (props) => {
         socket.emit("eventChannel", {
           id: props.mychannel?.id,
         });
-      });
+      }).catch((err)=>{
+        
+        router.push('/home')
+      })
     setClickmember(false);
     setClickadmin(false);
   };
@@ -134,6 +145,9 @@ const ChannelBar = (props) => {
         socket.emit("eventChannel", {
           id: props.mychannel?.id,
         });
+      }).catch((err)=>{
+        
+        router.push('/home')
       });
     setClickmember(false);
     setClickadmin(false);
@@ -159,6 +173,9 @@ const ChannelBar = (props) => {
         socket.emit("eventChannel", {
           id: props.mychannel?.id,
         });
+      }).catch((err)=>{
+        
+        router.push('/home')
       });
     setClickmember(false);
     setClickadmin(false);
@@ -180,24 +197,6 @@ const ChannelBar = (props) => {
         router.push("/home");
       });
   };
-  const hundelsubmiteditpassword = async (e, id) => {
-    e.preventDefault();
-    console.log(selectedpassword);
-    axios
-      .put(
-        `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/channels/update/${id}/password/users/me`,{
-          password: selectedpassword
-        },
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      )
-      .then((res) => {
-        // socket.emit("eventChannel", {
-        //   id: props.mychannel?.id,
-        // });
-      });
-  };
   const hundelremoveban = async (e) => {
     e.preventDefault();
     var formData = new FormData();
@@ -215,6 +214,9 @@ const ChannelBar = (props) => {
         socket.emit("eventChannel", {
           id: props.mychannel?.id,
         });
+      }).catch((err)=>{
+        
+        router.push('/home')
       });
     setClickmember(false);
     setClickadmin(false);
@@ -238,6 +240,9 @@ const ChannelBar = (props) => {
         socket.emit("eventChannel", {
           id: props.mychannel?.id,
         });
+      }).catch((err)=>{
+        
+        router.push('/home')
       });
     setClickmember(false);
     setClickadmin(false);
@@ -264,6 +269,9 @@ const ChannelBar = (props) => {
         socket.emit("eventChannel", {
           id: props.mychannel?.id,
         });
+      }).catch((err)=>{
+        
+        router.push('/home')
       });
     setClickmember(false);
     setClickadmin(false);
@@ -372,7 +380,8 @@ const ChannelBar = (props) => {
                           <div className="w-32">
                             <div>
                               <input
-                                type="text"
+                                type="number"
+                                minLength={1}
                                 id="time"
                                 placeholder="Time"
                                 className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
@@ -457,7 +466,8 @@ const ChannelBar = (props) => {
                           <div className="w-32">
                             <div>
                               <input
-                                type="text"
+                                type="number"
+                                minLength={1}
                                 id="time"
                                 placeholder="Time"
                                 className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
@@ -593,8 +603,9 @@ const ChannelBar = (props) => {
                           <div className="w-32">
                             <div>
                               <input
-                                type="text"
+                                type="number"
                                 id="time"
+                                minLength={1}
                                 placeholder="Time"
                                 className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
                                 onChange={(e) =>
@@ -624,7 +635,8 @@ const ChannelBar = (props) => {
                           <div className="w-32">
                             <div>
                               <input
-                                type="text"
+                                type="number"
+                                minLength={1}
                                 id="time"
                                 placeholder="Time"
                                 className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
@@ -693,7 +705,8 @@ const ChannelBar = (props) => {
                           <div className="w-32">
                             <div>
                               <input
-                                type="text"
+                                type="number"
+                                minLength={1}
                                 id="time"
                                 placeholder="Time"
                                 className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
@@ -724,7 +737,8 @@ const ChannelBar = (props) => {
                           <div className="w-32">
                             <div>
                               <input
-                                type="text"
+                                type="number"
+                                minLength={1}
                                 id="time"
                                 placeholder="Time"
                                 className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
@@ -828,7 +842,8 @@ const ChannelBar = (props) => {
                           <div className="w-32">
                             <div>
                               <input
-                                type="text"
+                                type="number"
+                                minLength={1}
                                 id="time"
                                 placeholder="Time"
                                 className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
@@ -859,7 +874,8 @@ const ChannelBar = (props) => {
                           <div className="w-32">
                             <div>
                               <input
-                                type="text"
+                                type="number"
+                                minLength={1}
                                 id="time"
                                 placeholder="Time"
                                 className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
@@ -928,7 +944,8 @@ const ChannelBar = (props) => {
                           <div className="w-32">
                             <div>
                               <input
-                                type="text"
+                                type="number"
+                                minLength={1}
                                 id="time"
                                 placeholder="Time"
                                 className="bg-indigo-50 px-2 py-2 outline-none rounded-md w-32 mt-1"
@@ -1014,7 +1031,7 @@ const ChannelBar = (props) => {
             </button>
           </div>
         </div>
-        {imowner && (
+        {/* {imowner && (
           <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
             <div className="inline-flex mt-2 xs:mt-0">
               <button
@@ -1056,7 +1073,7 @@ const ChannelBar = (props) => {
               </div>
             )}
           </Modal>
-        )}
+        )} */}
         <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
           <div className="inline-flex mt-2 xs:mt-0">
             <button

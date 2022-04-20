@@ -12,7 +12,7 @@ export class FortyTwoStrategyStrategy extends PassportStrategy(Strategy) {
     super({
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: process.env.REDIRECT_URI,
+      callbackURL: process.env.REDIRECT_URL,
     });
   }
 
@@ -25,7 +25,7 @@ export class FortyTwoStrategyStrategy extends PassportStrategy(Strategy) {
     const user: User = {
       id: profile._json.id,
       avatar: profile._json.image_url,
-      username: profile._json.login,
+      // username: profile._json.login,
       email: profile._json.email,
       friend: [],
       block: [],

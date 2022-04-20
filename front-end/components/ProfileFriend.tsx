@@ -6,7 +6,6 @@ import FriendComponent from "./FriendComponent";
 import HomeNavbar from "./HomeNavbar";
 
 const ProfileFriend = (props) => {
-    // console.log(props);
     const [myprofile, setMyprofile] = useState({});
   const [hasResult, setHasResult] = useState(false);
   const fetchmyprofile = async () => {
@@ -15,6 +14,7 @@ const ProfileFriend = (props) => {
     });
     return response;
   };
+  const router = useRouter()
   useEffect(() => {
     fetchmyprofile()
       .then((res) => {
@@ -24,7 +24,7 @@ const ProfileFriend = (props) => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        router.push('/home')
       });
   }, []);
   const [myhistory, setMyhistory] = useState();
@@ -43,7 +43,7 @@ const ProfileFriend = (props) => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        router.push('/home')
       });
   }, []);
   const [data, setData] = useState({});
@@ -60,22 +60,9 @@ const ProfileFriend = (props) => {
         if (res.data) setData(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        router.push('/home')
       });
   }, []);
-  // const router = useRouter()
-  // const handlerclickparticipate = async (e, id) => {
-  //   e.preventDefault()
-  //     {
-  //       router.push(`FriendPage/${id}`)
-  //     }
-  // };
-  // const data = {
-  //   username: props.mydata.user.username,
-  //   avatar: props.mydata.user.avatar,
-  // };
-  // const [click, setClick] = useState(false);
-  // const [participatechannel, setParticipatechannel] = useState("");
   return (
     <div>
       {

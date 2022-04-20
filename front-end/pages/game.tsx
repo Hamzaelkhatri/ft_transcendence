@@ -80,7 +80,7 @@ const Game = () => {
     const [choosable, setChoosable] = useState(false);
     let context: any = useMyContext();
     const fetchData = async () => {
-        const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3001/users/me', {
+        const response = await axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/users/me", {
             headers:
                 { Authorization: `Bearer ${localStorage.getItem('token')}` }
         }).then(res => {
@@ -223,204 +223,204 @@ const Game = () => {
     return (
         <MydataProvider>
 
-        <div>
-            <HomeNavbar />
-            <link
+            <div>
+                <HomeNavbar />
+                {/* <link
                 rel="stylesheet"
                 href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css"
                 />
             <link
                 rel="stylesheet"
                 href="https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css"
-                />
-            <Content style={{ padding: '5%' }}>
-                <div style={{ textAlign: 'center' }}>
-                    {context.ShowCanvas.show &&
-                        <Canvas data={context.ShowCanvas['gameInfo']} mydata={MyData} />
-                    }
-                </div>
-                {!context.ShowCanvas.show &&
-                    <Row justify="center" align="top" gutter={[48, 32]}>
-                        <Col span={18} push={6} style={{ background: 'white' }} >
-                            {/* <div className="ant-col { xs: 10, sm: 16, md: 24, lg: 32 }"> */}
-                            {!context.ShowCanvas.show &&
-                                <div style={{ width: "auto", height: "auto" }}>
-                                    <MatchLive />
-                                </div>
-                            }
-                            {/* </div> */}
-                        </Col>
-                        <Col span={6} pull={18} style={{ background: 'transparent' }}>
-
-                            <div style={{ width: "auto", height: "auto" }}>
-
-                                <Card
-                                    id="_card"
-                                    style={{ width: "auto", height: "auto" }}
-                                    loading={MyData['id'] === undefined && data['id'] === undefined}
-                                    cover={
-                                        <div style={{ textAlign: 'center' }}>
-                                            <Badge.Ribbon text="online" style={{ backgroundColor: '#87d068', width: "auto", height: "auto" }} placement='start' />
-                                            {
-                                                <Avatar shape="square" style={{ width: "50%", height: "auto", borderRadius: "20px" }} src={data['avatar']} />
-                                            }
-                                        </div>
-                                    }
-                                    actions={
-                                        [
-                                            <ArrowLeftOutlined key="previous" onClick={() => { fetradom(); }} />,
-                                            <PlayCircleOutlined
-                                            key="play" onClick={() => {
-                                                setisRandom(0);
-                                                setIsModalVisible(true);
-                                            }} />,
-                                            <ArrowRightOutlined key="next" onClick={() => { fetradom(); }} />]}>
-                                    <Meta
-                                        title={data['username']}
-                                        description={
-                                            <ul>
-                                                <i id="icons" style={{ width: "auto", height: "auto", margin: "auto", borderRadius: "20px" }}>
-                                                    <li>
-                                                        <FieldNumberOutlined /> : Level {data['level']}
-                                                    </li>
-                                                    <li>
-                                                        <LikeOutlined /> : wins {data['wins']} Match(s)
-                                                    </li>
-
-                                                    <li>
-                                                        <DislikeOutlined /> : lost {data['loses']} Match(s)
-                                                    </li>
-                                                    <li>
-                                                        <FlagOutlined /> : Quit {data['quit']} Match(s)
-                                                    </li>
-                                                </i>
-                                            </ul>}
-                                    />
-                                </Card>
-
-                            </div>
-                            <div className="ant-col { xs: 10, sm: 16, md: 24, lg: 32 }">
-                                {!context.ShowCanvas.show && <Button id="btnp" size="large"
-                                    style={{
-                                        width: "100%", height: "auto", zIndex: "999", color: "white", background: "#fa982f",
-                                        border: "none", marginTop: "10px"
-                                    }}
-
-                                    onClick={() => {
-                                        setIsModalVisible(true);
-                                        setisRandom(1);
-                                    }}>
-                                    <div id="_random_match">
-                                        Random Match
+                /> */}
+                <Content style={{ padding: '5%' }}>
+                    <div style={{ textAlign: 'center' }}>
+                        {context.ShowCanvas.show &&
+                            <Canvas data={context.ShowCanvas['gameInfo']} mydata={MyData} />
+                        }
+                    </div>
+                    {!context.ShowCanvas.show &&
+                        <Row justify="center" align="top" gutter={[48, 32]}>
+                            <Col span={18} push={6} style={{ background: 'white' }} >
+                                {/* <div className="ant-col { xs: 10, sm: 16, md: 24, lg: 32 }"> */}
+                                {!context.ShowCanvas.show &&
+                                    <div style={{ width: "auto", height: "auto" }}>
+                                        <MatchLive />
                                     </div>
-                                    <div id="_txt_random_match">
-                                        <PlayCircleOutlined />
-                                    </div>
-                                </Button>
                                 }
-                            </div>
-                        </Col>
-                    </Row>
-                }
-                {/* {!context.ShowCanvas.show &&
+                                {/* </div> */}
+                            </Col>
+                            <Col span={6} pull={18} style={{ background: 'transparent' }}>
+
+                                <div style={{ width: "auto", height: "auto" }}>
+
+                                    {data['id'] !== undefined && <Card
+                                        id="_card"
+                                        style={{ width: "auto", height: "auto" }}
+                                        loading={MyData['id'] === undefined && data['id'] === undefined}
+                                        cover={
+                                            <div style={{ textAlign: 'center' }}>
+                                                <Badge.Ribbon text="online" style={{ backgroundColor: '#87d068', width: "auto", height: "auto" }} placement='start' />
+                                                {
+                                                    <Avatar shape="square" style={{ width: "50%", height: "auto", borderRadius: "20px" }} src={data['avatar']} />
+                                                }
+                                            </div>
+                                        }
+                                        actions={
+                                            [
+                                                <ArrowLeftOutlined key="previous" onClick={() => { fetradom(); }} />,
+                                                <PlayCircleOutlined
+                                                    key="play" onClick={() => {
+                                                        setisRandom(0);
+                                                        setIsModalVisible(true);
+                                                    }} />,
+                                                <ArrowRightOutlined key="next" onClick={() => { fetradom(); }} />]}>
+                                        <Meta
+                                            title={data['username']}
+                                            description={
+                                                <ul>
+                                                    <i id="icons" style={{ width: "auto", height: "auto", margin: "auto", borderRadius: "20px" }}>
+                                                        <li>
+                                                            <FieldNumberOutlined /> : Level {data['level']}
+                                                        </li>
+                                                        <li>
+                                                            <LikeOutlined /> : wins {data['wins']} Match(s)
+                                                        </li>
+
+                                                        <li>
+                                                            <DislikeOutlined /> : lost {data['loses']} Match(s)
+                                                        </li>
+                                                        <li>
+                                                            <FlagOutlined /> : Quit {data['quit']} Match(s)
+                                                        </li>
+                                                    </i>
+                                                </ul>}
+                                        />
+                                    </Card>
+                                    }
+
+                                </div>
+                                <div className="ant-col { xs: 10, sm: 16, md: 24, lg: 32 }">
+                                    {!context.ShowCanvas.show && <Button id="btnp" size="large"
+                                        style={{
+                                            width: "100%", height: "auto", zIndex: "999", color: "white", background: "#fa982f",
+                                            border: "none", marginTop: "10px"
+                                        }}
+
+                                        onClick={() => {
+                                            setIsModalVisible(true);
+                                            setisRandom(1);
+                                        }}>
+                                        <div id="_random_match">
+                                            Random Match
+                                        </div>
+                                        <div id="_txt_random_match">
+                                            <PlayCircleOutlined />
+                                        </div>
+                                    </Button>
+                                    }
+                                </div>
+                            </Col>
+                        </Row>
+                    }
+                    {/* {!context.ShowCanvas.show &&
                     <Row justify="center" align="top" gutter={[48, 32]}>
                         <Col span={6} pull={18} style={{ background: 'transparent' }} >
                          
-
                         </Col>
                     </Row>
                 } */}
-                {isModalVisible && <Modal title="Choose A Map To Play" visible={true} onOk={handleOk} maskClosable={true} mask={true} onCancel={handleCancel} style={{ top: "10%", width: "100%", height: "100%" }}
-                    footer={[
-                    ]}>
-                    <div style={{ padding: "24px", width: "100%", height: "100%" }}>
-                        <Space>
-                            <Comment content={
-                                <div style={{ textAlign: "center", fontSize: "25px", fontFamily: "Ro" }} >
-                                    <h3 >
-                                        Rules:
-                                    </h3>
-                                    <li>You Press [< ArrowUpOutlined /> or W] key to Move Up  </li>
-                                    <li>You Press [<ArrowDownOutlined />  or S] key to Move Down </li>
-                                    <li>You Press [P]  or Space key to Pause the Game</li>
-                                    <li>You can join back to play befor 10s(click [P] or Space) or you lose </li>
-                                    <li>If you Quit the Game , You will lose </li>
-                                    <li>Good Luck <HeartOutlined /> </li>
-                                </div>
-                            }
-                            />
-                        </Space>
-                    </div>
-                    <div>
-                        <List
-                            grid={{ gutter: 16, column: 4, xs: 1, sm: 2, md: 3, lg: 4, xl: 4 }}
-                            dataSource={datas}
-                            renderItem={item => (
-                                <List.Item>
-                                    <Card title={
-                                        <Space direction="vertical">
-                                            {item.title}
-                                            <Button type="primary" onClick={() => {
-                                                if (isRandom === 1) {
-                                                    axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/game/matchmaking/" + MyData["id"] + '/' + item.title)
-                                                        .then(res => {
-                                                            if (res.data.length !== 0) {
-                                                                context.setShowCanvas(
-                                                                    {
-                                                                        show: true,
-                                                                        gameInfo: res.data
-                                                                    }
-                                                                )
-                                                            }
-                                                            setIsModalVisible(false);
-                                                            setisRandom(-1);
-                                                        }
-                                                        )
-                                                }
-                                                else if (isRandom === 0) {
-                                                    axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/game/invite",
-                                                        {
-                                                            "username1": MyData['username'],
-                                                            "username2": data['username'],
-                                                            "map": item.title
-                                                        })
-                                                        .then(res => {
-                                                            if (res.data.length !== 0) {
-                                                                setData(res.data);
-                                                                context.setShowCanvas(
-                                                                    {
-                                                                        show: true,
-                                                                        gameInfo: res.data
-                                                                    }
-                                                                )
-                                                                setOneTime(1);
+                    {isModalVisible && <Modal title="Choose A Map To Play" visible={true} onOk={handleOk} maskClosable={true} mask={true} onCancel={handleCancel} style={{ top: "10%", width: "100%", height: "100%" }}
+                        footer={[
+                        ]}>
+                        <div style={{ padding: "24px", width: "100%", height: "100%" }}>
+                            <Space>
+                                <Comment content={
+                                    <div style={{ textAlign: "center", fontSize: "25px", fontFamily: "Ro" }} >
+                                        <h3 >
+                                            Rules:
+                                        </h3>
+                                        <li>You Press [< ArrowUpOutlined /> or W] key to Move Up  </li>
+                                        <li>You Press [<ArrowDownOutlined />  or S] key to Move Down </li>
+                                        <li>You Press [P]  or Space key to Pause the Game</li>
+                                        <li>You can join back to play befor 10s(click [P] or Space) or you lose </li>
+                                        <li>If you Quit the Game , You will lose </li>
+                                        <li>Good Luck <HeartOutlined /> </li>
+                                    </div>
+                                }
+                                />
+                            </Space>
+                        </div>
+                        <div>
+                            <List
+                                grid={{ gutter: 16, column: 4, xs: 1, sm: 2, md: 3, lg: 4, xl: 4 }}
+                                dataSource={datas}
+                                renderItem={item => (
+                                    <List.Item>
+                                        <Card title={
+                                            <Space direction="vertical">
+                                                {item.title}
+                                                <Button type="primary" onClick={() => {
+                                                    if (isRandom === 1) {
+                                                        axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/game/matchmaking/" + MyData["id"] + '/' + item.title)
+                                                            .then(res => {
+                                                                if (res.data.length !== 0) {
+                                                                    context.setShowCanvas(
+                                                                        {
+                                                                            show: true,
+                                                                            gameInfo: res.data
+                                                                        }
+                                                                    )
+                                                                }
                                                                 setIsModalVisible(false);
-                                                                // socket = io(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3080');
-                                                                socket.emit("notificationServer",
-                                                                    {
-                                                                        data: res.data,
-                                                                        idUser: res.data['user2']['id']
-                                                                    });
+                                                                setisRandom(-1);
                                                             }
-                                                        });
-                                                }
-                                            }}>
-                                                Play
-                                            </Button>
-                                        </Space>
-                                    }
-                                    >
-                                        {item.render(item)}
-                                    </Card>
-                                </List.Item>
-                            )}
-                        />
-                    </div>
-                </Modal>
-                }
+                                                            )
+                                                    }
+                                                    else if (isRandom === 0) {
+                                                        axios.post(process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/game/invite",
+                                                            {
+                                                                "username1": MyData['username'],
+                                                                "username2": data['username'],
+                                                                "map": item.title
+                                                            })
+                                                            .then(res => {
+                                                                if (res.data.length !== 0) {
+                                                                    setData(res.data);
+                                                                    context.setShowCanvas(
+                                                                        {
+                                                                            show: true,
+                                                                            gameInfo: res.data
+                                                                        }
+                                                                    )
+                                                                    setOneTime(1);
+                                                                    setIsModalVisible(false);
+                                                                    // socket = io(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3080');
+                                                                    socket.emit("notificationServer",
+                                                                        {
+                                                                            data: res.data,
+                                                                            idUser: res.data['user2']['id']
+                                                                        });
+                                                                }
+                                                            });
+                                                    }
+                                                }}>
+                                                    Play
+                                                </Button>
+                                            </Space>
+                                        }
+                                        >
+                                            {item.render(item)}
+                                        </Card>
+                                    </List.Item>
+                                )}
+                            />
+                        </div>
+                    </Modal>
+                    }
 
-            </Content >
-        </div>
+                </Content >
+            </div>
         </MydataProvider>
 
     )

@@ -25,9 +25,9 @@ const ChannelChat = (props) => {
     );
     return response;
   };
+  const router = useRouter()
   useEffect(() => {
     socket.on("newEventChannel", (data) => {
-      console.log(data);
       props
         .fetchmychannel()
         .then((res) => {
@@ -35,10 +35,14 @@ const ChannelChat = (props) => {
             props.setMychannel(res.data);
           }
         })
-        .catch((err) => {
-          console.log(err);
+        .catch((err)=>{
+        
+          router.push('/home')
         });
     });
+    return (()=>{
+      socket.off('newEventChannel')
+    })
   }, []);
   useEffect(() => {
     fetchconsversation()
@@ -47,8 +51,9 @@ const ChannelChat = (props) => {
           setConversation(res.data);
         }
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((err)=>{
+        
+        router.push('/home')
       });
   }, []);
   useEffect(() => {
@@ -70,8 +75,9 @@ const ChannelChat = (props) => {
             setConversation(res.data);
           }
         })
-        .catch((err) => {
-          console.log(err);
+        .catch((err)=>{
+        
+          router.push('/home')
         });
     }
   }, [object]);
@@ -90,8 +96,9 @@ const ChannelChat = (props) => {
           },
         }
       )
-      .then((res) => {
-        console.log(res);
+      .catch((err)=>{
+        
+        router.push('/home')
       });
     socket.emit("sendMessageChannel", {
       sender: props.mydata,

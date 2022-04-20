@@ -84,9 +84,9 @@ export class AppGateway
 
     for (let i = 0; i < this.game.length; i++) {
       // this.connect_users
-      // console.log("Currents Games",t his.game[i]);
       if (this.game[i].socket1 == client.id ) {
-        let url = process.env.FRONTEND_URL+':3001/game/quit/' + this.game[i].id + '/'+this.game[i].user2;
+        let url = process.env.NEXT_PUBLIC_FRONTEND_URL+':3001/game/quit/' + this.game[i].id + '/'+this.game[i].user2;
+        // console.log(url);
         this.axios.post(url,
           {
             user1_score: this.game[i].score1, 
@@ -97,7 +97,9 @@ export class AppGateway
         this.server.emit('QuitgameClient', { gameid: this.game[i].id, userId: this.game[i].user2 });
       }
       if(this.game[i].socket2 == client.id){
-        let url = process.env.FRONTEND_URL+':3001/game/quit/' + this.game[i].id + '/'+this.game[i].user1;
+        let url = process.env.NEXT_PUBLIC_FRONTEND_URL+':3001/game/quit/' + this.game[i].id + '/'+this.game[i].user1;
+        // console.log(url);
+
         this.axios.post(url,
           {
             user1_score: this.game[i].score1,
@@ -173,10 +175,10 @@ export class AppGateway
         this.game[game_id].socket2 = client.id;
         if (this.game[game_id].user2 == payload.idUser) 
         {
+          payload.GameInfo.is_started = true;
           payload.GameInfo.user1_accepted = true;
           payload.GameInfo.user2_accepted = true;
-          payload.GameInfo.is_started = true;
-      }
+        }
       }
     }
     game_id = this.game.findIndex((game) => game.id == payload.GameInfo.id);

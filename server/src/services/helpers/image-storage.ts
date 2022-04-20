@@ -17,7 +17,7 @@ const validMimeTypes: validMimeType[] = [
 
 export const saveImageToStorage = {
   storage: diskStorage({
-    destination: './src/avatar',
+    destination: '../front-end/public',
     filename: (req, file, cb) => {
       const filename: string =
         path.parse(file.originalname).name.replace(/\s/g, '') + uuidv4(); // regexr : regular expressions / '\s' for Whitespace / '/g' expression flags for global
@@ -32,8 +32,7 @@ export const saveImageToStorage = {
 };
 
 export const fullImagePath = (filename: string): string => {
-  const imagesFolderPath = process.cwd() + '/src/avatar';
-  const fullPath = imagesFolderPath + '/' + filename;
+  const fullPath = '/' + filename;
   return fullPath;
 };
 
@@ -42,7 +41,6 @@ export const isFileExtensionSafe = async (path: string) => {
   else {
     fs.unlink(path, (err) => {
       if (err) throw err;
-      console.log('file is deleted');
     });
     return false;
   }

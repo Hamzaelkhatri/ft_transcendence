@@ -19,18 +19,20 @@ const ChannelPage = (props) => {
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
-      );
-      return response;
-    } catch {
-      // router.push("/myprofile");
-    }
-  };
-  const [mychannelusers, setMychannelusers] = useState();
+        );
+        return response;
+      } catch {
+        // router.push("/myprofile");
+      }
+    };
+    const [mychannelusers, setMychannelusers] = useState();
+    
+    const fetchmychannelusers = async () => {
+   
 
-  const fetchmychannelusers = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/channels/${props.id}/users/all`,
+        `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/channels/${router.query.channelId}/users/all`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
@@ -47,9 +49,9 @@ const ChannelPage = (props) => {
           setMychannel(res.data);
         }
       })
-      .catch((err) => {
-        console.log(err);
-        // router.push("/myprofile");
+      .catch((err)=>{
+        
+        router.push('/home')
       });
   }, []);
 
@@ -60,13 +62,13 @@ const ChannelPage = (props) => {
           setMychannelusers(res.data);
         }
       })
-      .catch((err) => {
-        console.log(err);
-        // router.push("/myprofile");
+      .catch((err)=>{
+        
+        router.push('/home')
       });
-      return (()=>{
-        false
-      })
+    return () => {
+      false;
+    };
   }, []);
 
   return (

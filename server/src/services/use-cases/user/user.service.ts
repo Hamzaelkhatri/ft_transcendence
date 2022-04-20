@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Conversation } from 'src/core/entities/conversation.entity';
 import { Not, Repository } from 'typeorm';
-import { User } from '../../../core/entities/user.entity';
+import { StatusType, User } from '../../../core/entities/user.entity';
 
 @Injectable()
 export class UserService {
@@ -67,19 +67,20 @@ export class UserService {
   }
 
   async getNextUser(): Promise<User> {
-    return await this.userRepository.findOne({ is_online: true });
+    // return ;
+    return await this.userRepository.findOne({ status: StatusType.ONLINE });
   }
 
   async onlineUser(id: number) {
-    return await this.userRepository.update(id, {is_online: true});
+    return await this.userRepository.update(id, {status: StatusType.ONLINE});
   }
 
   async offlineUser(id: number) {
-    return await this.userRepository.update(id, {is_online: false});
+    return await this.userRepository.update(id, {status: StatusType.OFFLINE});
   }
   async getRandomUser(myId: string): Promise<User> {
     let ids: number[] = await this.userRepository
-      .find({ is_online: true })
+      .find({ status: StatusType.ONLINE })
       .then((users) => {
         let ids = [];
         users.forEach((user) => {
@@ -95,7 +96,6 @@ export class UserService {
         });
         return ids;
       });
-
     let random = Math.floor(Math.random() * ids.length);
     // await this.connection.getRepository(User).findOne()
     return await this.userRepository.findOne({ id: ids[random] });
@@ -112,7 +112,8 @@ export class UserService {
         avatar: user[i].avatar,
         username: user[i].username,
         email: user[i].email,
-        online: user[i].is_online,
+        // online: user[i].is_online,
+        // status: user[i].status,
         level: user[i].level,
       };
       winners.push(winner);

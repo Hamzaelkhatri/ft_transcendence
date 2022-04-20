@@ -18,6 +18,9 @@ const FriendComponent = (props) => {
         }
       ).then((res)=>{
         router.push(`/Chats/${res.data.id}`)
+      }).catch((err)=>{
+        
+        router.push('/home')
       })
   };
   return (
@@ -62,13 +65,6 @@ const FriendComponent = (props) => {
                         {props.mydata.numberOfFriends}
                       </span>
                       <span className="text-sm text-blueGray-400">Friends</span>
-                    </div>
-                    <div className="mr-4 p-3 text-center">
-                      <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
-                        20
-                        {/* {props.mydata.user.xp} */}
-                      </span>
-                      <span className="text-sm text-blueGray-400">Scores</span>
                     </div>
                     <div className="lg:mr-4 p-3 text-center">
                       <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">

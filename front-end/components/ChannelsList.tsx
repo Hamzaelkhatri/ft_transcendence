@@ -25,7 +25,9 @@ const ChannlesList = (props) => {
   const [isprivate, setIsprivate] = useState(false);
   const hundelsubmitprivate = async (e) => {
     e.preventDefault();
-    axios
+    if (selectedname.length > 4 && selectedpassword.length > 4)
+    {
+      axios
       .post(
         process.env.NEXT_PUBLIC_FRONTEND_URL +":3001/channels/create/private/users/me",
         {
@@ -37,16 +39,22 @@ const ChannlesList = (props) => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
-      )
-      .then((res) => {
-        setCreatechannel(!createchannel);
-      });
+        )
+        .then((res) => {
+          setCreatechannel(!createchannel);
+        }).catch((err)=>{
+        
+          router.push('/home')
+        });
+      }
   };
   const hundelsubmitprivatejoin = async (e, id) => {
     e.preventDefault();
-    var formData = new FormData();
-    formData.append("password", selectedpasswordjoin);
-    axios
+    if (selectedpasswordjoin.length > 4)
+    {
+      var formData = new FormData();
+      formData.append("password", selectedpasswordjoin);
+      axios
       .post(
         `${process.env.NEXT_PUBLIC_FRONTEND_URL}:3001/channels/join/${id}/private/users/me`,
         {
@@ -59,34 +67,38 @@ const ChannlesList = (props) => {
         }
         )
         .then((res) => {
-          console.log('im in then');
-          console.log(res);
           router.push(`/Channnel/${id}`);
         })
-      .catch((res)=>{
-        console.log('im in catch');
-        router.push(`/home`);
-      })
-      ;
+        .catch((res)=>{
+          router.push(`/home`);
+        })
+        ;
+      }
   };
   const hundelsubmitpublic = async (e) => {
     e.preventDefault();
-    axios
-      .post(
-        process.env.NEXT_PUBLIC_FRONTEND_URL +":3001/channels/create/public/users/me",
-        {
-          name: selectedname,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+    if (selectedname.length > 4)
+    {
+      axios
+        .post(
+          process.env.NEXT_PUBLIC_FRONTEND_URL +":3001/channels/create/public/users/me",
+          {
+            name: selectedname,
           },
-        }
-      )
-      .then((res) => {
-        console.log(res);
-        setCreatechannel(!createchannel);
-      });
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        )
+        .then((res) => {
+          
+          setCreatechannel(!createchannel);
+        }).catch((err)=>{
+        
+          router.push('/home')
+        });
+    }
   };
   const hundelsubmitpublicjoin = async (e, id) => {
     e.preventDefault();
@@ -104,6 +116,9 @@ const ChannlesList = (props) => {
         {
           router.push(`/Channnel/${id}`);
         }
+      }).catch((err)=>{
+        
+        router.push('/home')
       });
   };
   const hundelsubmit = async (e) => {
@@ -152,6 +167,8 @@ const ChannlesList = (props) => {
                     <input
                       type="text"
                       id="name"
+                      maxLength={10}
+                      minLength={5}
                       className="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full"
                       onChange={(e) => setSelectedname(e.target.value)}
                     />
@@ -188,6 +205,8 @@ const ChannlesList = (props) => {
                       </label>
                       <input
                         type="text"
+                        minLength={5}
+                        maxLength={12}
                         id="password"
                         className="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full"
                         onChange={(e) => setSelectedPassword(e.target.value)}
@@ -306,6 +325,8 @@ const ChannlesList = (props) => {
                                               <input
                                                 type="text"
                                                 id="password"
+                                                minLength={5}
+                                                maxLength={12}
                                                 className="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full"
                                                 onChange={(e) => {
                                                   setSelectedPasswordjoin(
@@ -514,6 +535,8 @@ const ChannlesList = (props) => {
                                             <input
                                               type="text"
                                               id="password"
+                                              minLength={5}
+                                              maxLength={12}
                                               className="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full"
                                               onChange={(e) => {
                                                 setSelectedPasswordjoin(
