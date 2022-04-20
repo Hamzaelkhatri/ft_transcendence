@@ -1099,12 +1099,13 @@ const Canvas = (props: any) => {
         }
         else {
             setIsWating(false);
-            // // while ( === null)
-            // console.log("Wa9ila here")
             new Game(canvasRef.current as unknown as HTMLCanvasElement, context.ShowCanvas.gameInfo, socket, props.mydata);
         }
-
-    }, []);
+        return () => {
+            socket.off('ConnectClient');
+            socket.off('GameOverClient');
+        }
+    }, [isWating]);
 
     return (
 

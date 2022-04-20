@@ -43,9 +43,7 @@ export default function MatchLive() {
             render: (rese) => (
                 <Space>
                     <Button style={{background: "#fa982f", color: 'white'}} onClick={() => {
-                        // console.log(rese.key);
                         axios.get(process.env.NEXT_PUBLIC_FRONTEND_URL +":3001/game/watch/" + rese.key).then(res => {
-                            // console.log(res.data);
                             context.setShowCanvas
                             (
                                 {

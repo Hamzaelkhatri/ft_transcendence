@@ -416,7 +416,21 @@ export class GameService extends TypeOrmCrudService<Game> {
       };
       data.push(d);
     }
-    // console.log(data);
     return data;
   }
+
+  async CurrentMatch(id:number)
+  {
+      const game = await this.repository
+      .createQueryBuilder('game')
+      .leftJoinAndSelect('game.user1','user1')
+      .leftJoinAndSelect('game.user2','user2')
+      .andWhere('game.is_finished = false')
+      .andWhere('game.is_started = true')
+      .andWhere('game.user1=:id',{id:id})
+      .orWhere('game.user2=:id',{id:id})
+      .getOne();
+      
+      return game;
+  } 
 }

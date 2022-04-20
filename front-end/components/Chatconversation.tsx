@@ -19,6 +19,7 @@ import {
   List,
 } from "antd";
 import { Button, notification, Image, Comment } from "antd";
+import Game from '../../server/src/core/entities/game.entity';
 import {
   ArrowLeftOutlined,
   PlayCircleOutlined,
@@ -81,6 +82,9 @@ const ChatConversation = (props) => {
   const [profilehref, setProfilehref] = useState("false");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [userInvite, setuserInvite] = useState(null);
+  const [userWatch, setuserWatch] = useState(null);
+  const [GameInfo, setGameInfo] = useState(null);
+
   let context = useMyContext();
   // let socket: any = context.socket;
   const router = useRouter();
@@ -92,8 +96,6 @@ const ChatConversation = (props) => {
     e.preventDefault();
     setuserInvite(id);
     context.setMydata(props.data);
-
-    // isModalVisible(true);
     axios
       .post(
         process.env.NEXT_PUBLIC_FRONTEND_URL +
@@ -106,30 +108,39 @@ const ChatConversation = (props) => {
       )
       .then((res) => {
         if (res.data.length !== 0) {
-          // setData(res.data);
-
           context.setShowCanvas({
             show: true,
             gameInfo: res.data,
           });
-          // setOneTime(1);
           setIsModalVisible(false);
           router.push('/game');
-          // socket = io(process.env.NEXT_PUBLIC_FRONTEND_URL + ':3080');
-          // socket.emit("notificationServer", {
-          //   data: res.data,
-          //   idUser: res.data["user2"]["id"],
-          // });
         }
       });
   };
-  const handleOk = () => {
+
+  const hundelWatchgame = async (e, id) => {
+    e.preventDefault();
+    setuserWatch(id);
+    context.setMydata(props.data);
+    context.setShowCanvas({
+      show: true,
+      gameInfo: GameInfo,
+    });
     setIsModalVisible(false);
+    router.push('/game');
+
   };
 
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
+  const getCurrentGameOfUser = async (data) => {
+    axios
+      .get(
+        process.env.NEXT_PUBLIC_FRONTEND_URL + ":3001/game/currentMatch/" + data.id,
+      )
+      .then((res) => {
+        setGameInfo(res.data);
+      });
+  }
+
   return (
     <div className="h-screen justify-center">
       <div>{props.data && <HomeNavbar />}</div>
@@ -150,6 +161,7 @@ const ChatConversation = (props) => {
             <button
               className="outline-none menu-button"
               onClick={() => {
+
                 setClickconvresp(true);
               }}
             >
@@ -201,6 +213,7 @@ const ChatConversation = (props) => {
                   setClickconv(!clickconv);
                   setConvid(stat.id);
                   setReciever(stat.user);
+                  getCurrentGameOfUser(stat.user);
                 }}
               >
                 <div className="w-1/4">
@@ -247,6 +260,18 @@ const ChatConversation = (props) => {
                             }}
                           >
                             Invite game
+                          </p>
+                          {/* </Link> */}
+                        </li>
+                        <li>
+                          {/* <Link href="/"> */}
+                          <p
+                            className="w-22 block py-2 px-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                            onClick={(e) => {
+                              hundelWatchgame(e, stat.user.username)
+                            }}
+                          >
+                            Watch game
                           </p>
                           {/* </Link> */}
                         </li>
